@@ -18,7 +18,8 @@ MonoBehaviour:
   duration: Infinity
   name: Rocket Launcher
   weapon_spawn: {x: 0, y: 0, z: 0}
-  shot_spawn: {x: 0, y: 0, z: 0}
+  shot_spawn: {x: 0, y: 0, z: 0.5}
   model: {fileID: -2432090755550338912, guid: 2d21dd4c6ba67d343a733cd0c30a6a1e, type: 3}
-  mat: {fileID: 7741625113677808684, guid: 2d21dd4c6ba67d343a733cd0c30a6a1e, type: 3}
+  mats:
+  - {fileID: 7741625113677808684, guid: 2d21dd4c6ba67d343a733cd0c30a6a1e, type: 3}
   projectile: {fileID: 0}
