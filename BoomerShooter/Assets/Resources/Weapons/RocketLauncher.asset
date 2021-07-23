@@ -12,14 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c86f01555a6c6964fbb49c6623b7cc45, type: 3}
   m_Name: RocketLauncher
   m_EditorClassIdentifier: 
-  use_projectile: 1
+  use_projectile: 0
+  multi_shot: 1
   use_gravity: 0
+  number_of_shots: 16
+  deviation: 10
   distance: Infinity
   duration: Infinity
-  name: Rocket Launcher
+  shot_speed: 21
+  shot_rate: 0
+  shot_interval: 0.8
+  weapon_name: Rocket Launcher
   weapon_spawn: {x: 0, y: 0, z: 0}
   shot_spawn: {x: 0, y: 0, z: 0.5}
   model: {fileID: -2432090755550338912, guid: 2d21dd4c6ba67d343a733cd0c30a6a1e, type: 3}
   mats:
   - {fileID: 7741625113677808684, guid: 2d21dd4c6ba67d343a733cd0c30a6a1e, type: 3}
-  projectile: {fileID: 0}
+  projectile: {fileID: 2907262764750256196, guid: eee65341114678b4da1e5647fb12b8ef, type: 3}

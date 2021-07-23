@@ -110,6 +110,8 @@ public class CharacterMovement : MonoBehaviour
             }
         }
     }
+    
+    public GameObject GetCam() { return cam.gameObject; }
 
     // Start is called before the first frame update
     void Start()

@@ -129,7 +129,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-52822
+  m_Name: pb_Mesh14964
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -293,7 +293,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-6386
+  m_Name: pb_Mesh15016
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -613,7 +613,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 711833116}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Shot_spawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -634,6 +634,80 @@ Transform:
   m_Father: {fileID: 1456472795}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &829912862
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 829912863}
+  - component: {fileID: 829912864}
+  m_Layer: 8
+  m_Name: ViewmodelCam
+  m_TagString: MainCamera
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &829912863
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 829912862}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 842638762}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!20 &829912864
+Camera:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 829912862}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_ClearFlags: 3
+  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_projectionMatrixMode: 1
+  m_GateFitMode: 2
+  m_FOVAxisMode: 0
+  m_SensorSize: {x: 36, y: 24}
+  m_LensShift: {x: 0, y: 0}
+  m_FocalLength: 50
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: 0.3
+  far clip plane: 1000
+  field of view: 60
+  orthographic: 0
+  orthographic size: 5
+  m_Depth: 1
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 512
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 0}
+  m_TargetDisplay: 0
+  m_TargetEye: 3
+  m_HDR: 1
+  m_AllowMSAA: 1
+  m_AllowDynamicResolution: 0
+  m_ForceIntoRT: 0
+  m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: 0.022
 --- !u!1 &842638761
 GameObject:
   m_ObjectHideFlags: 0
@@ -664,6 +738,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1456472795}
+  - {fileID: 829912863}
   m_Father: {fileID: 1005539589}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -700,13 +775,13 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 90
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 1335
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -1014,17 +1089,9 @@ MonoBehaviour:
   assetGuid: 
   m_Mesh: {fileID: 301712174}
   m_IsSelectable: 1
-  m_SelectedFaces: 04000000
-  m_SelectedEdges:
-  - a: 16
-    b: 17
-  - a: 18
-    b: 16
-  - a: 17
-    b: 19
-  - a: 19
-    b: 18
-  m_SelectedVertices: 10000000110000001200000013000000
+  m_SelectedFaces: 
+  m_SelectedEdges: []
+  m_SelectedVertices: 
 --- !u!4 &898101193
 Transform:
   m_ObjectHideFlags: 0
@@ -1396,8 +1463,8 @@ MonoBehaviour:
   max_air_accel: 20
   friction: 5
   jump_speed: 7
-  crouch_speed_divider: 2
-  mouse_sensitivity: {x: 5, y: 5}
+  crouch_speed_divider: 4
+  mouse_sensitivity: {x: 7, y: 7}
 --- !u!54 &1005539585
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1504,7 +1571,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3af5e6055e37194cb1e58711a018540, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  max_bullet_holes: 16
+  current_interval: 0
   weapons: []
+  bullet_decal: {fileID: 6897869951443509573, guid: 4a93710794d019243a95e13293c1c2fe, type: 3}
 --- !u!1 &1085354353
 GameObject:
   m_ObjectHideFlags: 0
@@ -2281,17 +2351,9 @@ MonoBehaviour:
   assetGuid: 
   m_Mesh: {fileID: 1826033485}
   m_IsSelectable: 1
-  m_SelectedFaces: 0b000000
-  m_SelectedEdges:
-  - a: 45
-    b: 46
-  - a: 46
-    b: 47
-  - a: 47
-    b: 44
-  - a: 44
-    b: 45
-  m_SelectedVertices: 2f0000002d0000002e0000002c000000
+  m_SelectedFaces: 
+  m_SelectedEdges: []
+  m_SelectedVertices: 
 --- !u!4 &1085354358
 Transform:
   m_ObjectHideFlags: 0
@@ -2625,7 +2687,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-52262
+  m_Name: pb_Mesh14976
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -2794,7 +2856,7 @@ GameObject:
   - component: {fileID: 1456472795}
   - component: {fileID: 1456472797}
   - component: {fileID: 1456472796}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Viewmodel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2871,7 +2933,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-26792
+  m_Name: pb_Mesh15004
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
