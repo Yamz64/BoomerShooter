@@ -12,7 +12,9 @@ GameObject:
   - component: {fileID: 4947408531391136657}
   - component: {fileID: 8778959586933273742}
   - component: {fileID: 6917380556089477322}
+  - component: {fileID: 5697380951616400620}
   - component: {fileID: -2593299902865905130}
+  - component: {fileID: -1717791895441318962}
   m_Layer: 10
   m_Name: TempRocket
   m_TagString: Untagged
@@ -96,6 +98,19 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!135 &5697380951616400620
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2907262764750256196}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.6
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &-2593299902865905130
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -112,3 +127,16 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 2
+--- !u!114 &-1717791895441318962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2907262764750256196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cabbe18e97cc4349ac0ed045d50b360, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: {fileID: 11400000, guid: 6cffcb9f0aed91c4d869a2c855d59cdb, type: 2}

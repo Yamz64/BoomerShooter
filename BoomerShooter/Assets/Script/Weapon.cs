@@ -12,7 +12,6 @@ public class Weapon : ScriptableObject
     public int number_of_shots;
     public float deviation;
     public float distance;
-    public float duration;
     public float shot_speed;
     public float shot_rate;
     public float shot_interval;

@@ -89,6 +89,7 @@ public class WeaponBehavior : MonoBehaviour
                 projectile.transform.forward = gameObject.GetComponent<CharacterMovement>().GetCam().transform.forward;
             projectile.GetComponent<Rigidbody>().velocity = weapon.shot_speed * projectile.transform.forward;
             projectile.GetComponent<Rigidbody>().useGravity = weapon.use_gravity;
+            projectile.GetComponent<ProjectileBehavior>().owner = gameObject;
             yield return new WaitForSeconds(weapon.shot_rate);
         }
     }
@@ -171,6 +172,7 @@ public class WeaponBehavior : MonoBehaviour
                         projectile.transform.forward = shot_paths[i];
                         projectile.GetComponent<Rigidbody>().velocity = weapon.shot_speed * projectile.transform.forward;
                         projectile.GetComponent<Rigidbody>().useGravity = weapon.use_gravity;
+                        projectile.GetComponent<ProjectileBehavior>().owner = gameObject;
                     }
                 }
                 else
