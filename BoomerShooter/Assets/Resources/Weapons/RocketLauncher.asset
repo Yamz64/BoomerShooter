@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c86f01555a6c6964fbb49c6623b7cc45, type: 3}
   m_Name: RocketLauncher
   m_EditorClassIdentifier: 
-  use_projectile: 0
+  use_projectile: 1
   multi_shot: 1
-  use_gravity: 0
+  use_gravity: 1
   number_of_shots: 16
   deviation: 10
   distance: Infinity
