@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class WeaponBehavior : MonoBehaviour
 {
+    [Tooltip("Type of weapon in the held_weapons list: 0 = melee, 1 = pistols/light, 2 = shotguns, 3 = assault/heavy, 4 = explosives, 5 = energy, 6 = big")]
+    public int active_type;
+    [Tooltip("Position in the held_weapons[active_type] list")]
+    public int active_weapon;
     public int max_bullet_holes;
     public float current_interval;
     public Weapon[] weapons;
@@ -11,7 +15,7 @@ public class WeaponBehavior : MonoBehaviour
 
     private bool firing;
     private float max_interval;
-    private List<Weapon> held_weapons;
+    private List<List<Weapon>> held_weapons;
     private GameObject physics_parent;
     private GameObject viewmodel;
     private GameObject shot_origin;
@@ -46,6 +50,8 @@ public class WeaponBehavior : MonoBehaviour
 
         current_interval = weapon.shot_interval;
         max_interval = weapon.shot_interval;
+
+        anim.runtimeAnimatorController = weapon.anim;
     }
 
     //based on the number of shots and degrees of deviation spawn a sort of weapon spread
@@ -152,13 +158,16 @@ public class WeaponBehavior : MonoBehaviour
         if(current_interval >= 0.0f)
         {
             current_interval -= 1.0f * Time.deltaTime;
+            firing = false;
             return;
         }
 
         //if the weapon is ready to be fired and the fire key is being pressed
         if(Input.GetButton("Fire1"))
         {
+            firing = true;
             current_interval = max_interval;
+            GetComponent<Rigidbody>().AddForce(-viewmodel.transform.forward * weapon.kick_back);
             //first see if the weapon is projectile or hitscan
             //projectile
             if (weapon.use_projectile)
@@ -228,6 +237,7 @@ public class WeaponBehavior : MonoBehaviour
             Rigidbody rb = GetComponent<Rigidbody>();
             CharacterMovement cm = GetComponent<CharacterMovement>();
             anim.SetBool("Fire", firing);
+            Debug.Log(anim.GetBool("Fire"));
             anim.SetFloat("Speed", Mathf.Clamp01(rb.velocity.magnitude / cm.max_ground_accel));
 
             Vector3 forward_proj = (Vector3.Dot(rb.velocity / cm.max_air_accel, transform.forward) / 1f) * transform.forward;
@@ -238,22 +248,120 @@ public class WeaponBehavior : MonoBehaviour
         }
     }
 
+    public void AddWeapon(Weapon weapon) { held_weapons[weapon.weapon_type].Add(weapon); }
+
+    //function handles switching of weapons
+    public void SwitchWeapon()
+    {
+        //scrollwheel
+        if (Input.mouseScrollDelta.y != 0)
+        {
+            //determine whether the mousewheel is being scrolled up or down
+            bool up = false;
+            if (Input.mouseScrollDelta.y / Mathf.Abs(Input.mouseScrollDelta.y) == 1) up = true;
+
+            //up
+            if (up)
+            {
+                //find the next available weapon to switch to
+                bool valid = false;
+                int temp_active = active_weapon;
+                int temp_type = active_type;
+                while (!valid)
+                {
+                    temp_active++;
+                    if (temp_active < held_weapons[temp_type].Count) valid = true;
+                    else
+                    {
+                        if (temp_type != 6) temp_type++;
+                        else temp_type = 0;
+                        temp_active = -1;
+                    }
+                }
+
+                active_weapon = temp_active;
+                active_type = temp_type;
+            }
+            //down
+            else
+            {
+                //find the next available weapon to switch to
+                bool valid = false;
+                int temp_active = active_weapon;
+                int temp_type = active_type;
+                while (!valid)
+                {
+                    temp_active--;
+                    if (temp_active > -1 && held_weapons[temp_type].Count > 0) valid = true;
+                    else
+                    {
+                        if (temp_type != 0) temp_type--;
+                        else temp_type = 6;
+                        temp_active = held_weapons[temp_type].Count;
+                    }
+                }
+
+                active_weapon = temp_active;
+                active_type = temp_type;
+            }
+
+            UpdateViewmodel(held_weapons[active_type][active_weapon]);
+        }
+        //keyboard
+        else
+        {
+            int key_pressed = -1;
+            if (Input.GetKeyDown(KeyCode.Alpha1)) key_pressed = 0;
+            if (Input.GetKeyDown(KeyCode.Alpha2)) key_pressed = 1;
+            if (Input.GetKeyDown(KeyCode.Alpha3)) key_pressed = 2;
+            if (Input.GetKeyDown(KeyCode.Alpha4)) key_pressed = 3;
+            if (Input.GetKeyDown(KeyCode.Alpha5)) key_pressed = 4;
+            if (Input.GetKeyDown(KeyCode.Alpha6)) key_pressed = 5;
+            if (Input.GetKeyDown(KeyCode.Alpha7)) key_pressed = 6;
+
+            if (key_pressed == -1) return;
+
+            if (active_type != key_pressed)
+            {
+                if (held_weapons[key_pressed].Count > 0)
+                {
+                    active_type = key_pressed;
+                    active_weapon = 0;
+                }
+            }
+            else
+            {
+                if (active_weapon < held_weapons[active_type].Count - 1) active_weapon++;
+            }
+
+            UpdateViewmodel(held_weapons[active_type][active_weapon]);
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         //load all weapons found in resources into the weapons list
         weapons = Resources.LoadAll<Weapon>("Weapons");
 
-        held_weapons = new List<Weapon>();
-        held_weapons.Add(weapons[0]);
+        held_weapons = new List<List<Weapon>>() { new List<Weapon>(),
+                                                  new List<Weapon>(),
+                                                  new List<Weapon>(),
+                                                  new List<Weapon>(),
+                                                  new List<Weapon>(),
+                                                  new List<Weapon>(),
+                                                  new List<Weapon>()
+                                                };
+        foreach (Weapon weapon in weapons) { AddWeapon(weapon); }
+        active_type = 4;
+        active_weapon = 0;
 
         //load the first active weapon to the viewmodel
         physics_parent = transform.GetChild(0).GetChild(0).gameObject;
         viewmodel = physics_parent.transform.GetChild(0).gameObject;
         shot_origin = transform.GetChild(0).GetChild(1).gameObject;
-        UpdateViewmodel(held_weapons[0]);
         anim = viewmodel.GetComponent<Animator>();
-        anim.runtimeAnimatorController = held_weapons[0].anim;
+        UpdateViewmodel(held_weapons[active_type][active_weapon]);
 
         //initialize list for keeping track of bullet holes
         bullet_holes = new List<GameObject>();
@@ -263,6 +371,9 @@ public class WeaponBehavior : MonoBehaviour
     void Update()
     {
         Animate();
-        Fire(held_weapons[0]);
+        Fire(held_weapons[active_type][active_weapon]);
+
+        //handle weaponswitching
+        SwitchWeapon();
     }
 }
