@@ -9,12 +9,15 @@ public class WeaponBehavior : MonoBehaviour
     public Weapon[] weapons;
     public Object bullet_decal;
 
+    private bool firing;
     private float max_interval;
     private List<Weapon> held_weapons;
+    private GameObject physics_parent;
     private GameObject viewmodel;
     private GameObject shot_origin;
 
     private List<GameObject> bullet_holes;
+    private Animator anim;
 
     //function to find the next perfect root that assists in building fixed shot patterns
     int NextRoot(int number)
@@ -39,7 +42,7 @@ public class WeaponBehavior : MonoBehaviour
 
         //update the viewmodel's position and shot_spawn position
         viewmodel.transform.localPosition = new Vector3(0.0f, -.5f, 1f) + weapon.weapon_spawn;
-        viewmodel.transform.GetChild(0).localPosition = weapon.shot_spawn;
+        transform.GetChild(0).GetChild(1).localPosition = weapon.shot_spawn;
 
         current_interval = weapon.shot_interval;
         max_interval = weapon.shot_interval;
@@ -218,6 +221,23 @@ public class WeaponBehavior : MonoBehaviour
         }
     }
 
+    public void Animate()
+    {
+        if (anim != null)
+        {
+            Rigidbody rb = GetComponent<Rigidbody>();
+            CharacterMovement cm = GetComponent<CharacterMovement>();
+            anim.SetBool("Fire", firing);
+            anim.SetFloat("Speed", Mathf.Clamp01(rb.velocity.magnitude / cm.max_ground_accel));
+
+            Vector3 forward_proj = (Vector3.Dot(rb.velocity / cm.max_air_accel, transform.forward) / 1f) * transform.forward;
+            Vector3 right_proj = (Vector3.Dot(rb.velocity / cm.max_air_accel, transform.right) / 1f) * transform.right;
+            Vector3 up_proj = (Vector3.Dot(rb.velocity / cm.max_air_accel, transform.up) / 1f) * transform.up;
+            physics_parent.transform.localPosition = Vector3.zero;
+            physics_parent.transform.position += (forward_proj + right_proj + up_proj) * -.1f;
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -228,9 +248,12 @@ public class WeaponBehavior : MonoBehaviour
         held_weapons.Add(weapons[0]);
 
         //load the first active weapon to the viewmodel
-        viewmodel = transform.GetChild(0).GetChild(0).gameObject;
-        shot_origin = viewmodel.transform.GetChild(0).gameObject;
+        physics_parent = transform.GetChild(0).GetChild(0).gameObject;
+        viewmodel = physics_parent.transform.GetChild(0).gameObject;
+        shot_origin = transform.GetChild(0).GetChild(1).gameObject;
         UpdateViewmodel(held_weapons[0]);
+        anim = viewmodel.GetComponent<Animator>();
+        anim.runtimeAnimatorController = held_weapons[0].anim;
 
         //initialize list for keeping track of bullet holes
         bullet_holes = new List<GameObject>();
@@ -239,6 +262,7 @@ public class WeaponBehavior : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Animate();
         Fire(held_weapons[0]);
     }
 }

@@ -132,7 +132,6 @@ public class CharacterMovement : MonoBehaviour
         Crouch();
         //check if the player is grounded (wait a frame before calculations are accepted
         float ray_length = (col.height / 2f) + .005f;
-        Debug.DrawRay(transform.position + col.center, ray_length * Vector3.down, Color.red, 1.0f);
         if(Physics.Raycast(transform.position + col.center, -Vector3.up, ray_length, ~LayerMask.GetMask("Player")))
         {
             if (!frame_check) frame_check = true;

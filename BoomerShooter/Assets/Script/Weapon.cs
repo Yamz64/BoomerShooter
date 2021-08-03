@@ -22,4 +22,5 @@ public class Weapon : ScriptableObject
     [SerializeField]
     public Material[] mats;
     public Object projectile;
+    public RuntimeAnimatorController anim;
 }
