@@ -332,6 +332,7 @@ public class WeaponBehavior : MonoBehaviour
             else
             {
                 if (active_weapon < held_weapons[active_type].Count - 1) active_weapon++;
+                else active_weapon = 0;
             }
 
             UpdateViewmodel(held_weapons[active_type][active_weapon]);
