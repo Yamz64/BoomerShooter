@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c86f01555a6c6964fbb49c6623b7cc45, type: 3}
+  m_Name: Pistol
+  m_EditorClassIdentifier: 
+  weapon_type: 1
+  use_projectile: 0
+  multi_shot: 0
+  use_gravity: 0
+  number_of_shots: 1
+  deviation: 4
+  distance: Infinity
+  shot_speed: Infinity
+  shot_rate: 1
+  shot_interval: 0.15
+  kick_back: 0
+  weapon_name: Pistol
+  weapon_spawn: {x: 0, y: -0.115, z: 0.387}
+  shot_spawn: {x: 0, y: 0, z: 0}
+  model: {fileID: -2432090755550338912, guid: 1f6241be5e2b03a45b921217821dcce3, type: 3}
+  mats:
+  - {fileID: 7741625113677808684, guid: 1f6241be5e2b03a45b921217821dcce3, type: 3}
+  projectile: {fileID: 0}
+  anim: {fileID: 9100000, guid: 8a208d3a32c97be4d8942d978c648ac9, type: 2}

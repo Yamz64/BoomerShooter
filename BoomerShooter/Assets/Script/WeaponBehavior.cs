@@ -22,6 +22,7 @@ public class WeaponBehavior : MonoBehaviour
 
     private List<GameObject> bullet_holes;
     private Animator anim;
+    private PlayerStats stats;
 
     //function to find the next perfect root that assists in building fixed shot patterns
     int NextRoot(int number)
@@ -237,7 +238,6 @@ public class WeaponBehavior : MonoBehaviour
             Rigidbody rb = GetComponent<Rigidbody>();
             CharacterMovement cm = GetComponent<CharacterMovement>();
             anim.SetBool("Fire", firing);
-            Debug.Log(anim.GetBool("Fire"));
             anim.SetFloat("Speed", Mathf.Clamp01(rb.velocity.magnitude / cm.max_ground_accel));
 
             Vector3 forward_proj = (Vector3.Dot(rb.velocity / cm.max_air_accel, transform.forward) / 1f) * transform.forward;
@@ -306,6 +306,7 @@ public class WeaponBehavior : MonoBehaviour
             }
 
             UpdateViewmodel(held_weapons[active_type][active_weapon]);
+            stats.UpdateUI();
         }
         //keyboard
         else
@@ -336,6 +337,7 @@ public class WeaponBehavior : MonoBehaviour
             }
 
             UpdateViewmodel(held_weapons[active_type][active_weapon]);
+            stats.UpdateUI();
         }
     }
 
@@ -363,6 +365,7 @@ public class WeaponBehavior : MonoBehaviour
         shot_origin = transform.GetChild(0).GetChild(1).gameObject;
         anim = viewmodel.GetComponent<Animator>();
         UpdateViewmodel(held_weapons[active_type][active_weapon]);
+        stats = GetComponent<PlayerStats>();
 
         //initialize list for keeping track of bullet holes
         bullet_holes = new List<GameObject>();

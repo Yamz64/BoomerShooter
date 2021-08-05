@@ -27,7 +27,6 @@ public class BlastRadiusBehavior : MonoBehaviour
         if(LayerMask.GetMask("Player") == (LayerMask.GetMask("Player") | 1 << other.gameObject.layer))
         {
             float falloff_factor = Mathf.Clamp(1f - (Vector3.Distance(other.gameObject.transform.position, gameObject.transform.position) / GetComponent<SphereCollider>().radius), 0f, Mathf.Infinity);
-            Debug.Log(falloff_factor);
             other.GetComponent<Rigidbody>().AddForce((other.gameObject.transform.position - transform.position).normalized * knock_back * falloff_factor);
         }
     }
