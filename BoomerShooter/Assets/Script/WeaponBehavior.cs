@@ -155,6 +155,31 @@ public class WeaponBehavior : MonoBehaviour
 
     void Fire(Weapon weapon)
     {
+        //check to see if there is enough ammo to fire the weapon
+        switch (weapon.weapon_type)
+        {
+            case 1:
+                if (stats.GetBullets() < weapon.shot_cost) { firing = false; return; }
+                break;
+            case 2:
+                if (stats.GetShells() < weapon.shot_cost) { firing = false; return; }
+                break;
+            case 3:
+                if (stats.GetBullets() < weapon.shot_cost) { firing = false; return; }
+                break;
+            case 4:
+                if (stats.GetExplosives() < weapon.shot_cost) { firing = false; return; }
+                break;
+            case 5:
+                if (stats.GetEnergy() < weapon.shot_cost) { firing = false; return; }
+                break;
+            case 6:
+                if (stats.GetEnergy() < weapon.shot_cost) { firing = false; return; }
+                break;
+            default:
+                break;
+        }
+
         //check to see if the weapon is ready to be fired
         if(current_interval >= 0.0f)
         {
@@ -227,6 +252,31 @@ public class WeaponBehavior : MonoBehaviour
                     //simply fire the weapon according to it's deviation
                     StartCoroutine(BurstHitscan(weapon));
                 }
+            }
+
+            //subtract the ammo cost from the reserve based on type
+            switch (weapon.weapon_type)
+            {
+                case 1:
+                    stats.SetBullets(stats.GetBullets() - weapon.shot_cost);
+                    break;
+                case 2:
+                    stats.SetShells(stats.GetShells() - weapon.shot_cost);
+                    break;
+                case 3:
+                    stats.SetBullets(stats.GetBullets() - weapon.shot_cost);
+                    break;
+                case 4:
+                    stats.SetExplosives(stats.GetExplosives() - weapon.shot_cost);
+                    break;
+                case 5:
+                    stats.SetEnergy(stats.GetEnergy() - weapon.shot_cost);
+                    break;
+                case 6:
+                    stats.SetEnergy(stats.GetEnergy() - weapon.shot_cost);
+                    break;
+                default:
+                    break;
             }
         }
     }

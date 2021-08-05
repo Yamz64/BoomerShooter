@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: SuperShotGun
   m_EditorClassIdentifier: 
   weapon_type: 2
+  shot_cost: 2
   use_projectile: 0
   multi_shot: 1
   use_gravity: 0

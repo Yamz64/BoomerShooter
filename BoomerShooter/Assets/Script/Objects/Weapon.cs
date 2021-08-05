@@ -8,6 +8,8 @@ public class Weapon : ScriptableObject
     //is this weapon hitscan or projectile
     [Tooltip("Type of weapon: 0 = melee, 1 = pistols/light, 2 = shotguns, 3 = assault/heavy, 4 = explosives, 5 = energy, 6 = big")]
     public int weapon_type;
+    [Tooltip("How much ammo does it require to fire this weapon once?")]
+    public int shot_cost;
     public bool use_projectile;
     public bool multi_shot;
     public bool use_gravity;

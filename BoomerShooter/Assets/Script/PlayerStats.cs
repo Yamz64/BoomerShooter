@@ -30,12 +30,12 @@ public class PlayerStats : MonoBehaviour
     public int GetArmorType() { return armor_type; }
 
     //--MODIFIERS--
-    public void SetArmor(int a) { armor = a; UpdateUI(); }
-    public void SetHealth(int h) { health = h; UpdateUI(); }
-    public void SetBullets(int b) { bullets = b; UpdateUI(); }
-    public void SetShells(int s) { shells = s; UpdateUI(); }
-    public void SetExplosives(int e) { explosives = e; UpdateUI(); }
-    public void SetEnergy(int e) { energy = e; UpdateUI(); }
+    public void SetArmor(int a) { armor = a; if (armor > max_armor) armor = max_armor; if (armor == 0) SetArmorType(0); UpdateUI(); }
+    public void SetHealth(int h) { health = h; if (health > max_health) health = max_health; UpdateUI(); }
+    public void SetBullets(int b) { bullets = b; if (bullets > max_bullets) bullets = max_bullets; UpdateUI(); }
+    public void SetShells(int s) { shells = s; if (shells > max_shells) shells = max_shells; UpdateUI(); }
+    public void SetExplosives(int e) { explosives = e; if (explosives > max_explosives) explosives = max_explosives; UpdateUI(); }
+    public void SetEnergy(int e) { energy = e; if (energy > max_energy) energy = max_energy; UpdateUI(); }
     public void SetMaxArmor(int a) { max_armor = a; UpdateUI(); }
     public void SetMaxHealth(int h) { max_health = h; UpdateUI(); }
     public void SetMaxBullets(int b) { max_bullets = b; UpdateUI(); }

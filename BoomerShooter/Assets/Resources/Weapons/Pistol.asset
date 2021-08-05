@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Pistol
   m_EditorClassIdentifier: 
   weapon_type: 1
+  shot_cost: 1
   use_projectile: 0
   multi_shot: 0
   use_gravity: 0
