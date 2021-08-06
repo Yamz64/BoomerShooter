@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &2433278953350069830
+--- !u!1 &2668822365313676750
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,26 +8,26 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2433278953350069848}
-  - component: {fileID: 2433278953350069851}
-  - component: {fileID: 2433278953350069850}
-  - component: {fileID: 2433278953350069829}
-  - component: {fileID: 2433278953350069828}
-  - component: {fileID: 2433278953350069831}
+  - component: {fileID: 6611179470692656885}
+  - component: {fileID: 8316054969201434559}
+  - component: {fileID: 4777533939486866219}
+  - component: {fileID: 7339231077400502786}
+  - component: {fileID: 1322210659119132014}
+  - component: {fileID: 8869636461807951052}
   m_Layer: 11
-  m_Name: SuperArmorPickup
+  m_Name: Health
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2433278953350069848
+--- !u!4 &6611179470692656885
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2433278953350069830}
+  m_GameObject: {fileID: 2668822365313676750}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -35,21 +35,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &2433278953350069851
+--- !u!33 &8316054969201434559
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2433278953350069830}
-  m_Mesh: {fileID: -2432090755550338912, guid: 4624aea3ebb3d5b47afb44f4b5cc238e, type: 3}
---- !u!23 &2433278953350069850
+  m_GameObject: {fileID: 2668822365313676750}
+  m_Mesh: {fileID: -2432090755550338912, guid: 6af2cdff41f50db478d768506bdfc84c, type: 3}
+--- !u!23 &4777533939486866219
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2433278953350069830}
+  m_GameObject: {fileID: 2668822365313676750}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -62,7 +62,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: af2540bff2de7984383bc14654a383c0, type: 2}
+  - {fileID: 2100000, guid: 7990f3f08d3a7d24fae7c1708e93e496, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -84,30 +84,30 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &2433278953350069829
+--- !u!65 &7339231077400502786
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2433278953350069830}
+  m_GameObject: {fileID: 2668822365313676750}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0.8481727, z: 0}
---- !u!95 &2433278953350069828
+  m_Size: {x: 1, y: 0.99999994, z: 1}
+  m_Center: {x: 0, y: 0.65864944, z: 0}
+--- !u!95 &1322210659119132014
 Animator:
   serializedVersion: 3
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2433278953350069830}
+  m_GameObject: {fileID: 2668822365313676750}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 77b9b5df8e19fd04f8b64e04c3c9fafe, type: 2}
+  m_Controller: {fileID: 9100000, guid: 84537bcaa2096954e9ed0d0078896d94, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -116,16 +116,16 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &2433278953350069831
+--- !u!114 &8869636461807951052
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2433278953350069830}
+  m_GameObject: {fileID: 2668822365313676750}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef8799816a62f48438b1cf64c8777d96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stats: {fileID: 11400000, guid: 9edbf18d05e602e4b8c8edffd46eadad, type: 2}
+  stats: {fileID: 11400000, guid: 7e9248a7fef0d4c40a9df07164134d1d, type: 2}

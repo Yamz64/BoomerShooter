@@ -32,4 +32,16 @@ public class ObjectSpawner : MonoBehaviour
             }
         }
     }
+
+    private void OnDrawGizmos()
+    {
+        if (spawnable != null)
+        {
+            GameObject temp = (GameObject)spawnable;
+            Mesh mesh = temp.GetComponent<MeshFilter>().sharedMesh;
+            Material mat = temp.GetComponent<MeshRenderer>().sharedMaterial;
+            if(mat != null) mat.SetPass(0);
+            if(mesh != null) Graphics.DrawMeshNow(mesh, transform.position, transform.rotation);
+        }
+    }
 }

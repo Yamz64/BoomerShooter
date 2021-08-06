@@ -31,7 +31,7 @@ public class PlayerStats : MonoBehaviour
 
     //--MODIFIERS--
     public void SetArmor(int a) { armor = a; if (armor > max_armor) armor = max_armor; if (armor == 0) SetArmorType(0); UpdateUI(); }
-    public void SetHealth(int h) { health = h; if (health > max_health) health = max_health; UpdateUI(); }
+    public void SetHealth(int h, bool overheal = false) { health = h; if (health > max_health && !overheal) health = max_health; UpdateUI(); }
     public void SetBullets(int b) { bullets = b; if (bullets > max_bullets) bullets = max_bullets; UpdateUI(); }
     public void SetShells(int s) { shells = s; if (shells > max_shells) shells = max_shells; UpdateUI(); }
     public void SetExplosives(int e) { explosives = e; if (explosives > max_explosives) explosives = max_explosives; UpdateUI(); }
@@ -140,5 +140,6 @@ public class PlayerStats : MonoBehaviour
         energy_text = canvas.transform.GetChild(7).GetComponent<Text>();
 
         StartCoroutine(LateStart());
+        health = 1;
     }
 }
