@@ -21,8 +21,8 @@ public class PickupBehavior : MonoBehaviour
                 {
                     restored = true;
                     player.SetArmorType(1);
+                    player.SetMaxArmor(100);
                 }
-                player.SetMaxArmor(100);
                 if (stats.flat) player.SetArmor(player.GetArmor() + (int)stats.amount);
                 else player.SetArmor(player.GetArmor() + player.GetMaxArmor() * (int)Mathf.Clamp01(stats.amount));
                 break;
@@ -31,8 +31,8 @@ public class PickupBehavior : MonoBehaviour
                 {
                     restored = true;
                     player.SetArmorType(2);
+                    player.SetMaxArmor(200);
                 }
-                player.SetMaxArmor(200);
                 if (stats.flat) player.SetArmor(player.GetArmor() + (int)stats.amount);
                 else player.SetArmor(player.GetArmor() + player.GetMaxArmor() * (int)Mathf.Clamp01(stats.amount));
                 break;

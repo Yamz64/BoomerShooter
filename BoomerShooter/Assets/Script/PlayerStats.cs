@@ -63,8 +63,8 @@ public class PlayerStats : MonoBehaviour
         //armor
         armor_text.text = $"{armor}/{max_armor}";
         armor_bar.fillAmount = Mathf.Clamp01((float)armor / (float)(max_armor));
-        if (armor_type == 0 || armor_type == 1) armor_bar.color = new Color(0.0f, 1f, 1f, .5f);
-        else armor_bar.color = new Color(1f, 1f, 0.0f, .5f);
+        if (armor_type == 0 || armor_type == 1) armor_bar.color = armor_text.color = new Color(0.0f, 1f, 1f, .5f);
+        else armor_bar.color = armor_text.color = new Color(1f, 1f, 0.0f, .5f);
 
         //current ammunition
         int active_type = GetComponent<WeaponBehavior>().active_type;
