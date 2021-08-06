@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: ArmorPickup
   m_EditorClassIdentifier: 
   flat: 1
-  stat: 1
+  stat: 2
   amount: 150

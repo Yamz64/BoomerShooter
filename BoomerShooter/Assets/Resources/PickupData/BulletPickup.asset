@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: BulletPickup
   m_EditorClassIdentifier: 
   flat: 1
-  stat: 3
+  stat: 4
   amount: 20

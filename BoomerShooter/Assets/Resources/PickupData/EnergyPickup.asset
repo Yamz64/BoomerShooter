@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: EnergyPickup
   m_EditorClassIdentifier: 
   flat: 1
-  stat: 6
+  stat: 7
   amount: 20

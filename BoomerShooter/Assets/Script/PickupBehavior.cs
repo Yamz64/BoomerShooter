@@ -12,9 +12,20 @@ public class PickupBehavior : MonoBehaviour
         switch (stats.stat)
         {
             case Pickup.StatType.HEALTH:
-                if (player.GetHealth() < player.GetMaxHealth()) restored = true;
-                if (stats.flat) player.SetHealth(player.GetHealth() + (int)stats.amount);
-                else player.SetHealth(player.GetHealth() + (int)((float)player.GetMaxHealth() * Mathf.Clamp01(stats.amount)));
+                if (player.GetHealth() < player.GetMaxHealth())
+                {
+                    restored = true;
+                    if (stats.flat) player.SetHealth(player.GetHealth() + (int)stats.amount);
+                    else player.SetHealth(player.GetHealth() + (int)((float)player.GetMaxHealth() * Mathf.Clamp01(stats.amount)));
+                }
+                break;
+            case Pickup.StatType.OVERHEAL:
+                if (player.GetHealth() < player.GetMaxHealth() * 1.5f)
+                {
+                    restored = true;
+                    if (stats.flat) player.SetHealth(player.GetHealth() + (int)stats.amount, true);
+                    else player.SetHealth(player.GetHealth() + (int)((float)player.GetMaxHealth() * Mathf.Clamp01(stats.amount)), true);
+                }
                 break;
             case Pickup.StatType.ARMOR:
                 if (player.GetArmor() < player.GetMaxArmor())

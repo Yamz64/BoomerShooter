@@ -8,10 +8,11 @@ public class PlayerStats : MonoBehaviour
     [SerializeField]
     private int armor, health, bullets, shells, explosives, energy;
     private int max_armor, max_health, max_bullets, max_shells, max_explosives, max_energy, armor_type;
+    private float overheal_decay_delay;
 
     public GameObject canvas;
 
-    private Image crosshair, health_bar, armor_bar;
+    private Image crosshair, health_bar, overheal_bar, armor_bar;
     private Text health_text, armor_text, current_ammo_text, bullet_text, shell_text, explosive_text, energy_text;
 
     //--ACCESSORS--
@@ -31,7 +32,19 @@ public class PlayerStats : MonoBehaviour
 
     //--MODIFIERS--
     public void SetArmor(int a) { armor = a; if (armor > max_armor) armor = max_armor; if (armor == 0) SetArmorType(0); UpdateUI(); }
-    public void SetHealth(int h, bool overheal = false) { health = h; if (health > max_health && !overheal) health = max_health; UpdateUI(); }
+    public void SetHealth(int h, bool overheal = false)
+    {
+        health = h;
+        if (!overheal)
+        {
+            if (health > max_health) health = max_health;
+        }
+        else
+        {
+            if (health > (float)max_health * 1.5) health = (int)((float)max_health * 1.5f);
+        }
+        UpdateUI();
+    }
     public void SetBullets(int b) { bullets = b; if (bullets > max_bullets) bullets = max_bullets; UpdateUI(); }
     public void SetShells(int s) { shells = s; if (shells > max_shells) shells = max_shells; UpdateUI(); }
     public void SetExplosives(int e) { explosives = e; if (explosives > max_explosives) explosives = max_explosives; UpdateUI(); }
@@ -57,8 +70,8 @@ public class PlayerStats : MonoBehaviour
         //health
         health_text.text = $"{health}/{max_health}";
         health_bar.fillAmount = Mathf.Clamp01((float)health / (float)(max_health));
-        if (health > max_health) health_bar.color = Color.Lerp(new Color(0.0f, 1f, 0.0f, .5f), new Color(1f, 1f, 1f, .5f), (float)health / ((float)max_health * 1.5f));
-        else health_bar.color = Color.Lerp(new Color(1f, 0.0f, 0.0f, .5f), new Color(0.0f, 1.0f, 0.0f, .5f), (float)health / (float)max_health);
+        overheal_bar.fillAmount = Mathf.Clamp01(((float)health - (float)max_health) / ((float)max_health * 1.5f - (float)max_health));
+        health_bar.color = Color.Lerp(new Color(1f, 0.0f, 0.0f, .5f), new Color(0.0f, 1.0f, 0.0f, .5f), Mathf.Clamp01((float)health / (float)max_health));
 
         //armor
         armor_text.text = $"{armor}/{max_armor}";
@@ -114,6 +127,27 @@ public class PlayerStats : MonoBehaviour
         UpdateUI();
     }
 
+    //function will decay overheal over time
+    void UpdateOverheal()
+    {
+        //do nothing if not overhealed
+        if (health <= max_health) return;
+
+        //find the step required to decay max overheal in 15 seconds
+        int step = (int)((((float)max_health * .5f)/15f) * .5f);
+
+        if (overheal_decay_delay > 0.0f) overheal_decay_delay -= 1.0f * Time.deltaTime;
+        else
+        {
+            overheal_decay_delay = .5f;
+
+            //take precautions so that losing overheal will never put you below max hp
+            if (health - step < max_health) SetHealth(max_health);
+            else SetHealth(health - step, true);
+        }
+
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -131,6 +165,7 @@ public class PlayerStats : MonoBehaviour
         crosshair = canvas.transform.GetChild(0).GetComponent<Image>();
         health_text = canvas.transform.GetChild(1).GetComponent<Text>();
         health_bar = health_text.transform.GetChild(0).GetComponent<Image>();
+        overheal_bar = health_text.transform.GetChild(1).GetComponent<Image>();
         armor_text = canvas.transform.GetChild(2).GetComponent<Text>();
         armor_bar = armor_text.transform.GetChild(0).GetComponent<Image>();
         current_ammo_text = canvas.transform.GetChild(3).GetComponent<Text>();
@@ -138,8 +173,13 @@ public class PlayerStats : MonoBehaviour
         shell_text = canvas.transform.GetChild(5).GetComponent<Text>();
         explosive_text = canvas.transform.GetChild(6).GetComponent<Text>();
         energy_text = canvas.transform.GetChild(7).GetComponent<Text>();
-
+        
+        SetHealth(1);
         StartCoroutine(LateStart());
-        health = 1;
+    }
+
+    private void Update()
+    {
+        UpdateOverheal();
     }
 }

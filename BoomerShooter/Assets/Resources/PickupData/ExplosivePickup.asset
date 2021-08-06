@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: ExplosivePickup
   m_EditorClassIdentifier: 
   flat: 1
-  stat: 5
+  stat: 6
   amount: 20
