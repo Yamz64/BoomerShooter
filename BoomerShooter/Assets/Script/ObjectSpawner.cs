@@ -38,8 +38,26 @@ public class ObjectSpawner : MonoBehaviour
         if (spawnable != null)
         {
             GameObject temp = (GameObject)spawnable;
-            Mesh mesh = temp.GetComponent<MeshFilter>().sharedMesh;
-            Material mat = temp.GetComponent<MeshRenderer>().sharedMaterial;
+            bool is_pickup = temp.GetComponent<PickupBehavior>() != null;
+
+            Mesh mesh = null;
+            Material mat = null;
+
+            if (is_pickup)
+            {
+                PickupBehavior stats = temp.GetComponent<PickupBehavior>();
+                if (stats.stats && stats.stats.weapon != null)
+                {
+                    if (stats.stats.weapon.model != null) mesh = stats.stats.weapon.model;
+                    if (stats.stats.weapon.mats.Length > 0) mat = stats.stats.weapon.mats[0];
+                    if (mat != null) mat.SetPass(0);
+                    if (mesh != null) Graphics.DrawMeshNow(mesh, transform.position, transform.rotation);
+                    return;
+                }
+            }
+
+            mesh = temp.GetComponent<MeshFilter>().sharedMesh;
+            mat = temp.GetComponent<MeshRenderer>().sharedMaterial;
             if(mat != null) mat.SetPass(0);
             if(mesh != null) Graphics.DrawMeshNow(mesh, transform.position, transform.rotation);
         }

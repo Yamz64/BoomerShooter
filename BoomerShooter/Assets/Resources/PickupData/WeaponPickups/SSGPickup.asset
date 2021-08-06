@@ -10,8 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7e3ab5b5fb2dfd74aa6d700cfc69011b, type: 3}
-  m_Name: EnergyPickup
+  m_Name: SSGPickup
   m_EditorClassIdentifier: 
-  flat: 1
-  stat: 7
-  amount: 20
+  weapon_pickup: 1
+  flat: 0
+  stat: 0
+  amount: 10
+  weapon: {fileID: 11400000, guid: fa09b2c010020664d9db5a054affbd30, type: 2}

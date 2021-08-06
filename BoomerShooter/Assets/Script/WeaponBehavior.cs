@@ -118,7 +118,7 @@ public class WeaponBehavior : MonoBehaviour
             if(i != 0)
             {
                 RaycastHit hit = new RaycastHit();
-                if(Physics.Raycast(GetComponent<CharacterMovement>().GetCam().transform.position, shot_direction, out hit, Mathf.Infinity))
+                if(Physics.Raycast(GetComponent<CharacterMovement>().GetCam().transform.position, shot_direction, out hit, Mathf.Infinity, ~LayerMask.GetMask("Pickup")))
                 {
                     GameObject bullet_hole = (GameObject)Instantiate(bullet_decal, hit.point, Quaternion.identity);
                     bullet_hole.transform.forward = -hit.normal;
@@ -130,7 +130,7 @@ public class WeaponBehavior : MonoBehaviour
             else
             {
                 RaycastHit hit = new RaycastHit();
-                if (Physics.Raycast(GetComponent<CharacterMovement>().GetCam().transform.position, GetComponent<CharacterMovement>().GetCam().transform.forward, out hit, Mathf.Infinity))
+                if (Physics.Raycast(GetComponent<CharacterMovement>().GetCam().transform.position, GetComponent<CharacterMovement>().GetCam().transform.forward, out hit, Mathf.Infinity, ~LayerMask.GetMask("Pickup")))
                 {
                     GameObject bullet_hole = (GameObject)Instantiate(bullet_decal, hit.point, Quaternion.identity);
                     bullet_hole.transform.forward = -hit.normal;
@@ -232,7 +232,7 @@ public class WeaponBehavior : MonoBehaviour
                     {
                         //raycast along all paths in the shot_paths
                         RaycastHit hit = new RaycastHit();
-                        if(Physics.Raycast(GetComponent<CharacterMovement>().GetCam().transform.position, shot_paths[i], out hit, Mathf.Infinity))
+                        if(Physics.Raycast(GetComponent<CharacterMovement>().GetCam().transform.position, shot_paths[i], out hit, Mathf.Infinity, ~LayerMask.GetMask("Pickup")))
                         {
                             //if the bullet hits a wall then spawn a bullet hole
                             if(hit.collider.gameObject.layer == 0)
@@ -296,6 +296,18 @@ public class WeaponBehavior : MonoBehaviour
             physics_parent.transform.localPosition = Vector3.zero;
             physics_parent.transform.position += (forward_proj + right_proj + up_proj) * -.1f;
         }
+    }
+
+    public bool HasWeapon(Weapon weapon)
+    {
+        for(int i=0; i<held_weapons.Count; i++)
+        {
+            for(int j=0; j<held_weapons[i].Count; j++)
+            {
+                if (held_weapons[i][j].weapon_name == weapon.weapon_name) return true;
+            }
+        }
+        return false;
     }
 
     public void AddWeapon(Weapon weapon) { held_weapons[weapon.weapon_type].Add(weapon); }
@@ -395,7 +407,7 @@ public class WeaponBehavior : MonoBehaviour
     void Start()
     {
         //load all weapons found in resources into the weapons list
-        weapons = Resources.LoadAll<Weapon>("Weapons");
+        //weapons = Resources.LoadAll<Weapon>("Weapons");
 
         held_weapons = new List<List<Weapon>>() { new List<Weapon>(),
                                                   new List<Weapon>(),
@@ -405,8 +417,9 @@ public class WeaponBehavior : MonoBehaviour
                                                   new List<Weapon>(),
                                                   new List<Weapon>()
                                                 };
-        foreach (Weapon weapon in weapons) { AddWeapon(weapon); }
-        active_type = 4;
+        //find the pistol and add it to the player's held weapons
+        AddWeapon(Resources.Load<Weapon>("Weapons/Pistol"));
+        active_type = 1;
         active_weapon = 0;
 
         //load the first active weapon to the viewmodel

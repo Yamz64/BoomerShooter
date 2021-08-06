@@ -10,8 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7e3ab5b5fb2dfd74aa6d700cfc69011b, type: 3}
-  m_Name: ShellPickup
+  m_Name: RLPickup
   m_EditorClassIdentifier: 
-  flat: 1
-  stat: 5
-  amount: 20
+  weapon_pickup: 1
+  flat: 0
+  stat: 0
+  amount: 5
+  weapon: {fileID: 11400000, guid: 0f205a4a829e27f4db4c39ca2c35855c, type: 2}

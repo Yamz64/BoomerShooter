@@ -174,7 +174,6 @@ public class PlayerStats : MonoBehaviour
         explosive_text = canvas.transform.GetChild(6).GetComponent<Text>();
         energy_text = canvas.transform.GetChild(7).GetComponent<Text>();
         
-        SetHealth(1);
         StartCoroutine(LateStart());
     }
 
