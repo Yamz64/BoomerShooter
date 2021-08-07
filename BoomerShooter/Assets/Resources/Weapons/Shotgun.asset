@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c86f01555a6c6964fbb49c6623b7cc45, type: 3}
+  m_Name: Shotgun
+  m_EditorClassIdentifier: 
+  weapon_type: 2
+  shot_cost: 1
+  use_projectile: 0
+  multi_shot: 1
+  use_gravity: 0
+  number_of_shots: 9
+  deviation: 4
+  distance: Infinity
+  shot_speed: Infinity
+  shot_rate: 0
+  shot_interval: 0.65
+  kick_back: 80
+  weapon_name: Shotgun
+  weapon_spawn: {x: 0, y: 0, z: 0}
+  shot_spawn: {x: 0, y: 0, z: 0}
+  model: {fileID: -2432090755550338912, guid: a881cfec06427d94ebe2baed6d66477a, type: 3}
+  mats:
+  - {fileID: 7741625113677808684, guid: 2d21dd4c6ba67d343a733cd0c30a6a1e, type: 3}
+  projectile: {fileID: 0}
+  anim: {fileID: 9100000, guid: 9b0e4c032193d7a4f9a35a697589c741, type: 2}
