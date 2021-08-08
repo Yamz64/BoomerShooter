@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ed6219c4dd159744ca7f0eb5b838f261, type: 3}
-  m_Name: Plasma
+  m_Name: BFG
   m_EditorClassIdentifier: 
-  explosive: 0
-  die_after_other_collision: 1
+  explosive: 1
+  die_after_other_collision: 0
   die_on_contact: 1
-  die_after_time: 0
+  die_after_time: 1
   mass: 1
-  life_time: Infinity
-  knockback: 100
-  explosion_time: 0
-  explosion_radius: 0
+  life_time: 10
+  knockback: 1500
+  explosion_time: Infinity
+  explosion_radius: 20
   collision_mask:
     serializedVersion: 2
     m_Bits: 257
