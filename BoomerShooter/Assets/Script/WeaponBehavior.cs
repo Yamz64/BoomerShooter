@@ -98,7 +98,17 @@ public class WeaponBehavior : MonoBehaviour
                 projectile.transform.forward = shot_direction;
             else
                 projectile.transform.forward = gameObject.GetComponent<CharacterMovement>().GetCam().transform.forward;
-            projectile.GetComponent<Rigidbody>().velocity = weapon.shot_speed * projectile.transform.forward;
+            //handle shot direction override
+            if (weapon.shot_direction.magnitude == 0)
+                projectile.GetComponent<Rigidbody>().velocity = weapon.shot_speed * projectile.transform.forward;
+            else
+            {
+                Vector3 override_direction = projectile.transform.right * weapon.shot_direction.x + projectile.transform.up * weapon.shot_direction.y + projectile.transform.forward * weapon.shot_direction.z;
+                shot_direction.Normalize();
+                projectile.GetComponent<Rigidbody>().velocity = weapon.shot_speed * override_direction;
+            }
+            projectile.GetComponent<Rigidbody>().rotation = projectile.transform.rotation;
+            projectile.GetComponent<Rigidbody>().AddRelativeTorque(weapon.shot_torque);
             projectile.GetComponent<Rigidbody>().useGravity = weapon.use_gravity;
             projectile.GetComponent<ProjectileBehavior>().owner = gameObject;
             yield return new WaitForSeconds(weapon.shot_rate);
@@ -209,7 +219,17 @@ public class WeaponBehavior : MonoBehaviour
                     {
                         GameObject projectile = (GameObject)Instantiate(weapon.projectile, shot_origin.transform.position, Quaternion.identity);
                         projectile.transform.forward = shot_paths[i];
-                        projectile.GetComponent<Rigidbody>().velocity = weapon.shot_speed * projectile.transform.forward;
+                        //handle shot direction override
+                        if(weapon.shot_direction.magnitude == 0)
+                            projectile.GetComponent<Rigidbody>().velocity = weapon.shot_speed * projectile.transform.forward;
+                        else
+                        {
+                            Vector3 shot_direction = projectile.transform.right * weapon.shot_direction.x + projectile.transform.up * weapon.shot_direction.y + projectile.transform.forward * weapon.shot_direction.z;
+                            shot_direction.Normalize();
+                            projectile.GetComponent<Rigidbody>().velocity = weapon.shot_speed * shot_direction;
+                        }
+                        projectile.GetComponent<Rigidbody>().rotation = projectile.transform.rotation;
+                        projectile.GetComponent<Rigidbody>().AddRelativeTorque(weapon.shot_torque);
                         projectile.GetComponent<Rigidbody>().useGravity = weapon.use_gravity;
                         projectile.GetComponent<ProjectileBehavior>().owner = gameObject;
                     }

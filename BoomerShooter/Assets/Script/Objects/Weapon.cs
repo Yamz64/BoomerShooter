@@ -26,6 +26,10 @@ public class Weapon : ScriptableObject
     public string weapon_name;
     public Vector3 weapon_spawn;
     public Vector3 shot_spawn;
+    [Tooltip("Override for shot direction of projectile weapons, if set to (0, 0, 0) this member is ignored")]
+    public Vector3 shot_direction;
+    [Tooltip("Torque added to projectile weapons")]
+    public Vector3 shot_torque;
     public Mesh model;
     [SerializeField]
     public Material[] mats;

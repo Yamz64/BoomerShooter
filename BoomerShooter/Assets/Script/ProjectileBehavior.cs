@@ -8,6 +8,7 @@ public class ProjectileBehavior : MonoBehaviour
     public GameObject owner;
 
     private float life_time;
+    private bool collided;
 
     public delegate void DeathSequence(GameObject player = null);
     public DeathSequence DeathFunction;
@@ -41,6 +42,10 @@ public class ProjectileBehavior : MonoBehaviour
     void Start()
     {
         life_time = data.life_time;
+        collided = false;
+
+        //the projectile cannot collide with it's owner
+        Physics.IgnoreCollision(owner.GetComponent<Collider>(), GetComponent<Collider>());
 
         if (data.explosive) DeathFunction += Explode;
         if (data.die_on_contact) DeathFunction += BreakOnCollide;
@@ -58,15 +63,19 @@ public class ProjectileBehavior : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(data.collision_mask == (data.collision_mask | (1 << other.gameObject.layer)) && owner != other.gameObject)
+        if (data.collision_mask == (data.collision_mask | (1 << other.gameObject.layer)) && owner != other.gameObject)
         {
             if (data.die_on_contact)
             {
-                if (other.gameObject.GetComponent<Rigidbody>() == null)
-                    DeathFunction();
-                else
-                    DeathFunction(other.gameObject);
+                if (!collided)
+                {
+                    if (other.gameObject.GetComponent<Rigidbody>() == null)
+                        DeathFunction();
+                    else
+                        DeathFunction(other.gameObject);
+                }
             }
         }
+        else if (!data.die_after_other_collision && owner != other.gameObject) { collided = true; }
     }
 }
