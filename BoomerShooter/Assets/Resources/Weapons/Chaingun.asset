@@ -10,25 +10,25 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c86f01555a6c6964fbb49c6623b7cc45, type: 3}
-  m_Name: Pistol
+  m_Name: Chaingun
   m_EditorClassIdentifier: 
-  weapon_type: 1
-  shot_cost: 1
+  weapon_type: 3
+  shot_cost: 2
   use_projectile: 0
   multi_shot: 0
   use_gravity: 0
-  number_of_shots: 1
-  deviation: 4
+  number_of_shots: 2
+  deviation: 6
   distance: Infinity
   shot_speed: Infinity
-  shot_rate: 1
-  shot_interval: 0.15
-  kick_back: 0
-  weapon_name: Pistol
-  weapon_spawn: {x: 0, y: 0, z: 0}
+  shot_rate: 0.0525
+  shot_interval: 0.108333334
+  kick_back: 50
+  weapon_name: Chaingun
+  weapon_spawn: {x: 0, y: 0.091, z: -0.552}
   shot_spawn: {x: 0, y: 0, z: 0}
-  model: {fileID: -2432090755550338912, guid: 1f6241be5e2b03a45b921217821dcce3, type: 3}
+  model: {fileID: -2432090755550338912, guid: eccb39e9e3f3693459e11c7c396127d8, type: 3}
   mats:
-  - {fileID: 7741625113677808684, guid: 1f6241be5e2b03a45b921217821dcce3, type: 3}
+  - {fileID: 7741625113677808684, guid: a881cfec06427d94ebe2baed6d66477a, type: 3}
   projectile: {fileID: 0}
-  anim: {fileID: 9100000, guid: 8a208d3a32c97be4d8942d978c648ac9, type: 2}
+  anim: {fileID: 9100000, guid: 7a222e352c91a7b4b8411ee72ee7b71e, type: 2}

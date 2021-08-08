@@ -46,7 +46,8 @@ public class WeaponBehavior : MonoBehaviour
         for(int i=0; i<weapon.mats.Length; i++) { viewmodel.GetComponent<MeshRenderer>().materials[i] = weapon.mats[i]; }
 
         //update the viewmodel's position and shot_spawn position
-        viewmodel.transform.localPosition = new Vector3(0.0f, -.5f, 1f) + weapon.weapon_spawn;
+        physics_parent.transform.localPosition = weapon.weapon_spawn;
+        viewmodel.transform.rotation = physics_parent.transform.rotation;
         transform.GetChild(0).GetChild(1).localPosition = weapon.shot_spawn;
 
         current_interval = weapon.shot_interval;
@@ -293,7 +294,7 @@ public class WeaponBehavior : MonoBehaviour
             Vector3 forward_proj = (Vector3.Dot(rb.velocity / cm.max_air_accel, transform.forward) / 1f) * transform.forward;
             Vector3 right_proj = (Vector3.Dot(rb.velocity / cm.max_air_accel, transform.right) / 1f) * transform.right;
             Vector3 up_proj = (Vector3.Dot(rb.velocity / cm.max_air_accel, transform.up) / 1f) * transform.up;
-            physics_parent.transform.localPosition = Vector3.zero;
+            physics_parent.transform.localPosition = held_weapons[active_type][active_weapon].weapon_spawn;
             physics_parent.transform.position += (forward_proj + right_proj + up_proj) * -.1f;
         }
     }
