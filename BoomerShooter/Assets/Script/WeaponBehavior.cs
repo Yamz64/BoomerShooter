@@ -131,11 +131,14 @@ public class WeaponBehavior : MonoBehaviour
                 RaycastHit hit = new RaycastHit();
                 if(Physics.Raycast(GetComponent<CharacterMovement>().GetCam().transform.position, shot_direction, out hit, Mathf.Infinity, ~LayerMask.GetMask("Pickup")))
                 {
-                    GameObject bullet_hole = (GameObject)Instantiate(bullet_decal, hit.point, Quaternion.identity);
-                    bullet_hole.transform.forward = -hit.normal;
-                    bullet_hole.transform.position += hit.normal * .0001f;
-                    bullet_holes.Add(bullet_hole);
-                    CleanBulletHoles();
+                    if (hit.collider.gameObject.layer != LayerMask.NameToLayer("Player"))
+                    {
+                        GameObject bullet_hole = (GameObject)Instantiate(bullet_decal, hit.point, Quaternion.identity);
+                        bullet_hole.transform.forward = -hit.normal;
+                        bullet_hole.transform.position += hit.normal * .0001f;
+                        bullet_holes.Add(bullet_hole);
+                        CleanBulletHoles();
+                    }
                 }
             }
             else
@@ -143,11 +146,14 @@ public class WeaponBehavior : MonoBehaviour
                 RaycastHit hit = new RaycastHit();
                 if (Physics.Raycast(GetComponent<CharacterMovement>().GetCam().transform.position, GetComponent<CharacterMovement>().GetCam().transform.forward, out hit, Mathf.Infinity, ~LayerMask.GetMask("Pickup")))
                 {
-                    GameObject bullet_hole = (GameObject)Instantiate(bullet_decal, hit.point, Quaternion.identity);
-                    bullet_hole.transform.forward = -hit.normal;
-                    bullet_hole.transform.position += hit.normal * .0001f;
-                    bullet_holes.Add(bullet_hole);
-                    CleanBulletHoles();
+                    if (hit.collider.gameObject.layer != LayerMask.NameToLayer("Player"))
+                    {
+                        GameObject bullet_hole = (GameObject)Instantiate(bullet_decal, hit.point, Quaternion.identity);
+                        bullet_hole.transform.forward = -hit.normal;
+                        bullet_hole.transform.position += hit.normal * .0001f;
+                        bullet_holes.Add(bullet_hole);
+                        CleanBulletHoles();
+                    }
                 }
             }
 
@@ -255,8 +261,7 @@ public class WeaponBehavior : MonoBehaviour
                         RaycastHit hit = new RaycastHit();
                         if(Physics.Raycast(GetComponent<CharacterMovement>().GetCam().transform.position, shot_paths[i], out hit, Mathf.Infinity, ~LayerMask.GetMask("Pickup")))
                         {
-                            //if the bullet hits a wall then spawn a bullet hole
-                            if(hit.collider.gameObject.layer == 0)
+                            if (hit.collider.gameObject.layer != LayerMask.NameToLayer("Player"))
                             {
                                 GameObject bullet_hole = (GameObject)Instantiate(bullet_decal, hit.point, Quaternion.identity);
                                 bullet_hole.transform.forward = -hit.normal;
