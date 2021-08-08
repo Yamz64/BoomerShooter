@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c86f01555a6c6964fbb49c6623b7cc45, type: 3}
+  m_Name: PlasmaRifle
+  m_EditorClassIdentifier: 
+  weapon_type: 5
+  shot_cost: 1
+  use_projectile: 1
+  multi_shot: 0
+  use_gravity: 0
+  number_of_shots: 1
+  deviation: 0
+  distance: Infinity
+  shot_speed: 1.15
+  shot_rate: 0
+  shot_interval: 0.083333336
+  kick_back: 0
+  weapon_name: Plasma Rifle
+  weapon_spawn: {x: 0, y: -0.167, z: -0.58}
+  shot_spawn: {x: 0, y: 0, z: 0}
+  shot_direction: {x: 0, y: 0, z: 0}
+  shot_torque: {x: 0, y: 0, z: 0}
+  model: {fileID: -2432090755550338912, guid: 9fb08387395fedb45bca446b2d57d90f, type: 3}
+  mats:
+  - {fileID: 7741625113677808684, guid: dec2797cf1b1b7b4095fe8d3b6359cc0, type: 3}
+  projectile: {fileID: 2907262764750256196, guid: c88507dacb3c0ce488e5e0471fcc8f7a, type: 3}
+  anim: {fileID: 9100000, guid: d20b5a138945c3b4ba267a8253b59d66, type: 2}
