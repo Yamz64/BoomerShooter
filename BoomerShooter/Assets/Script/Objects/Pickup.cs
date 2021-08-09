@@ -8,7 +8,7 @@ public class Pickup : ScriptableObject
     [Tooltip("Does this pickup restore a flat amount of a stat or a percentage")]
     public bool weapon_pickup;
     public bool flat;
-    public enum StatType { HEALTH, OVERHEAL, ARMOR, SUPERARMOR, BULLETS, SHELLS, EXPLOSIVES, ENERGY, MAXAMMO };
+    public enum StatType { HEALTH, OVERHEAL, ARMOR, SUPERARMOR, BULLETS, SHELLS, EXPLOSIVES, ENERGY, MAXAMMO, ALLMAX };
     public StatType stat;
     public float amount;
     public Weapon weapon;

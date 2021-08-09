@@ -70,11 +70,36 @@ public class PickupBehavior : MonoBehaviour
                 else player.SetEnergy(player.GetEnergy() + (int)((float)player.GetMaxEnergy() * (int)Mathf.Clamp01(stats.amount)));
                 break;
             case Pickup.StatType.MAXAMMO:
-                if (player.GetMaxBullets() < stats.amount) restored = true;
-                player.SetMaxBullets((int)stats.amount);
-                player.SetMaxShells((int)stats.amount);
-                player.SetMaxExplosives((int)stats.amount);
-                player.SetMaxEnergy((int)stats.amount);
+                if (player.GetMaxBullets() < stats.amount || player.GetMaxShells() < stats.amount || player.GetMaxExplosives() < stats.amount || player.GetMaxEnergy() < stats.amount)
+                {
+                    restored = true;
+                    player.SetMaxBullets((int)stats.amount);
+                    player.SetMaxShells((int)stats.amount);
+                    player.SetMaxExplosives((int)stats.amount);
+                    player.SetMaxEnergy((int)stats.amount);
+                }
+                if(player.GetBullets() < player.GetMaxBullets() || player.GetShells() < player.GetMaxShells() || player.GetExplosives() < player.GetMaxExplosives() || player.GetEnergy() < player.GetMaxEnergy())
+                {
+                    restored = true;
+                    player.SetBullets(player.GetBullets() + (int)stats.amount / 2);
+                    player.SetShells(player.GetShells() + (int)stats.amount / 2);
+                    player.SetExplosives(player.GetExplosives() + (int)stats.amount / 2);
+                    player.SetEnergy(player.GetEnergy() + (int)stats.amount / 2);
+                }
+                break;
+            case Pickup.StatType.ALLMAX:
+                if (player.GetHealth() < (int)((float)player.GetMaxHealth() * 1.5f) || player.GetArmor() < 200 || player.GetMaxBullets() < stats.amount || player.GetMaxShells() < stats.amount
+                    || player.GetMaxExplosives() < stats.amount || player.GetMaxEnergy() < stats.amount)
+                {
+                    restored = true;
+                    player.SetHealth((int)((float)player.GetMaxHealth() * 1.5f), true);
+                    player.SetArmorType(2);
+                    player.SetMaxArmor(200);
+                    player.SetMaxBullets((int)stats.amount);
+                    player.SetMaxShells((int)stats.amount);
+                    player.SetMaxExplosives((int)stats.amount);
+                    player.SetMaxEnergy((int)stats.amount);
+                }
                 break;
             default:
                 break;

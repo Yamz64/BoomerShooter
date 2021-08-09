@@ -238,6 +238,7 @@ public class WeaponBehavior : MonoBehaviour
                         projectile.GetComponent<Rigidbody>().AddRelativeTorque(weapon.shot_torque);
                         projectile.GetComponent<Rigidbody>().useGravity = weapon.use_gravity;
                         projectile.GetComponent<ProjectileBehavior>().owner = gameObject;
+                        Physics.IgnoreCollision(GetComponent<Collider>(), projectile.GetComponent<Collider>());
                     }
                 }
                 else
