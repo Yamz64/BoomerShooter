@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed6219c4dd159744ca7f0eb5b838f261, type: 3}
   m_Name: Plasma
   m_EditorClassIdentifier: 
+  network_index: 2
   explosive: 0
   die_after_other_collision: 1
   die_on_contact: 1

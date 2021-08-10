@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
-public class WeaponBehavior : MonoBehaviour
+public class WeaponBehavior : NetworkBehaviour
 {
     [Tooltip("Type of weapon in the held_weapons list: 0 = melee, 1 = pistols/light, 2 = shotguns, 3 = assault/heavy, 4 = explosives, 5 = energy, 6 = big")]
     public int active_type;
@@ -83,6 +84,28 @@ public class WeaponBehavior : MonoBehaviour
         return shot_paths;
     }
 
+    [Command]
+    private void Cmd_SpawnProjectile(int index, Vector3 position, Quaternion rotation, Vector3 velocity, Vector3 torque, bool use_gravity, string owner_name)
+    {
+        //attempt to spawn a projectile at the index
+        NetworkManager manager = GameObject.FindGameObjectWithTag("NetworkManager").GetComponent<NetworkManager>();
+        if (index < 0 || index > manager.spawnPrefabs.Count - 1) Debug.LogError($"Index provided: {index}, is invalid, no such spawnable exists.");
+
+        //check if the spawned object is of type projectile
+        GameObject temp = (GameObject)Instantiate(manager.spawnPrefabs[index], position, rotation);
+        ProjectileBehavior temp_projectile = temp.GetComponent<ProjectileBehavior>();
+        if (temp == null) Debug.LogError("The registered spawnable does not have a ProjectileBehavior component attached!");
+
+        //populate all values of the projectile
+        Rigidbody temp_rb = temp.GetComponent<Rigidbody>();
+        temp_rb.velocity = velocity;
+        temp_rb.AddRelativeTorque(torque);
+        temp_rb.useGravity = use_gravity;
+        temp_projectile.owner = this.gameObject;
+
+        NetworkServer.Spawn(temp);
+    }
+
     IEnumerator BurstProjectile(Weapon weapon)
     {
         for (int i = 0; i < weapon.number_of_shots; i++)
@@ -111,10 +134,15 @@ public class WeaponBehavior : MonoBehaviour
             projectile.GetComponent<Rigidbody>().AddRelativeTorque(weapon.shot_torque);
             projectile.GetComponent<Rigidbody>().useGravity = weapon.use_gravity;
             projectile.GetComponent<ProjectileBehavior>().owner = gameObject;
+
+            Projectile data = projectile.GetComponent<ProjectileBehavior>().data;
+            Rigidbody proj_rb = projectile.GetComponent<Rigidbody>();
+            Cmd_SpawnProjectile(data.network_index, projectile.transform.position, projectile.transform.rotation, proj_rb.velocity, weapon.shot_torque, weapon.use_gravity, name);
+            Destroy(projectile);
             yield return new WaitForSeconds(weapon.shot_rate);
         }
     }
-
+   
     IEnumerator BurstHitscan(Weapon weapon)
     {
         for (int i = 0; i < weapon.number_of_shots; i++)
@@ -169,7 +197,7 @@ public class WeaponBehavior : MonoBehaviour
             bullet_holes.RemoveAt(0);
         }
     }
-
+    
     void Fire(Weapon weapon)
     {
         //check to see if there is enough ammo to fire the weapon
@@ -198,7 +226,7 @@ public class WeaponBehavior : MonoBehaviour
         }
 
         //check to see if the weapon is ready to be fired
-        if(current_interval >= 0.0f)
+        if (current_interval >= 0.0f)
         {
             current_interval -= 1.0f * Time.deltaTime;
             firing = false;
@@ -206,7 +234,7 @@ public class WeaponBehavior : MonoBehaviour
         }
 
         //if the weapon is ready to be fired and the fire key is being pressed
-        if(Input.GetButton("Fire1"))
+        if (Input.GetButton("Fire1"))
         {
             firing = true;
             current_interval = max_interval;
@@ -221,12 +249,12 @@ public class WeaponBehavior : MonoBehaviour
                     //for every path generated in the shot pattern spawn a projectile and 
                     List<Vector3> shot_paths = new List<Vector3>(GenerateShotPattern(weapon));
 
-                    for(int i=0; i<shot_paths.Count; i++)
+                    for (int i = 0; i < shot_paths.Count; i++)
                     {
                         GameObject projectile = (GameObject)Instantiate(weapon.projectile, shot_origin.transform.position, Quaternion.identity);
                         projectile.transform.forward = shot_paths[i];
                         //handle shot direction override
-                        if(weapon.shot_direction.magnitude == 0)
+                        if (weapon.shot_direction.magnitude == 0)
                             projectile.GetComponent<Rigidbody>().velocity = weapon.shot_speed * projectile.transform.forward;
                         else
                         {
@@ -239,6 +267,10 @@ public class WeaponBehavior : MonoBehaviour
                         projectile.GetComponent<Rigidbody>().useGravity = weapon.use_gravity;
                         projectile.GetComponent<ProjectileBehavior>().owner = gameObject;
                         Physics.IgnoreCollision(GetComponent<Collider>(), projectile.GetComponent<Collider>());
+                        Projectile data = projectile.GetComponent<ProjectileBehavior>().data;
+                        Rigidbody proj_rb = projectile.GetComponent<Rigidbody>();
+                        Cmd_SpawnProjectile(data.network_index, projectile.transform.position, projectile.transform.rotation, proj_rb.velocity, weapon.shot_torque, weapon.use_gravity, name);
+                        Destroy(projectile);
                     }
                 }
                 else
@@ -256,11 +288,11 @@ public class WeaponBehavior : MonoBehaviour
                 {
                     List<Vector3> shot_paths = new List<Vector3>(GenerateShotPattern(weapon));
 
-                    for(int i=0; i<shot_paths.Count; i++)
+                    for (int i = 0; i < shot_paths.Count; i++)
                     {
                         //raycast along all paths in the shot_paths
                         RaycastHit hit = new RaycastHit();
-                        if(Physics.Raycast(GetComponent<CharacterMovement>().GetCam().transform.position, shot_paths[i], out hit, Mathf.Infinity, ~LayerMask.GetMask("Pickup")))
+                        if (Physics.Raycast(GetComponent<CharacterMovement>().GetCam().transform.position, shot_paths[i], out hit, Mathf.Infinity, ~LayerMask.GetMask("Pickup")))
                         {
                             if (hit.collider.gameObject.layer != LayerMask.NameToLayer("Player"))
                             {
@@ -464,10 +496,17 @@ public class WeaponBehavior : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Animate();
-        Fire(held_weapons[active_type][active_weapon]);
+        if (isLocalPlayer)
+        {
+            Animate();
+            Fire(held_weapons[active_type][active_weapon]);
 
-        //handle weaponswitching
-        SwitchWeapon();
+            //handle weaponswitching
+            SwitchWeapon();
+        }
+        else
+        {
+            viewmodel.SetActive(false);
+        }
     }
 }
