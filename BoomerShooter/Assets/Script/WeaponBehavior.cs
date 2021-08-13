@@ -83,7 +83,7 @@ public class WeaponBehavior : NetworkBehaviour
         }
         return shot_paths;
     }
-
+    
     [Command]
     private void Cmd_SpawnProjectile(int index, Vector3 position, Quaternion rotation, Vector3 velocity, Vector3 torque, bool use_gravity, string owner_name)
     {
@@ -103,7 +103,56 @@ public class WeaponBehavior : NetworkBehaviour
         temp_rb.useGravity = use_gravity;
         temp_projectile.owner = this.gameObject;
 
-        NetworkServer.Spawn(temp);
+        NetworkServer.Spawn(temp, connectionToClient);
+    }
+    
+    public void DealDamage(GameObject target, int damage)
+    {
+        //make sure that the target is a valid target before dealing damage
+        if (target.GetComponent<NetworkIdentity>() == null || target.GetComponent<PlayerStats>() == null) return;
+        Cmd_DealDamage(target, damage);
+    }
+
+    public void DealDamageRPC(GameObject target, int damage)
+    {
+        //make sure that the target is a valid target before dealing damage
+        if (target.GetComponent<NetworkIdentity>() == null || target.GetComponent<PlayerStats>() == null) return;
+        Rpc_DealDamage(target, damage);
+    }
+
+    [Command]
+    private void Cmd_DealDamage(GameObject target, int damage)
+    {
+        PlayerStats stats = target.GetComponent<PlayerStats>();
+        stats.SetHealth(stats.GetHealth() - damage, true);
+    }
+
+    [ClientRpc]
+    private void Rpc_DealDamage(GameObject target, int damage)
+    {
+        PlayerStats stats = target.GetComponent<PlayerStats>();
+        stats.SetHealth(stats.GetHealth() - damage, true);
+    }
+
+    public void SpawnExplosion(Vector3 position, Quaternion rotation, float radius, int damage, float knockback, GameObject owner, GameObject damaged)
+    {
+        Rpc_SpawnExplosion(position, rotation, radius, damage, knockback, owner, damaged);
+    }
+
+    [ClientRpc]
+    private void Rpc_SpawnExplosion(Vector3 position, Quaternion rotation, float radius, int damage, float knockback, GameObject owner, GameObject damaged)
+    {
+        NetworkManager manager = GameObject.FindGameObjectWithTag("NetworkManager").GetComponent<NetworkManager>();
+
+        GameObject explosion = (GameObject)Instantiate(manager.spawnPrefabs[5], position, rotation);
+        BlastRadiusBehavior temp = explosion.GetComponent<BlastRadiusBehavior>();
+        explosion.GetComponent<SphereCollider>().radius = radius;
+        temp.damage = damage;
+        temp.knock_back = knockback;
+        temp.owner = owner;
+        if(damaged != null) temp.AddObject(ref damaged);
+
+        NetworkServer.Spawn(explosion);
     }
 
     IEnumerator BurstProjectile(Weapon weapon)
@@ -159,6 +208,7 @@ public class WeaponBehavior : NetworkBehaviour
                 RaycastHit hit = new RaycastHit();
                 if(Physics.Raycast(GetComponent<CharacterMovement>().GetCam().transform.position, shot_direction, out hit, Mathf.Infinity, ~LayerMask.GetMask("Pickup")))
                 {
+                    //if the player hits an object that isn't a player
                     if (hit.collider.gameObject.layer != LayerMask.NameToLayer("Player"))
                     {
                         GameObject bullet_hole = (GameObject)Instantiate(bullet_decal, hit.point, Quaternion.identity);
@@ -167,6 +217,8 @@ public class WeaponBehavior : NetworkBehaviour
                         bullet_holes.Add(bullet_hole);
                         CleanBulletHoles();
                     }
+                    //hit a player
+                    else DealDamage(hit.collider.gameObject, weapon.damage);
                 }
             }
             else
@@ -176,12 +228,15 @@ public class WeaponBehavior : NetworkBehaviour
                 {
                     if (hit.collider.gameObject.layer != LayerMask.NameToLayer("Player"))
                     {
+                        //if the player hits an object that isn't a player
                         GameObject bullet_hole = (GameObject)Instantiate(bullet_decal, hit.point, Quaternion.identity);
                         bullet_hole.transform.forward = -hit.normal;
                         bullet_hole.transform.position += hit.normal * .0001f;
                         bullet_holes.Add(bullet_hole);
                         CleanBulletHoles();
                     }
+                    //hit a player
+                    else DealDamage(hit.collider.gameObject, weapon.damage);
                 }
             }
 
@@ -288,12 +343,14 @@ public class WeaponBehavior : NetworkBehaviour
                 {
                     List<Vector3> shot_paths = new List<Vector3>(GenerateShotPattern(weapon));
 
+                    Dictionary<GameObject, int> damaged_players = new Dictionary<GameObject, int>();
                     for (int i = 0; i < shot_paths.Count; i++)
                     {
                         //raycast along all paths in the shot_paths
                         RaycastHit hit = new RaycastHit();
                         if (Physics.Raycast(GetComponent<CharacterMovement>().GetCam().transform.position, shot_paths[i], out hit, Mathf.Infinity, ~LayerMask.GetMask("Pickup")))
                         {
+                            //if the player hits an object that isn't the player
                             if (hit.collider.gameObject.layer != LayerMask.NameToLayer("Player"))
                             {
                                 GameObject bullet_hole = (GameObject)Instantiate(bullet_decal, hit.point, Quaternion.identity);
@@ -302,7 +359,19 @@ public class WeaponBehavior : NetworkBehaviour
                                 bullet_holes.Add(bullet_hole);
                                 CleanBulletHoles();
                             }
+                            //hit a player
+                            else
+                            {
+                                //first see if the player has been hit
+                                if (damaged_players.ContainsKey(hit.collider.gameObject)) damaged_players[hit.collider.gameObject] += weapon.damage;
+                                else damaged_players.Add(hit.collider.gameObject, weapon.damage);
+                            }
                         }
+                    }
+                    //calculate total damage to all players hit and apply it in one command for each player
+                    foreach(KeyValuePair<GameObject, int> player in damaged_players)
+                    {
+                        DealDamage(player.Key, player.Value);
                     }
                 }
                 //no

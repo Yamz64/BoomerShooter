@@ -6,6 +6,7 @@ using UnityEngine;
 public class Projectile : ScriptableObject
 {
     public int network_index;
+    public int damage;
     public bool explosive;
     public bool die_after_other_collision;
     public bool die_on_contact;

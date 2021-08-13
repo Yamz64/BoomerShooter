@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weapon_type: 2
   shot_cost: 2
+  damage: 6
   use_projectile: 0
   multi_shot: 1
   use_gravity: 0
@@ -27,6 +28,8 @@ MonoBehaviour:
   weapon_name: Super Shotgun
   weapon_spawn: {x: 0, y: 0, z: 0}
   shot_spawn: {x: 0, y: 0, z: 0}
+  shot_direction: {x: 0, y: 0, z: 0}
+  shot_torque: {x: 0, y: 0, z: 0}
   model: {fileID: -2432090755550338912, guid: 993dc119b5a0f754c95c5153cc2f4e0c, type: 3}
   mats:
   - {fileID: 7741625113677808684, guid: 2d21dd4c6ba67d343a733cd0c30a6a1e, type: 3}

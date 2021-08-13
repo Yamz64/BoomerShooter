@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Mirror;
 
-public class PlayerStats : MonoBehaviour
+public class PlayerStats : NetworkBehaviour
 {
-    [SerializeField]
+    [SerializeField][SyncVar]
     private int armor, health, bullets, shells, explosives, energy;
+    [SerializeField][SyncVar]
     private int max_armor, max_health, max_bullets, max_shells, max_explosives, max_energy, armor_type;
+    [SyncVar]
     private float overheal_decay_delay;
 
     public GameObject canvas;
@@ -31,10 +34,13 @@ public class PlayerStats : MonoBehaviour
     public int GetArmorType() { return armor_type; }
 
     //--MODIFIERS--
+    [Server]
     public void SetArmor(int a) { armor = a; if (armor > max_armor) armor = max_armor; if (armor == 0) SetArmorType(0); UpdateUI(); }
-    public void SetHealth(int h, bool overheal = false)
+    [ClientRpc]
+    public void SetHealth(int h, bool overheal)
     {
         health = h;
+        if (health < 0) health = 0;
         if (!overheal)
         {
             if (health > max_health) health = max_health;
@@ -45,16 +51,27 @@ public class PlayerStats : MonoBehaviour
         }
         UpdateUI();
     }
+    [ClientRpc]
     public void SetBullets(int b) { bullets = b; if (bullets > max_bullets) bullets = max_bullets; UpdateUI(); }
+    [ClientRpc]
     public void SetShells(int s) { shells = s; if (shells > max_shells) shells = max_shells; UpdateUI(); }
+    [ClientRpc]
     public void SetExplosives(int e) { explosives = e; if (explosives > max_explosives) explosives = max_explosives; UpdateUI(); }
+    [ClientRpc]
     public void SetEnergy(int e) { energy = e; if (energy > max_energy) energy = max_energy; UpdateUI(); }
+    [ClientRpc]
     public void SetMaxArmor(int a) { max_armor = a; UpdateUI(); }
+    [ClientRpc]
     public void SetMaxHealth(int h) { max_health = h; UpdateUI(); }
+    [ClientRpc]
     public void SetMaxBullets(int b) { max_bullets = b; UpdateUI(); }
+    [ClientRpc]
     public void SetMaxShells(int s) { max_shells = s; UpdateUI(); }
+    [ClientRpc]
     public void SetMaxExplosives(int e) { max_explosives = e; UpdateUI(); }
+    [ClientRpc]
     public void SetMaxEnergy(int e) { max_energy = e; UpdateUI(); }
+    [ClientRpc]
     public void SetArmorType(int a)
     {
         if (a > 2 || a < 0) {
@@ -67,58 +84,61 @@ public class PlayerStats : MonoBehaviour
     //Update all UI except for the crosshair
     public void UpdateUI()
     {
-        //health
-        health_text.text = $"{health}/{max_health}";
-        health_bar.fillAmount = Mathf.Clamp01((float)health / (float)(max_health));
-        overheal_bar.fillAmount = Mathf.Clamp01(((float)health - (float)max_health) / ((float)max_health * 1.5f - (float)max_health));
-        health_bar.color = Color.Lerp(new Color(1f, 0.0f, 0.0f, .5f), new Color(0.0f, 1.0f, 0.0f, .5f), Mathf.Clamp01((float)health / (float)max_health));
-
-        //armor
-        armor_text.text = $"{armor}/{max_armor}";
-        armor_bar.fillAmount = Mathf.Clamp01((float)armor / (float)(max_armor));
-        if (armor_type == 0 || armor_type == 1) armor_bar.color = armor_text.color = new Color(0.0f, 1f, 1f, .5f);
-        else armor_bar.color = armor_text.color = new Color(1f, 1f, 0.0f, .5f);
-
-        //current ammunition
-        int active_type = GetComponent<WeaponBehavior>().active_type;
-        switch (active_type)
+        if (isLocalPlayer)
         {
-            case 0:
-                current_ammo_text.text = "∞";
-                break;
-            case 1:
-                current_ammo_text.text = $"{bullets}/{max_bullets}";
-                break;
-            case 2:
-                current_ammo_text.text = $"{shells}/{max_shells}";
-                break;
-            case 3:
-                current_ammo_text.text = $"{bullets}/{max_bullets}";
-                break;
-            case 4:
-                current_ammo_text.text = $"{explosives}/{max_explosives}";
-                break;
-            case 5:
-                current_ammo_text.text = $"{energy}/{max_energy}";
-                break;
-            case 6:
-                current_ammo_text.text = $"{energy}/{max_energy}";
-                break;
-            default:
-                break;
+            //health
+            health_text.text = $"{health}/{max_health}";
+            health_bar.fillAmount = Mathf.Clamp01((float)health / (float)(max_health));
+            overheal_bar.fillAmount = Mathf.Clamp01(((float)health - (float)max_health) / ((float)max_health * 1.5f - (float)max_health));
+            health_bar.color = Color.Lerp(new Color(1f, 0.0f, 0.0f, .5f), new Color(0.0f, 1.0f, 0.0f, .5f), Mathf.Clamp01((float)health / (float)max_health));
+
+            //armor
+            armor_text.text = $"{armor}/{max_armor}";
+            armor_bar.fillAmount = Mathf.Clamp01((float)armor / (float)(max_armor));
+            if (armor_type == 0 || armor_type == 1) armor_bar.color = armor_text.color = new Color(0.0f, 1f, 1f, .5f);
+            else armor_bar.color = armor_text.color = new Color(1f, 1f, 0.0f, .5f);
+
+            //current ammunition
+            int active_type = GetComponent<WeaponBehavior>().active_type;
+            switch (active_type)
+            {
+                case 0:
+                    current_ammo_text.text = "∞";
+                    break;
+                case 1:
+                    current_ammo_text.text = $"{bullets}/{max_bullets}";
+                    break;
+                case 2:
+                    current_ammo_text.text = $"{shells}/{max_shells}";
+                    break;
+                case 3:
+                    current_ammo_text.text = $"{bullets}/{max_bullets}";
+                    break;
+                case 4:
+                    current_ammo_text.text = $"{explosives}/{max_explosives}";
+                    break;
+                case 5:
+                    current_ammo_text.text = $"{energy}/{max_energy}";
+                    break;
+                case 6:
+                    current_ammo_text.text = $"{energy}/{max_energy}";
+                    break;
+                default:
+                    break;
+            }
+
+            //bullets
+            bullet_text.text = $"Bullets: {bullets}/{max_bullets}";
+
+            //shells
+            shell_text.text = $"Shells: {shells}/{max_shells}";
+
+            //explosives
+            explosive_text.text = $"Explosives: {explosives}/{max_explosives}";
+
+            //energy
+            energy_text.text = $"Energy: {energy}/{max_energy}";
         }
-
-        //bullets
-        bullet_text.text = $"Bullets: {bullets}/{max_bullets}";
-
-        //shells
-        shell_text.text = $"Shells: {shells}/{max_shells}";
-
-        //explosives
-        explosive_text.text = $"Explosives: {explosives}/{max_explosives}";
-
-        //energy
-        energy_text.text = $"Energy: {energy}/{max_energy}";
     }
 
     IEnumerator LateStart()
@@ -142,39 +162,40 @@ public class PlayerStats : MonoBehaviour
             overheal_decay_delay = .5f;
 
             //take precautions so that losing overheal will never put you below max hp
-            if (health - step < max_health) SetHealth(max_health);
+            if (health - step < max_health) SetHealth(max_health, false);
             else SetHealth(health - step, true);
         }
 
     }
 
+    public override void OnStartClient()
+    {
+        if (isClient)
+        {
+            armor = shells = explosives = energy = 0;
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        //handle stat members
-        max_armor = armor;
-        max_health = health;
-        max_bullets = bullets;
-        max_shells = shells;
-        max_explosives = explosives;
-        max_energy = energy;
+        if (isClient)
+        {
+            //initialize UI variables
+            crosshair = canvas.transform.GetChild(0).GetComponent<Image>();
+            health_text = canvas.transform.GetChild(1).GetComponent<Text>();
+            health_bar = health_text.transform.GetChild(0).GetComponent<Image>();
+            overheal_bar = health_text.transform.GetChild(1).GetComponent<Image>();
+            armor_text = canvas.transform.GetChild(2).GetComponent<Text>();
+            armor_bar = armor_text.transform.GetChild(0).GetComponent<Image>();
+            current_ammo_text = canvas.transform.GetChild(3).GetComponent<Text>();
+            bullet_text = canvas.transform.GetChild(4).GetComponent<Text>();
+            shell_text = canvas.transform.GetChild(5).GetComponent<Text>();
+            explosive_text = canvas.transform.GetChild(6).GetComponent<Text>();
+            energy_text = canvas.transform.GetChild(7).GetComponent<Text>();
 
-        armor = shells = explosives = energy = 0;
-
-        //initialize UI variables
-        crosshair = canvas.transform.GetChild(0).GetComponent<Image>();
-        health_text = canvas.transform.GetChild(1).GetComponent<Text>();
-        health_bar = health_text.transform.GetChild(0).GetComponent<Image>();
-        overheal_bar = health_text.transform.GetChild(1).GetComponent<Image>();
-        armor_text = canvas.transform.GetChild(2).GetComponent<Text>();
-        armor_bar = armor_text.transform.GetChild(0).GetComponent<Image>();
-        current_ammo_text = canvas.transform.GetChild(3).GetComponent<Text>();
-        bullet_text = canvas.transform.GetChild(4).GetComponent<Text>();
-        shell_text = canvas.transform.GetChild(5).GetComponent<Text>();
-        explosive_text = canvas.transform.GetChild(6).GetComponent<Text>();
-        energy_text = canvas.transform.GetChild(7).GetComponent<Text>();
-        
-        StartCoroutine(LateStart());
+            StartCoroutine(LateStart());
+        }
     }
 
     private void Update()

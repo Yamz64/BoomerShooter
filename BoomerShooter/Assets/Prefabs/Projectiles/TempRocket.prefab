@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: -1717791895441318962}
   - component: {fileID: -1098981542307649677}
   - component: {fileID: 3435571431056768542}
+  - component: {fileID: 7664062414400781111}
   m_Layer: 10
   m_Name: TempRocket
   m_TagString: Untagged
@@ -141,6 +142,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cabbe18e97cc4349ac0ed045d50b360, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
   data: {fileID: 11400000, guid: 6cffcb9f0aed91c4d869a2c855d59cdb, type: 2}
   owner: {fileID: 0}
 --- !u!114 &-1098981542307649677
@@ -189,3 +192,25 @@ MonoBehaviour:
   showGizmos: 0
   showOverlay: 0
   overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+--- !u!114 &7664062414400781111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2907262764750256196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83392ae5c1b731446909f252fd494ae4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  target: {fileID: -2593299902865905130}
+  clientAuthority: 0
+  syncVelocity: 1
+  clearVelocity: 0
+  velocitySensitivity: 0.1
+  syncAngularVelocity: 1
+  clearAngularVelocity: 0
+  angularVelocitySensitivity: 0.1

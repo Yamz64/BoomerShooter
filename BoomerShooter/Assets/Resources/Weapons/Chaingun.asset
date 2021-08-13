@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weapon_type: 3
   shot_cost: 2
+  damage: 15
   use_projectile: 0
   multi_shot: 0
   use_gravity: 0
@@ -27,6 +28,8 @@ MonoBehaviour:
   weapon_name: Chaingun
   weapon_spawn: {x: 0, y: 0.091, z: -0.552}
   shot_spawn: {x: 0, y: 0, z: 0}
+  shot_direction: {x: 0, y: 0, z: 0}
+  shot_torque: {x: 0, y: 0, z: 0}
   model: {fileID: -2432090755550338912, guid: eccb39e9e3f3693459e11c7c396127d8, type: 3}
   mats:
   - {fileID: 7741625113677808684, guid: a881cfec06427d94ebe2baed6d66477a, type: 3}

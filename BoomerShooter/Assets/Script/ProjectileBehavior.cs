@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
-public class ProjectileBehavior : MonoBehaviour
+public class ProjectileBehavior : NetworkBehaviour
 {
     public Projectile data;
     public GameObject owner;
@@ -12,19 +13,34 @@ public class ProjectileBehavior : MonoBehaviour
 
     public delegate void DeathSequence(GameObject player = null);
     public DeathSequence DeathFunction;
-
+    
     void Explode(GameObject player = null)
-    {
+    {/*
         GameObject blast = (GameObject)Instantiate(data.blast_box, transform.position, Quaternion.identity);
         blast.GetComponent<SphereCollider>().radius = data.explosion_radius;
         blast.GetComponent<BlastRadiusBehavior>().knock_back = data.knockback;
+        blast.GetComponent<BlastRadiusBehavior>().damage = data.damage;
+        blast.GetComponent<BlastRadiusBehavior>().owner = owner;
+        if (player != null)
+        {
+            blast.GetComponent<BlastRadiusBehavior>().AddObject(ref player);
+        }
+
+        NetworkServer.Spawn(blast);
+        Destroy(blast);
+        */
+        owner.GetComponent<WeaponBehavior>().SpawnExplosion(transform.position, Quaternion.identity, data.explosion_radius, data.damage, data.knockback, owner, player);
     }
 
     void BreakOnCollide(GameObject player = null)
     {
         if (player != null)
         {
-            if (!data.explosive) player.GetComponent<Rigidbody>().AddForce((player.transform.position - transform.position).normalized * data.knockback);
+            //deal damage and knockback
+            player.GetComponent<Rigidbody>().AddForce((player.transform.position - transform.position).normalized * data.knockback);
+            Debug.Log(data.damage);
+            Debug.Log(data.name);
+            owner.GetComponent<WeaponBehavior>().DealDamageRPC(player, data.damage);
         }
         Destroy(gameObject);
     }
@@ -36,7 +52,6 @@ public class ProjectileBehavior : MonoBehaviour
             DeathFunction(player);
         }
     }
-    
 
     // Start is called before the first frame update
     void Start()

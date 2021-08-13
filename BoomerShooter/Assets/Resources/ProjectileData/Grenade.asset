@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Grenade
   m_EditorClassIdentifier: 
   network_index: 1
+  damage: 100
   explosive: 1
   die_after_other_collision: 0
   die_on_contact: 1

@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weapon_type: 1
   shot_cost: 1
+  damage: 15
   use_projectile: 0
   multi_shot: 0
   use_gravity: 0
@@ -27,6 +28,8 @@ MonoBehaviour:
   weapon_name: Pistol
   weapon_spawn: {x: 0, y: 0, z: 0}
   shot_spawn: {x: 0, y: 0, z: 0}
+  shot_direction: {x: 0, y: 0, z: 0}
+  shot_torque: {x: 0, y: 0, z: 0}
   model: {fileID: -2432090755550338912, guid: 1f6241be5e2b03a45b921217821dcce3, type: 3}
   mats:
   - {fileID: 7741625113677808684, guid: 1f6241be5e2b03a45b921217821dcce3, type: 3}

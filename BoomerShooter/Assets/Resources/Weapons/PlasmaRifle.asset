@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weapon_type: 5
   shot_cost: 1
+  damage: 30
   use_projectile: 1
   multi_shot: 0
   use_gravity: 0

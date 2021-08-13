@@ -10,6 +10,8 @@ public class Weapon : ScriptableObject
     public int weapon_type;
     [Tooltip("How much ammo does it require to fire this weapon once?")]
     public int shot_cost;
+    [Tooltip("Only applies to hitscan weapons, projectiles use their own damage property!")]
+    public int damage;
     public bool use_projectile;
     public bool multi_shot;
     public bool use_gravity;
