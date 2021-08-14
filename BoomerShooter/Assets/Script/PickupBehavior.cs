@@ -8,6 +8,21 @@ public class PickupBehavior : MonoBehaviour
     private MeshRenderer rend;
     private MeshFilter filter;
 
+    public IEnumerator LateArmor(PlayerStats player)
+    {
+        yield return new WaitForEndOfFrame();
+        if (stats.flat) player.SetArmor(player.GetArmor() + (int)stats.amount);
+        else player.SetArmor(player.GetArmor() + (int)((float)player.GetMaxArmor() * Mathf.Clamp01(stats.amount)));
+    }
+
+    public IEnumerator LateDestroy()
+    {
+        GetComponent<Collider>().enabled = false;
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+        Destroy(gameObject);
+    }
+
     void RestoreStat(PlayerStats player)
     {
         bool restored = false;
@@ -30,14 +45,13 @@ public class PickupBehavior : MonoBehaviour
                 }
                 break;
             case Pickup.StatType.ARMOR:
-                if (player.GetArmor() < player.GetMaxArmor())
+                if (player.GetArmor() < 100)
                 {
                     restored = true;
                     player.SetArmorType(1);
                     player.SetMaxArmor(100);
                 }
-                if (stats.flat) player.SetArmor(player.GetArmor() + (int)stats.amount);
-                else player.SetArmor(player.GetArmor() + (int)((float)player.GetMaxArmor() * Mathf.Clamp01(stats.amount)));
+                StartCoroutine(LateArmor(player));
                 break;
             case Pickup.StatType.SUPERARMOR:
                 if (player.GetArmor() < 200)
@@ -46,8 +60,7 @@ public class PickupBehavior : MonoBehaviour
                     player.SetArmorType(2);
                     player.SetMaxArmor(200);
                 }
-                if (stats.flat) player.SetArmor(player.GetArmor() + (int)stats.amount);
-                else player.SetArmor(player.GetArmor() + (int)((float)player.GetMaxArmor() * Mathf.Clamp01(stats.amount)));
+                StartCoroutine(LateArmor(player));
                 break;
             case Pickup.StatType.BULLETS:
                 if (player.GetBullets() < player.GetMaxBullets()) restored = true;
@@ -104,7 +117,7 @@ public class PickupBehavior : MonoBehaviour
             default:
                 break;
         }
-        if (restored) { Destroy(gameObject); }
+        if (restored) { StartCoroutine(LateDestroy()); }
     }
 
     void AddWeapon(WeaponBehavior player)

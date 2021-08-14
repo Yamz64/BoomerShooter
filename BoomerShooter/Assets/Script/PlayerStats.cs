@@ -35,7 +35,7 @@ public class PlayerStats : NetworkBehaviour
 
     //--MODIFIERS--
     [Server]
-    public void SetArmor(int a) { armor = a; if (armor > max_armor) armor = max_armor; if (armor == 0) SetArmorType(0); UpdateUI(); }
+    public void SetArmor(int a) { armor = a; if (armor < 0) armor = 0; if (armor > max_armor) armor = max_armor; if (armor == 0) SetArmorType(0); UpdateUI(); }
     [ClientRpc]
     public void SetHealth(int h, bool overheal)
     {

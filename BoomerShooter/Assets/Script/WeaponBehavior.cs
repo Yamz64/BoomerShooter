@@ -124,13 +124,98 @@ public class WeaponBehavior : NetworkBehaviour
     private void Cmd_DealDamage(GameObject target, int damage)
     {
         PlayerStats stats = target.GetComponent<PlayerStats>();
-        stats.SetHealth(stats.GetHealth() - damage, true);
+
+        //first determine what type of armor the player has before dealing the damage
+        /*
+        Steps for dealing armor based damage:
+        1) Determine the armor type
+        2) Subtract the protected damage from the armor's total
+        3) Deal the rest of the damage to the player
+        4) If more damage is dealt to the armor than there is armor value then add that remaining damage to be subtracted from the player's health
+        */
+        switch (stats.GetArmorType())
+        {
+            //no armor
+            case 0:
+                stats.SetHealth(stats.GetHealth() - damage, true);
+                break;
+            //regular armor 1/3 damage reduction
+            case 1:
+                int armor_damage = damage / 3;
+                int player_damage = (2 * damage) / 3;
+                if (stats.GetArmor() - armor_damage < 0)
+                {
+                    player_damage += Mathf.Abs(stats.GetArmor() - armor_damage);
+                    stats.SetArmor(0);
+                }
+                else stats.SetArmor(stats.GetArmor() - armor_damage);
+                stats.SetHealth(stats.GetHealth() - player_damage, true);
+                break;
+            //super armor 1/2 damage reduction
+            case 2:
+                armor_damage = damage / 2;
+                player_damage = damage / 2;
+                if (stats.GetArmor() - armor_damage < 0)
+                {
+                    player_damage += Mathf.Abs(stats.GetArmor() - armor_damage);
+                    stats.SetArmor(0);
+                }
+                else stats.SetArmor(stats.GetArmor() - armor_damage);
+                stats.SetHealth(stats.GetHealth() - player_damage, true);
+                break;
+            default:
+                stats.SetHealth(stats.GetHealth() - damage, true);
+                break;
+        }
     }
 
     [ClientRpc]
     private void Rpc_DealDamage(GameObject target, int damage)
     {
         PlayerStats stats = target.GetComponent<PlayerStats>();
+
+        //first determine what type of armor the player has before dealing the damage
+        /*
+        Steps for dealing armor based damage:
+        1) Determine the armor type
+        2) Subtract the protected damage from the armor's total
+        3) Deal the rest of the damage to the player
+        4) If more damage is dealt to the armor than there is armor value then add that remaining damage to be subtracted from the player's health
+        */
+        switch (stats.GetArmorType())
+        {
+            //no armor
+            case 0:
+                stats.SetHealth(stats.GetHealth() - damage, true);
+                break;
+            //regular armor 1/3 damage reduction
+            case 1:
+                int armor_damage = damage / 3;
+                int player_damage = (2 * damage) / 3;
+                if (stats.GetArmor() - armor_damage < 0)
+                {
+                    player_damage += Mathf.Abs(stats.GetArmor() - armor_damage);
+                    stats.SetArmor(0);
+                }
+                else stats.SetArmor(stats.GetArmor() - armor_damage);
+                stats.SetHealth(stats.GetHealth() - player_damage, true);
+                break;
+            //super armor 1/2 damage reduction
+            case 2:
+                armor_damage = damage / 2;
+                player_damage = damage / 2;
+                if (stats.GetArmor() - armor_damage < 0)
+                {
+                    player_damage += Mathf.Abs(stats.GetArmor() - armor_damage);
+                    stats.SetArmor(0);
+                }
+                else stats.SetArmor(stats.GetArmor() - armor_damage);
+                stats.SetHealth(stats.GetHealth() - player_damage, true);
+                break;
+            default:
+                stats.SetHealth(stats.GetHealth() - damage, true);
+                break;
+        }
         stats.SetHealth(stats.GetHealth() - damage, true);
     }
 
