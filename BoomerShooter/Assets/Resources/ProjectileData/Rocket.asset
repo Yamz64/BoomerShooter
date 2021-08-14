@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Rocket
   m_EditorClassIdentifier: 
   network_index: 3
+  damage: 90
   explosive: 1
   die_after_other_collision: 0
   die_on_contact: 1
