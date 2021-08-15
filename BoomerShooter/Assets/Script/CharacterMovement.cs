@@ -138,30 +138,37 @@ public class CharacterMovement : NetworkBehaviour
     {
         if (isLocalPlayer)
         {
-            Look();
-            Crouch();
-            //check if the player is grounded (wait a frame before calculations are accepted
-            float ray_length = (col.height / 2f) + .005f;
-            if (Physics.Raycast(transform.position + col.center, -Vector3.up, ray_length, ~LayerMask.GetMask("Player", "Pickup")))
+            if (!GetComponent<PlayerStats>().GetDead())
             {
-                if (!frame_check) frame_check = true;
-                else grounded = true;
+                Look();
+                Crouch();
+                //check if the player is grounded (wait a frame before calculations are accepted
+                float ray_length = (col.height / 2f) + .005f;
+                if (Physics.Raycast(transform.position + col.center, -Vector3.up, ray_length, ~LayerMask.GetMask("Player", "Pickup")))
+                {
+                    if (!frame_check) frame_check = true;
+                    else grounded = true;
+                }
+                else
+                {
+                    frame_check = false;
+                    grounded = false;
+                }
+
+                if (frame_check && Input.GetButton("Jump")) rb.velocity += new Vector3(0.0f, jump_speed, 0.0f);
+
+                Vector3 move_dir_forward = transform.forward;
+                Vector3 move_dir_right = -(Vector3.Cross(move_dir_forward, Vector3.up).normalized);
+                move_dir_forward *= Input.GetAxis("Vertical");
+                move_dir_right *= Input.GetAxis("Horizontal");
+                Vector3 move_dir = (move_dir_forward + move_dir_right).normalized;
+                if (grounded) rb.velocity = MoveGround(move_dir, rb.velocity);
+                else rb.velocity = MoveAir(move_dir, rb.velocity);
             }
             else
             {
-                frame_check = false;
-                grounded = false;
+                rb.velocity = Vector3.zero;
             }
-
-            if (frame_check && Input.GetButton("Jump")) rb.velocity += new Vector3(0.0f, jump_speed, 0.0f);
-
-            Vector3 move_dir_forward = transform.forward;
-            Vector3 move_dir_right = -(Vector3.Cross(move_dir_forward, Vector3.up).normalized);
-            move_dir_forward *= Input.GetAxis("Vertical");
-            move_dir_right *= Input.GetAxis("Horizontal");
-            Vector3 move_dir = (move_dir_forward + move_dir_right).normalized;
-            if (grounded) rb.velocity = MoveGround(move_dir, rb.velocity);
-            else rb.velocity = MoveAir(move_dir, rb.velocity);
         }
     }
 }

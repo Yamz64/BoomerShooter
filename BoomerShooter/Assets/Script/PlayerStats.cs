@@ -6,6 +6,9 @@ using Mirror;
 
 public class PlayerStats : NetworkBehaviour
 {
+    [SerializeField]
+    [SyncVar]
+    private bool dead;
     [SerializeField][SyncVar]
     private int armor, health, bullets, shells, explosives, energy;
     [SerializeField][SyncVar]
@@ -16,9 +19,10 @@ public class PlayerStats : NetworkBehaviour
     public GameObject canvas;
 
     private Image crosshair, health_bar, overheal_bar, armor_bar;
-    private Text health_text, armor_text, current_ammo_text, bullet_text, shell_text, explosive_text, energy_text;
+    private Text health_text, armor_text, current_ammo_text, bullet_text, shell_text, explosive_text, energy_text, death_text;
 
     //--ACCESSORS--
+    public bool GetDead() { return dead; }
     public int GetArmor() { return armor; }
     public int GetHealth() { return health; }
     public int GetBullets() { return bullets; }
@@ -34,13 +38,20 @@ public class PlayerStats : NetworkBehaviour
     public int GetArmorType() { return armor_type; }
 
     //--MODIFIERS--
-    [Server]
+    [ClientRpc]
+    public void SetDead(bool d) { dead = d; }
+    [ClientRpc]
     public void SetArmor(int a) { armor = a; if (armor < 0) armor = 0; if (armor > max_armor) armor = max_armor; if (armor == 0) SetArmorType(0); UpdateUI(); }
     [ClientRpc]
     public void SetHealth(int h, bool overheal)
     {
         health = h;
-        if (health < 0) health = 0;
+        if (health < 0)
+        {
+            dead = true;
+            health = 0;
+        }
+        if (health == 0) dead = true;
         if (!overheal)
         {
             if (health > max_health) health = max_health;
@@ -79,6 +90,29 @@ public class PlayerStats : NetworkBehaviour
             return;
         }
         armor_type = a;
+    }
+
+    //--MISC--  
+    [Command]
+    public void Respawn()
+    {
+        //get a list of all spawn locations on the server
+        GameObject[] spawn_points = GameObject.FindGameObjectsWithTag("Respawn");
+
+        //set the player's position to a random spawnpoint reset the player's health and ammo to default values and resurrect them
+        transform.position = spawn_points[Random.Range(0, spawn_points.Length)].transform.position;
+
+        health = max_health = 150;
+        armor_type = 0;
+        armor = 0;
+        max_armor = 100;
+
+        shells = explosives = energy = 0;
+        bullets = max_bullets = max_shells = max_explosives = max_energy = 50;
+
+        GetComponent<WeaponBehavior>().ClearWeapons();
+        dead = false;
+        StartCoroutine(LateStart());
     }
 
     //Update all UI except for the crosshair
@@ -138,6 +172,9 @@ public class PlayerStats : NetworkBehaviour
 
             //energy
             energy_text.text = $"Energy: {energy}/{max_energy}";
+
+            //death text
+            death_text.enabled = dead;
         }
     }
 
@@ -193,13 +230,19 @@ public class PlayerStats : NetworkBehaviour
             shell_text = canvas.transform.GetChild(5).GetComponent<Text>();
             explosive_text = canvas.transform.GetChild(6).GetComponent<Text>();
             energy_text = canvas.transform.GetChild(7).GetComponent<Text>();
+            death_text = canvas.transform.GetChild(8).GetComponent<Text>();
 
+            SetDead(false);
             StartCoroutine(LateStart());
         }
     }
 
     private void Update()
     {
-        UpdateOverheal();
+        if (isLocalPlayer)
+        {
+            UpdateOverheal();
+            if (dead && Input.anyKeyDown) Respawn();
+        }
     }
 }

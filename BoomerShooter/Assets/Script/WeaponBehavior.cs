@@ -525,6 +525,22 @@ public class WeaponBehavior : NetworkBehaviour
 
     public void AddWeapon(Weapon weapon) { held_weapons[weapon.weapon_type].Add(weapon); }
 
+    public void ClearWeapons()
+    {
+        held_weapons = new List<List<Weapon>>() { new List<Weapon>(),
+                                                  new List<Weapon>(),
+                                                  new List<Weapon>(),
+                                                  new List<Weapon>(),
+                                                  new List<Weapon>(),
+                                                  new List<Weapon>(),
+                                                  new List<Weapon>()
+                                                };
+        AddWeapon(Resources.Load<Weapon>("Weapons/Pistol"));
+        active_type = 1;
+        active_weapon = 0;
+        UpdateViewmodel(held_weapons[active_type][active_weapon]);
+    }
+
     //function handles switching of weapons
     public void SwitchWeapon()
     {
@@ -652,11 +668,13 @@ public class WeaponBehavior : NetworkBehaviour
     {
         if (isLocalPlayer)
         {
-            Animate();
-            Fire(held_weapons[active_type][active_weapon]);
-
-            //handle weaponswitching
-            SwitchWeapon();
+            if (!stats.GetDead())
+            {
+                //handle weaponswitching
+                SwitchWeapon();
+                Animate();
+                Fire(held_weapons[active_type][active_weapon]);
+            }
         }
         else
         {

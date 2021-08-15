@@ -132,7 +132,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1319136294733531268, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_Name
-      value: ShotgunSpawner
+      value: PickupSpawner
       objectReference: {fileID: 0}
     - target: {fileID: 2715709911088242965, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_LocalPosition.x
@@ -193,7 +193,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1319136294733531268, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_Name
-      value: SmallHealthSpawner (8)
+      value: PickupSpawner
       objectReference: {fileID: 0}
     - target: {fileID: 2715709911088242965, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_LocalPosition.x
@@ -254,7 +254,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1319136294733531268, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_Name
-      value: ChaingunSpawner
+      value: PickupSpawner
       objectReference: {fileID: 0}
     - target: {fileID: 2715709911088242965, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_LocalPosition.x
@@ -315,7 +315,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1319136294733531268, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_Name
-      value: SmallHealthSpawner (2)
+      value: PickupSpawner
       objectReference: {fileID: 0}
     - target: {fileID: 2715709911088242965, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_LocalPosition.x
@@ -540,7 +540,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1319136294733531268, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_Name
-      value: ShellSpawner
+      value: PickupSpawner
       objectReference: {fileID: 0}
     - target: {fileID: 2715709911088242965, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_LocalPosition.x
@@ -754,7 +754,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1319136294733531268, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_Name
-      value: SmallHealthSpawner (3)
+      value: PickupSpawner
       objectReference: {fileID: 0}
     - target: {fileID: 2715709911088242965, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1075,7 +1075,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1319136294733531268, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_Name
-      value: SmallHealthSpawner (7)
+      value: PickupSpawner
       objectReference: {fileID: 0}
     - target: {fileID: 2715709911088242965, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1228,7 +1228,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1319136294733531268, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_Name
-      value: EnergySpawner
+      value: PickupSpawner
       objectReference: {fileID: 0}
     - target: {fileID: 2715709911088242965, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1289,7 +1289,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1319136294733531268, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_Name
-      value: SuperArmorSpawner
+      value: PickupSpawner
       objectReference: {fileID: 0}
     - target: {fileID: 2715709911088242965, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1663,7 +1663,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1319136294733531268, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_Name
-      value: SuperBackpackSpawner
+      value: PickupSpawner
       objectReference: {fileID: 0}
     - target: {fileID: 2715709911088242965, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1724,7 +1724,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1319136294733531268, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_Name
-      value: PRSpawner
+      value: PickupSpawner
       objectReference: {fileID: 0}
     - target: {fileID: 2715709911088242965, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2098,7 +2098,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1319136294733531268, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_Name
-      value: SmallHealthSpawner (4)
+      value: PickupSpawner
       objectReference: {fileID: 0}
     - target: {fileID: 2715709911088242965, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2159,7 +2159,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1319136294733531268, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_Name
-      value: SmallHealthSpawner (5)
+      value: PickupSpawner
       objectReference: {fileID: 0}
     - target: {fileID: 2715709911088242965, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2220,7 +2220,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1319136294733531268, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_Name
-      value: SmallHealthSpawner (1)
+      value: PickupSpawner
       objectReference: {fileID: 0}
     - target: {fileID: 2715709911088242965, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3074,7 +3074,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1319136294733531268, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_Name
-      value: SmallHealthSpawner (6)
+      value: PickupSpawner
       objectReference: {fileID: 0}
     - target: {fileID: 2715709911088242965, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3625,7 +3625,7 @@ MonoBehaviour:
   authenticator: {fileID: 0}
   playerPrefab: {fileID: 8014360631600213390, guid: a4d4cec4b4a4cee4fb142de004ddaf19, type: 3}
   autoCreatePlayer: 1
-  playerSpawnMethod: 0
+  playerSpawnMethod: 1
   spawnPrefabs:
   - {fileID: 2907262764750256196, guid: a6aa3788b42600540a0e8eab2aedf6e6, type: 3}
   - {fileID: 3475817317680054474, guid: b0fcaff280134da46a7a307afd14aa75, type: 3}
@@ -3656,7 +3656,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1319136294733531268, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_Name
-      value: GrenadeLauncherSpawner
+      value: PickupSpawner
       objectReference: {fileID: 0}
     - target: {fileID: 2715709911088242965, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3881,7 +3881,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1319136294733531268, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_Name
-      value: ArmorSpawner
+      value: PickupSpawner
       objectReference: {fileID: 0}
     - target: {fileID: 2715709911088242965, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4106,7 +4106,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1319136294733531268, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_Name
-      value: SSGSpawner
+      value: PickupSpawner
       objectReference: {fileID: 0}
     - target: {fileID: 2715709911088242965, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4241,7 +4241,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1319136294733531268, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_Name
-      value: HealthSpawner
+      value: PickupSpawner
       objectReference: {fileID: 0}
     - target: {fileID: 2715709911088242965, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4302,7 +4302,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1319136294733531268, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_Name
-      value: RLSpawner
+      value: PickupSpawner
       objectReference: {fileID: 0}
     - target: {fileID: 2715709911088242965, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4363,7 +4363,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1319136294733531268, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_Name
-      value: SmallHealthSpawner
+      value: PickupSpawner
       objectReference: {fileID: 0}
     - target: {fileID: 2715709911088242965, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4424,7 +4424,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1319136294733531268, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_Name
-      value: PistolSpawner
+      value: PickupSpawner
       objectReference: {fileID: 0}
     - target: {fileID: 2715709911088242965, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4485,7 +4485,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1319136294733531268, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_Name
-      value: BackpackSpawner
+      value: PickupSpawner
       objectReference: {fileID: 0}
     - target: {fileID: 2715709911088242965, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4546,7 +4546,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1319136294733531268, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_Name
-      value: RevolverSpawner
+      value: PickupSpawner
       objectReference: {fileID: 0}
     - target: {fileID: 2715709911088242965, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4607,7 +4607,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1319136294733531268, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_Name
-      value: BFGSpawner
+      value: PickupSpawner
       objectReference: {fileID: 0}
     - target: {fileID: 2715709911088242965, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4668,7 +4668,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1319136294733531268, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_Name
-      value: ExplosiveSpawner
+      value: PickupSpawner
       objectReference: {fileID: 0}
     - target: {fileID: 2715709911088242965, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4795,7 +4795,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1319136294733531268, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_Name
-      value: BulletSpawner
+      value: PickupSpawner
       objectReference: {fileID: 0}
     - target: {fileID: 2715709911088242965, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4847,3 +4847,60 @@ PrefabInstance:
       objectReference: {fileID: 2472905842216550237, guid: 879f85d473594f742b1c63c2ca41a7f8, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ac1f5eacd71365447b67b6d6a210b498, type: 3}
+--- !u!1001 &7067640618710508950
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 7067640618377828192, guid: 70b723a3c5bb4eb4cb6c15b198178f13, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7067640618377828192, guid: 70b723a3c5bb4eb4cb6c15b198178f13, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7067640618377828192, guid: 70b723a3c5bb4eb4cb6c15b198178f13, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 6.2724404
+      objectReference: {fileID: 0}
+    - target: {fileID: 7067640618377828192, guid: 70b723a3c5bb4eb4cb6c15b198178f13, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7067640618377828192, guid: 70b723a3c5bb4eb4cb6c15b198178f13, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7067640618377828192, guid: 70b723a3c5bb4eb4cb6c15b198178f13, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7067640618377828192, guid: 70b723a3c5bb4eb4cb6c15b198178f13, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7067640618377828192, guid: 70b723a3c5bb4eb4cb6c15b198178f13, type: 3}
+      propertyPath: m_RootOrder
+      value: 38
+      objectReference: {fileID: 0}
+    - target: {fileID: 7067640618377828192, guid: 70b723a3c5bb4eb4cb6c15b198178f13, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7067640618377828192, guid: 70b723a3c5bb4eb4cb6c15b198178f13, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7067640618377828192, guid: 70b723a3c5bb4eb4cb6c15b198178f13, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7067640618377828194, guid: 70b723a3c5bb4eb4cb6c15b198178f13, type: 3}
+      propertyPath: m_Name
+      value: SpawnPoint
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 70b723a3c5bb4eb4cb6c15b198178f13, type: 3}
