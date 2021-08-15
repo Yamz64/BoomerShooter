@@ -271,6 +271,7 @@ public class WeaponBehavior : NetworkBehaviour
 
             Projectile data = projectile.GetComponent<ProjectileBehavior>().data;
             Rigidbody proj_rb = projectile.GetComponent<Rigidbody>();
+            Debug.Log($"{data.network_index}, {projectile.transform.position}, {projectile.transform.rotation}, {proj_rb.velocity}, {weapon.shot_torque}, {weapon.use_gravity}, {name}");
             Cmd_SpawnProjectile(data.network_index, projectile.transform.position, projectile.transform.rotation, proj_rb.velocity, weapon.shot_torque, weapon.use_gravity, name);
             Destroy(projectile);
             yield return new WaitForSeconds(weapon.shot_rate);

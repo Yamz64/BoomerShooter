@@ -25,5 +25,5 @@ MonoBehaviour:
   explosion_radius: 0
   collision_mask:
     serializedVersion: 2
-    m_Bits: 257
+    m_Bits: 8449
   blast_box: {fileID: 652292039481531886, guid: 1a177309db4428d4da2a6f010134890d, type: 3}

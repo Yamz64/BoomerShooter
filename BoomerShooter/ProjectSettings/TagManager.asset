@@ -18,8 +18,8 @@ TagManager:
   - Viewmodel
   - Projectile
   - Pickup
-  - 
-  - 
+  - IgnoreProjectile
+  - ProjectileClip
   - 
   - 
   - 
