@@ -38,11 +38,11 @@ public class PlayerStats : NetworkBehaviour
     public int GetArmorType() { return armor_type; }
 
     //--MODIFIERS--
-    [ClientRpc]
+    [ClientCallback]
     public void SetDead(bool d) { dead = d; }
-    [ClientRpc]
+    [ClientCallback]
     public void SetArmor(int a) { armor = a; if (armor < 0) armor = 0; if (armor > max_armor) armor = max_armor; if (armor == 0) SetArmorType(0); UpdateUI(); }
-    [ClientRpc]
+    [ClientCallback]
     public void SetHealth(int h, bool overheal)
     {
         health = h;
@@ -62,27 +62,27 @@ public class PlayerStats : NetworkBehaviour
         }
         UpdateUI();
     }
-    [ClientRpc]
+    [ClientCallback]
     public void SetBullets(int b) { bullets = b; if (bullets > max_bullets) bullets = max_bullets; UpdateUI(); }
-    [ClientRpc]
+    [ClientCallback]
     public void SetShells(int s) { shells = s; if (shells > max_shells) shells = max_shells; UpdateUI(); }
-    [ClientRpc]
+    [ClientCallback]
     public void SetExplosives(int e) { explosives = e; if (explosives > max_explosives) explosives = max_explosives; UpdateUI(); }
-    [ClientRpc]
+    [ClientCallback]
     public void SetEnergy(int e) { energy = e; if (energy > max_energy) energy = max_energy; UpdateUI(); }
-    [ClientRpc]
+    [ClientCallback]
     public void SetMaxArmor(int a) { max_armor = a; UpdateUI(); }
-    [ClientRpc]
+    [ClientCallback]
     public void SetMaxHealth(int h) { max_health = h; UpdateUI(); }
-    [ClientRpc]
+    [ClientCallback]
     public void SetMaxBullets(int b) { max_bullets = b; UpdateUI(); }
-    [ClientRpc]
+    [ClientCallback]
     public void SetMaxShells(int s) { max_shells = s; UpdateUI(); }
-    [ClientRpc]
+    [ClientCallback]
     public void SetMaxExplosives(int e) { max_explosives = e; UpdateUI(); }
-    [ClientRpc]
+    [ClientCallback]
     public void SetMaxEnergy(int e) { max_energy = e; UpdateUI(); }
-    [ClientRpc]
+    [ClientCallback]
     public void SetArmorType(int a)
     {
         if (a > 2 || a < 0) {
@@ -93,7 +93,7 @@ public class PlayerStats : NetworkBehaviour
     }
 
     //--MISC--  
-    [Command]
+    [ClientCallback]
     public void Respawn()
     {
         //get a list of all spawn locations on the server
