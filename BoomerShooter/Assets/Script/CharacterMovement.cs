@@ -18,6 +18,8 @@ public class CharacterMovement : NetworkBehaviour
     public float crouch_speed_divider;
     public Vector2 mouse_sensitivity;
 
+    private bool noclip;
+    private float sensitivity_factor;
     private float rot_x;
     private float rot_y;
     private float height;
@@ -25,10 +27,14 @@ public class CharacterMovement : NetworkBehaviour
     private Rigidbody rb;
     private CapsuleCollider col;
     
+    public void SetSensitivity(float s) { sensitivity_factor = s; }
+
+    public void ToggleNoClip() { noclip = !noclip; }
+
     void Look()
     {
-        rot_x += Input.GetAxis("Mouse X") * mouse_sensitivity.x;
-        rot_y += Input.GetAxis("Mouse Y") * mouse_sensitivity.y;
+        rot_x += Input.GetAxis("Mouse X") * mouse_sensitivity.x * sensitivity_factor;
+        rot_y += Input.GetAxis("Mouse Y") * mouse_sensitivity.y * sensitivity_factor;
 
         rot_y = Mathf.Clamp(rot_y, -90f, 90f);
 
@@ -117,6 +123,7 @@ public class CharacterMovement : NetworkBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        sensitivity_factor = 1f;
         rot_x = transform.rotation.eulerAngles.x;
         rot_y = 0.0f;
         cam = transform.GetChild(0).gameObject.GetComponent<Camera>();
@@ -140,8 +147,12 @@ public class CharacterMovement : NetworkBehaviour
         {
             if (!GetComponent<PlayerStats>().GetDead())
             {
-                Look();
-                Crouch();
+                if (!GetComponent<PlayerStats>().GetInteractionLock())
+                {
+                    Look();
+                    if(!noclip)
+                    Crouch();
+                }
                 //check if the player is grounded (wait a frame before calculations are accepted
                 float ray_length = (col.height / 2f) + .005f;
                 if (Physics.Raycast(transform.position + col.center, -Vector3.up, ray_length, ~LayerMask.GetMask("Player", "Pickup")))
@@ -159,11 +170,39 @@ public class CharacterMovement : NetworkBehaviour
 
                 Vector3 move_dir_forward = transform.forward;
                 Vector3 move_dir_right = -(Vector3.Cross(move_dir_forward, Vector3.up).normalized);
-                move_dir_forward *= Input.GetAxis("Vertical");
-                move_dir_right *= Input.GetAxis("Horizontal");
+                if (noclip)
+                {
+                    move_dir_forward = cam.transform.forward;
+                    move_dir_right = -(Vector3.Cross(move_dir_forward, Vector3.up).normalized);
+                    col.enabled = false;
+                    rb.useGravity = false;
+                }
+                else
+                {
+                    col.enabled = true;
+                    rb.useGravity = true;
+                }
+
+                if (!GetComponent<PlayerStats>().GetInteractionLock())
+                {
+                    move_dir_forward *= Input.GetAxis("Vertical");
+                    move_dir_right *= Input.GetAxis("Horizontal");
+                }
+                else
+                {
+                    move_dir_forward *= 0;
+                    move_dir_right *= 0;
+                }
                 Vector3 move_dir = (move_dir_forward + move_dir_right).normalized;
-                if (grounded) rb.velocity = MoveGround(move_dir, rb.velocity);
-                else rb.velocity = MoveAir(move_dir, rb.velocity);
+                if (!noclip)
+                {
+                    if (grounded) rb.velocity = MoveGround(move_dir, rb.velocity);
+                    else rb.velocity = MoveAir(move_dir, rb.velocity);
+                }
+                else
+                {
+                    rb.velocity = MoveGround(move_dir, rb.velocity);
+                }
             }
             else
             {

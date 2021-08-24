@@ -8,7 +8,7 @@ public class PlayerStats : NetworkBehaviour
 {
     [SerializeField]
     [SyncVar]
-    private bool dead;
+    private bool dead, interaction_lock;
     [SerializeField][SyncVar]
     private int armor, health, bullets, shells, explosives, energy;
     [SerializeField][SyncVar]
@@ -23,6 +23,7 @@ public class PlayerStats : NetworkBehaviour
 
     //--ACCESSORS--
     public bool GetDead() { return dead; }
+    public bool GetInteractionLock() { return interaction_lock; }
     public int GetArmor() { return armor; }
     public int GetHealth() { return health; }
     public int GetBullets() { return bullets; }
@@ -40,6 +41,8 @@ public class PlayerStats : NetworkBehaviour
     //--MODIFIERS--
     [ClientCallback]
     public void SetDead(bool d) { dead = d; }
+    [ClientCallback]
+    public void SetInteractionLock(bool i) { interaction_lock = i; }
     [ClientCallback]
     public void SetArmor(int a) { armor = a; if (armor < 0) armor = 0; if (armor > max_armor) armor = max_armor; if (armor == 0) SetArmorType(0); UpdateUI(); }
     [ClientCallback]

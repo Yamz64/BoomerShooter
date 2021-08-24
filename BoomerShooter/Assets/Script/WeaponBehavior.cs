@@ -672,9 +672,12 @@ public class WeaponBehavior : NetworkBehaviour
             if (!stats.GetDead())
             {
                 //handle weaponswitching
-                SwitchWeapon();
+                if (!stats.GetInteractionLock())
+                {
+                    SwitchWeapon();
+                    Fire(held_weapons[active_type][active_weapon]);
+                }
                 Animate();
-                Fire(held_weapons[active_type][active_weapon]);
             }
         }
         else
