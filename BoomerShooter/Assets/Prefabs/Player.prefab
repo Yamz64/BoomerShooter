@@ -1,5 +1,40 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5546561288744353905
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2366704653834511120}
+  m_Layer: 0
+  m_Name: DamageNumbers
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2366704653834511120
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5546561288744353905}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8014360630376768813}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 960, y: -540}
+  m_SizeDelta: {x: 1920, y: 1080}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &6932082426223545082
 GameObject:
   m_ObjectHideFlags: 0
@@ -377,6 +412,7 @@ RectTransform:
   - {fileID: 8014360631855747091}
   - {fileID: 8014360630968773839}
   - {fileID: 7367990063877150412}
+  - {fileID: 2366704653834511120}
   m_Father: {fileID: 8014360631600213108}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1145,6 +1181,7 @@ GameObject:
   - component: {fileID: 3648841962646553291}
   - component: {fileID: 5624483878962667439}
   - component: {fileID: 2415821490807106123}
+  - component: {fileID: 3679641350117293890}
   m_Layer: 8
   m_Name: Player
   m_TagString: Untagged
@@ -1308,6 +1345,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   dead: 0
+  interaction_lock: 0
   armor: 100
   health: 150
   bullets: 50
@@ -1402,6 +1440,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c5676c3225a6a04c81b5240eb402fff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+--- !u!114 &3679641350117293890
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8014360631600213390}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfb431c658b97af4480ce6c4db032713, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage_number_lifetime: 1
+  damage_prefab: {fileID: 5039829689230605961, guid: 103506029186f89468c4c2d487e3e6d7, type: 3}
+  damage_parent: {fileID: 5546561288744353905}
 --- !u!1 &8014360631756003544
 GameObject:
   m_ObjectHideFlags: 0

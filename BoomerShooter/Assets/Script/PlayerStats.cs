@@ -44,7 +44,8 @@ public class PlayerStats : NetworkBehaviour
     [ClientCallback]
     public void SetInteractionLock(bool i) { interaction_lock = i; }
     [ClientCallback]
-    public void SetArmor(int a) { armor = a; if (armor < 0) armor = 0; if (armor > max_armor) armor = max_armor; if (armor == 0) SetArmorType(0); UpdateUI(); }
+    public void SetArmor(int a) { armor = a; if (armor < 0) armor = 0; if (armor > max_armor) armor = max_armor; if (armor == 0) SetArmorType(0); }
+    
     [ClientCallback]
     public void SetHealth(int h, bool overheal)
     {
@@ -63,28 +64,28 @@ public class PlayerStats : NetworkBehaviour
         {
             if (health > (float)max_health * 1.5) health = (int)((float)max_health * 1.5f);
         }
-        UpdateUI();
     }
+
     [ClientCallback]
-    public void SetBullets(int b) { bullets = b; if (bullets > max_bullets) bullets = max_bullets; UpdateUI(); }
+    public void SetBullets(int b) { bullets = b; if (bullets > max_bullets) bullets = max_bullets; }
     [ClientCallback]
-    public void SetShells(int s) { shells = s; if (shells > max_shells) shells = max_shells; UpdateUI(); }
+    public void SetShells(int s) { shells = s; if (shells > max_shells) shells = max_shells; }
     [ClientCallback]
-    public void SetExplosives(int e) { explosives = e; if (explosives > max_explosives) explosives = max_explosives; UpdateUI(); }
+    public void SetExplosives(int e) { explosives = e; if (explosives > max_explosives) explosives = max_explosives; }
     [ClientCallback]
-    public void SetEnergy(int e) { energy = e; if (energy > max_energy) energy = max_energy; UpdateUI(); }
+    public void SetEnergy(int e) { energy = e; if (energy > max_energy) energy = max_energy; }
     [ClientCallback]
-    public void SetMaxArmor(int a) { max_armor = a; UpdateUI(); }
+    public void SetMaxArmor(int a) { max_armor = a; }
     [ClientCallback]
-    public void SetMaxHealth(int h) { max_health = h; UpdateUI(); }
+    public void SetMaxHealth(int h) { max_health = h; }
     [ClientCallback]
-    public void SetMaxBullets(int b) { max_bullets = b; UpdateUI(); }
+    public void SetMaxBullets(int b) { max_bullets = b; }
     [ClientCallback]
-    public void SetMaxShells(int s) { max_shells = s; UpdateUI(); }
+    public void SetMaxShells(int s) { max_shells = s; }
     [ClientCallback]
-    public void SetMaxExplosives(int e) { max_explosives = e; UpdateUI(); }
+    public void SetMaxExplosives(int e) { max_explosives = e; }
     [ClientCallback]
-    public void SetMaxEnergy(int e) { max_energy = e; UpdateUI(); }
+    public void SetMaxEnergy(int e) { max_energy = e; }
     [ClientCallback]
     public void SetArmorType(int a)
     {
@@ -245,7 +246,22 @@ public class PlayerStats : NetworkBehaviour
         if (isLocalPlayer)
         {
             UpdateOverheal();
+            UpdateUI();
+            if (health <= 0) dead = true;
             if (dead && Input.anyKeyDown) Respawn();
+        }
+        if (isClient)
+        {
+            if (dead)
+            {
+                GetComponent<Collider>().enabled = false;
+                GetComponent<Rigidbody>().useGravity = false;
+            }
+            else
+            {
+                GetComponent<Collider>().enabled = true;
+                GetComponent<Rigidbody>().useGravity = true;
+            }
         }
     }
 }

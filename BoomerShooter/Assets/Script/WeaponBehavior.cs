@@ -24,6 +24,7 @@ public class WeaponBehavior : NetworkBehaviour
     private List<GameObject> bullet_holes;
     private Animator anim;
     private PlayerStats stats;
+    private HandleDamageNumbers damage_handler;
 
     //function to find the next perfect root that assists in building fixed shot patterns
     int NextRoot(int number)
@@ -119,11 +120,11 @@ public class WeaponBehavior : NetworkBehaviour
         if (target.GetComponent<NetworkIdentity>() == null || target.GetComponent<PlayerStats>() == null) return;
         Rpc_DealDamage(target, damage);
     }
-
+    
     [Command]
     private void Cmd_DealDamage(GameObject target, int damage)
     {
-        PlayerStats stats = target.GetComponent<PlayerStats>();
+        PlayerStats target_stats = target.GetComponent<PlayerStats>();
 
         //first determine what type of armor the player has before dealing the damage
         /*
@@ -133,38 +134,42 @@ public class WeaponBehavior : NetworkBehaviour
         3) Deal the rest of the damage to the player
         4) If more damage is dealt to the armor than there is armor value then add that remaining damage to be subtracted from the player's health
         */
-        switch (stats.GetArmorType())
+        switch (target_stats.GetArmorType())
         {
             //no armor
             case 0:
-                stats.SetHealth(stats.GetHealth() - damage, true);
+                target_stats.SetHealth(target_stats.GetHealth() - damage, true);
+                damage_handler.SpawnDamageNumber(damage, target.transform.position);
                 break;
             //regular armor 1/3 damage reduction
             case 1:
                 int armor_damage = damage / 3;
                 int player_damage = (2 * damage) / 3;
-                if (stats.GetArmor() - armor_damage < 0)
+                if (target_stats.GetArmor() - armor_damage < 0)
                 {
-                    player_damage += Mathf.Abs(stats.GetArmor() - armor_damage);
-                    stats.SetArmor(0);
+                    player_damage += Mathf.Abs(target_stats.GetArmor() - armor_damage);
+                    target_stats.SetArmor(0);
                 }
-                else stats.SetArmor(stats.GetArmor() - armor_damage);
-                stats.SetHealth(stats.GetHealth() - player_damage, true);
+                else target_stats.SetArmor(target_stats.GetArmor() - armor_damage);
+                target_stats.SetHealth(target_stats.GetHealth() - player_damage, true);
+                damage_handler.SpawnDamageNumber(player_damage, target.transform.position);
                 break;
             //super armor 1/2 damage reduction
             case 2:
                 armor_damage = damage / 2;
                 player_damage = damage / 2;
-                if (stats.GetArmor() - armor_damage < 0)
+                if (target_stats.GetArmor() - armor_damage < 0)
                 {
-                    player_damage += Mathf.Abs(stats.GetArmor() - armor_damage);
-                    stats.SetArmor(0);
+                    player_damage += Mathf.Abs(target_stats.GetArmor() - armor_damage);
+                    target_stats.SetArmor(0);
                 }
-                else stats.SetArmor(stats.GetArmor() - armor_damage);
-                stats.SetHealth(stats.GetHealth() - player_damage, true);
+                else target_stats.SetArmor(target_stats.GetArmor() - armor_damage);
+                target_stats.SetHealth(target_stats.GetHealth() - player_damage, true);
+                damage_handler.SpawnDamageNumber(player_damage, target.transform.position);
                 break;
             default:
-                stats.SetHealth(stats.GetHealth() - damage, true);
+                target_stats.SetHealth(target_stats.GetHealth() - damage, true);
+                damage_handler.SpawnDamageNumber(damage, target.transform.position);
                 break;
         }
     }
@@ -172,7 +177,7 @@ public class WeaponBehavior : NetworkBehaviour
     [ClientRpc]
     private void Rpc_DealDamage(GameObject target, int damage)
     {
-        PlayerStats stats = target.GetComponent<PlayerStats>();
+        PlayerStats target_stats = target.GetComponent<PlayerStats>();
 
         //first determine what type of armor the player has before dealing the damage
         /*
@@ -182,41 +187,45 @@ public class WeaponBehavior : NetworkBehaviour
         3) Deal the rest of the damage to the player
         4) If more damage is dealt to the armor than there is armor value then add that remaining damage to be subtracted from the player's health
         */
-        switch (stats.GetArmorType())
+        switch (target_stats.GetArmorType())
         {
             //no armor
             case 0:
-                stats.SetHealth(stats.GetHealth() - damage, true);
+                target_stats.SetHealth(target_stats.GetHealth() - damage, true);
+                damage_handler.SpawnDamageNumber(damage, target.transform.position);
                 break;
             //regular armor 1/3 damage reduction
             case 1:
                 int armor_damage = damage / 3;
                 int player_damage = (2 * damage) / 3;
-                if (stats.GetArmor() - armor_damage < 0)
+                if (target_stats.GetArmor() - armor_damage < 0)
                 {
-                    player_damage += Mathf.Abs(stats.GetArmor() - armor_damage);
-                    stats.SetArmor(0);
+                    player_damage += Mathf.Abs(target_stats.GetArmor() - armor_damage);
+                    target_stats.SetArmor(0);
                 }
-                else stats.SetArmor(stats.GetArmor() - armor_damage);
-                stats.SetHealth(stats.GetHealth() - player_damage, true);
+                else target_stats.SetArmor(target_stats.GetArmor() - armor_damage);
+                target_stats.SetHealth(target_stats.GetHealth() - player_damage, true);
+                damage_handler.SpawnDamageNumber(player_damage, target.transform.position);
                 break;
             //super armor 1/2 damage reduction
             case 2:
                 armor_damage = damage / 2;
                 player_damage = damage / 2;
-                if (stats.GetArmor() - armor_damage < 0)
+                if (target_stats.GetArmor() - armor_damage < 0)
                 {
-                    player_damage += Mathf.Abs(stats.GetArmor() - armor_damage);
-                    stats.SetArmor(0);
+                    player_damage += Mathf.Abs(target_stats.GetArmor() - armor_damage);
+                    target_stats.SetArmor(0);
                 }
-                else stats.SetArmor(stats.GetArmor() - armor_damage);
-                stats.SetHealth(stats.GetHealth() - player_damage, true);
+                else target_stats.SetArmor(target_stats.GetArmor() - armor_damage);
+                target_stats.SetHealth(target_stats.GetHealth() - player_damage, true);
+                damage_handler.SpawnDamageNumber(player_damage, target.transform.position);
                 break;
             default:
-                stats.SetHealth(stats.GetHealth() - damage, true);
+                target_stats.SetHealth(target_stats.GetHealth() - damage, true);
+                damage_handler.SpawnDamageNumber(damage, target.transform.position);
                 break;
         }
-        stats.SetHealth(stats.GetHealth() - damage, true);
+        target_stats.SetHealth(target_stats.GetHealth() - damage, true);
     }
 
     public void SpawnExplosion(Vector3 position, Quaternion rotation, float radius, int damage, float knockback, GameObject owner, GameObject damaged)
@@ -304,7 +313,10 @@ public class WeaponBehavior : NetworkBehaviour
                         CleanBulletHoles();
                     }
                     //hit a player
-                    else DealDamage(hit.collider.gameObject, weapon.damage);
+                    else
+                    {
+                        Cmd_DealDamage(hit.collider.gameObject, weapon.damage);
+                    }
                 }
             }
             else
@@ -659,6 +671,7 @@ public class WeaponBehavior : NetworkBehaviour
         anim = viewmodel.GetComponent<Animator>();
         UpdateViewmodel(held_weapons[active_type][active_weapon]);
         stats = GetComponent<PlayerStats>();
+        damage_handler = GetComponent<HandleDamageNumbers>();
 
         //initialize list for keeping track of bullet holes
         bullet_holes = new List<GameObject>();
