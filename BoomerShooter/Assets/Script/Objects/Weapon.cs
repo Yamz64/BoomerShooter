@@ -37,4 +37,9 @@ public class Weapon : ScriptableObject
     public Material[] mats;
     public Object projectile;
     public RuntimeAnimatorController anim;
+    public AudioClip fire_sound;
+    [SerializeField]
+    public AudioClip[] shot_miss;
+    [SerializeField]
+    public AudioClip[] shot_hit;
 }

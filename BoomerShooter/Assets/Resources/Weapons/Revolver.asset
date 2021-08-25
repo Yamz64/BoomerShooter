@@ -35,3 +35,11 @@ MonoBehaviour:
   - {fileID: 7741625113677808684, guid: 993dc119b5a0f754c95c5153cc2f4e0c, type: 3}
   projectile: {fileID: 0}
   anim: {fileID: 9100000, guid: 7ed2ac56dbbf50b4e999f04ee9c839e0, type: 2}
+  fire_sound: {fileID: 8300000, guid: 5150f3c7f7b1dc345a9122cf09e67adc, type: 3}
+  shot_miss:
+  - {fileID: 8300000, guid: 03e054cd650890a4ea18856830e19f23, type: 3}
+  - {fileID: 8300000, guid: f7804150855142f4b96286e4ef6fb7c2, type: 3}
+  - {fileID: 8300000, guid: 326db433d3c3ae44fb04c0a48d94e2f0, type: 3}
+  - {fileID: 8300000, guid: 72d4576eb0af2c54dac0a3821b40acb9, type: 3}
+  shot_hit:
+  - {fileID: 8300000, guid: c8ecfb9d9ecff2944805f808be51209a, type: 3}

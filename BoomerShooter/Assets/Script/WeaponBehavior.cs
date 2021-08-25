@@ -311,11 +311,25 @@ public class WeaponBehavior : NetworkBehaviour
                         bullet_hole.transform.position += hit.normal * .0001f;
                         bullet_holes.Add(bullet_hole);
                         CleanBulletHoles();
+
+                        //Miss Sound
+                        if (weapon.shot_miss != null)
+                        {
+                            if (weapon.shot_miss.Length != 0)
+                                PlayerAudioHandler.PlaySoundAtPoint(weapon.shot_miss[Random.Range(0, weapon.shot_miss.Length)], hit.point);
+                        }
                     }
                     //hit a player
                     else
                     {
                         Cmd_DealDamage(hit.collider.gameObject, weapon.damage);
+
+                        //Hit Sound
+                        if (weapon.shot_hit != null)
+                        {
+                            if (weapon.shot_hit.Length != 0)
+                                PlayerAudioHandler.PlaySoundAtPoint(weapon.shot_hit[Random.Range(0, weapon.shot_hit.Length)], hit.point);
+                        }
                     }
                 }
             }
@@ -332,6 +346,13 @@ public class WeaponBehavior : NetworkBehaviour
                         bullet_hole.transform.position += hit.normal * .0001f;
                         bullet_holes.Add(bullet_hole);
                         CleanBulletHoles();
+
+                        //Miss Sound
+                        if (weapon.shot_miss != null)
+                        {
+                            if (weapon.shot_miss.Length != 0)
+                                PlayerAudioHandler.PlaySoundAtPoint(weapon.shot_miss[Random.Range(0, weapon.shot_miss.Length)], hit.point);
+                        }
                     }
                     //hit a player
                     else DealDamage(hit.collider.gameObject, weapon.damage);
@@ -456,6 +477,13 @@ public class WeaponBehavior : NetworkBehaviour
                                 bullet_hole.transform.position += hit.normal * .0001f;
                                 bullet_holes.Add(bullet_hole);
                                 CleanBulletHoles();
+
+                                //Miss Sound
+                                if (weapon.shot_miss != null)
+                                {
+                                    if(weapon.shot_miss.Length != 0)
+                                    PlayerAudioHandler.PlaySoundAtPoint(weapon.shot_miss[Random.Range(0, weapon.shot_miss.Length)], hit.point, 1f/(float)weapon.number_of_shots);
+                                }
                             }
                             //hit a player
                             else
@@ -463,6 +491,13 @@ public class WeaponBehavior : NetworkBehaviour
                                 //first see if the player has been hit
                                 if (damaged_players.ContainsKey(hit.collider.gameObject)) damaged_players[hit.collider.gameObject] += weapon.damage;
                                 else damaged_players.Add(hit.collider.gameObject, weapon.damage);
+
+                                //Hit Sound
+                                if (weapon.shot_hit != null)
+                                {
+                                    if (weapon.shot_hit.Length != 0)
+                                        PlayerAudioHandler.PlaySoundAtPoint(weapon.shot_hit[Random.Range(0, weapon.shot_hit.Length)], hit.point, 1f/(float)weapon.number_of_shots);
+                                }
                             }
                         }
                     }
@@ -504,6 +539,9 @@ public class WeaponBehavior : NetworkBehaviour
                 default:
                     break;
             }
+
+            //play the weapon's sound when it is fired at the player's position
+            if(weapon.fire_sound != null) PlayerAudioHandler.PlaySoundAtPoint(weapon.fire_sound, transform.position, 1f, false);
         }
     }
 

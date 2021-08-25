@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - NetworkManager
+  - Sound
   layers:
   - Default
   - TransparentFX

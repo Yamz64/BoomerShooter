@@ -248,6 +248,7 @@ public class PlayerStats : NetworkBehaviour
             UpdateOverheal();
             UpdateUI();
             if (health <= 0) dead = true;
+            else dead = false;
             if (dead && Input.anyKeyDown) Respawn();
         }
         if (isClient)
