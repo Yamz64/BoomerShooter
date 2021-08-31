@@ -26,4 +26,9 @@ MonoBehaviour:
   collision_mask:
     serializedVersion: 2
     m_Bits: 8449
+  sound_mask:
+    serializedVersion: 2
+    m_Bits: 8193
+  collide_sound: {fileID: 0}
+  death_sound: {fileID: 8300000, guid: b8450b9169ff13847af8597154cd1639, type: 3}
   blast_box: {fileID: 652292039481531886, guid: 1a177309db4428d4da2a6f010134890d, type: 3}

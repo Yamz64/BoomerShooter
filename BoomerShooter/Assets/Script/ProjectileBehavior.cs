@@ -50,6 +50,8 @@ public class ProjectileBehavior : NetworkBehaviour
         if (life_time <= 0)
         {
             DeathFunction(player);
+            if (data.death_sound != null)
+                PlayerAudioHandler.PlaySoundAtPoint(data.death_sound, transform.position, 1f, true, 3f);
         }
     }
 
@@ -78,6 +80,11 @@ public class ProjectileBehavior : NetworkBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (data.sound_mask == (data.sound_mask | (1 << other.gameObject.layer)) && owner != other.gameObject)
+        {
+            if (data.collide_sound != null)
+                PlayerAudioHandler.PlaySoundAtPoint(data.collide_sound, transform.position);
+        }
         if (data.collision_mask == (data.collision_mask | (1 << other.gameObject.layer)) && owner != other.gameObject)
         {
             if (data.die_on_contact)
@@ -85,9 +92,17 @@ public class ProjectileBehavior : NetworkBehaviour
                 if (!collided)
                 {
                     if (other.gameObject.GetComponent<Rigidbody>() == null)
+                    {
                         DeathFunction();
+                        if (data.death_sound != null)
+                            PlayerAudioHandler.PlaySoundAtPoint(data.death_sound, transform.position, 1f, true, 3f);
+                    }
                     else
+                    {
                         DeathFunction(other.gameObject);
+                        if (data.death_sound != null)
+                            PlayerAudioHandler.PlaySoundAtPoint(data.death_sound, transform.position, 1f, true, 3f);
+                    }
                 }
             }
         }

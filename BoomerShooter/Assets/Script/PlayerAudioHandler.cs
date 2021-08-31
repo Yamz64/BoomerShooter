@@ -34,15 +34,16 @@ public static class PlayerAudioHandler
         }
     }
 
-    public static void PlaySoundAtPoint(AudioClip clip, Vector3 position, float volume = 1, bool use_spatial_blending = true)
+    public static void PlaySoundAtPoint(AudioClip clip, Vector3 position, float volume = 1, bool use_spatial_blending = true, float range_factor = 1)
     {
         volume = Mathf.Clamp01(volume);
         audio_object = Resources.Load<Object>("LoadablePrefabs/Sound");
         GameObject sound = (GameObject)MonoBehaviour.Instantiate(audio_object, position, Quaternion.identity);
 
         sound.GetComponent<AudioSource>().clip = clip;
-        sound.GetComponent<AudioSource>().Play();
         sound.GetComponent<AudioSource>().volume = volume;
+        sound.GetComponent<AudioSource>().maxDistance = sound.GetComponent<AudioSource>().maxDistance * range_factor;
+        sound.GetComponent<AudioSource>().Play();
         if (!use_spatial_blending) sound.GetComponent<AudioSource>().spatialBlend = 0;
 
         Init();

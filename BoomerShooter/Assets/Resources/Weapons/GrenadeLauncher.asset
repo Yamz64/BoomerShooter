@@ -35,3 +35,6 @@ MonoBehaviour:
   - {fileID: 7741625113677808684, guid: dec2797cf1b1b7b4095fe8d3b6359cc0, type: 3}
   projectile: {fileID: 3475817317680054474, guid: b0fcaff280134da46a7a307afd14aa75, type: 3}
   anim: {fileID: 9100000, guid: 3c0fd9aaa9a74bf4092d42bf5c50d190, type: 2}
+  fire_sound: {fileID: 8300000, guid: ab1816c600abbc747b3b94fb5a8555b3, type: 3}
+  shot_miss: []
+  shot_hit: []

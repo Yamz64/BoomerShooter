@@ -17,6 +17,9 @@ public class Projectile : ScriptableObject
     public float explosion_time;
     public float explosion_radius;
     public LayerMask collision_mask;
+    public LayerMask sound_mask;
+    public AudioClip collide_sound;
+    public AudioClip death_sound;
     [HideInInspector]
     public Object blast_box;
 

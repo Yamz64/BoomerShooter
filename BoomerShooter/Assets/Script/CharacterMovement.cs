@@ -155,7 +155,7 @@ public class CharacterMovement : NetworkBehaviour
                 }
                 //check if the player is grounded (wait a frame before calculations are accepted
                 float ray_length = (col.height / 2f) + .005f;
-                if (Physics.Raycast(transform.position + col.center, -Vector3.up, ray_length, ~LayerMask.GetMask("Player", "Pickup")))
+                if (Physics.Raycast(transform.position + col.center, -Vector3.up, ray_length, ~LayerMask.GetMask("Player", "Pickup", "Projectile")))
                 {
                     if (!frame_check) frame_check = true;
                     else grounded = true;
