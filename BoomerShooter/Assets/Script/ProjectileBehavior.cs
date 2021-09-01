@@ -30,6 +30,7 @@ public class ProjectileBehavior : NetworkBehaviour
         Destroy(blast);
         */
         owner.GetComponent<WeaponBehavior>().SpawnExplosion(transform.position, Quaternion.identity, data.explosion_radius, data.damage, data.knockback, owner, player);
+        if (data.spawn_effect) owner.GetComponent<WeaponBehavior>().SpawnGeneric(data.effect_index, transform.position, transform.rotation);
     }
 
     void BreakOnCollide(GameObject player = null)
@@ -55,6 +56,8 @@ public class ProjectileBehavior : NetworkBehaviour
         }
     }
 
+    void SpawnEffect(GameObject player = null) { owner.GetComponent<WeaponBehavior>().SpawnGeneric(data.effect_index, transform.position, transform.rotation); }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -66,6 +69,7 @@ public class ProjectileBehavior : NetworkBehaviour
 
         if (data.explosive) DeathFunction += Explode;
         if (data.die_on_contact) DeathFunction += BreakOnCollide;
+        if (data.spawn_effect) DeathFunction += SpawnEffect;
     }
 
     // Update is called once per frame

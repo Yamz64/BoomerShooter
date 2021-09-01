@@ -112,6 +112,7 @@ public class WeaponBehavior : NetworkBehaviour
         //make sure that the target is a valid target before dealing damage
         if (target.GetComponent<NetworkIdentity>() == null || target.GetComponent<PlayerStats>() == null) return;
         Cmd_DealDamage(target, damage);
+        if (isLocalPlayer) damage_handler.SpawnDamageNumber(CalculateDamage(target, damage), target.transform.position);
     }
 
     public void DealDamageRPC(GameObject target, int damage)
@@ -119,6 +120,47 @@ public class WeaponBehavior : NetworkBehaviour
         //make sure that the target is a valid target before dealing damage
         if (target.GetComponent<NetworkIdentity>() == null || target.GetComponent<PlayerStats>() == null) return;
         Rpc_DealDamage(target, damage);
+        if (isLocalPlayer) damage_handler.SpawnDamageNumber(CalculateDamage(target, damage), target.transform.position);
+    }
+
+    public int CalculateDamage(GameObject target, int damage)
+    {
+        PlayerStats target_stats = target.GetComponent<PlayerStats>();
+
+        //first determine what type of armor the player has before dealing the damage
+        /*
+        Steps for dealing armor based damage:
+        1) Determine the armor type
+        2) Subtract the protected damage from the armor's total
+        3) Deal the rest of the damage to the player
+        4) If more damage is dealt to the armor than there is armor value then add that remaining damage to be subtracted from the player's health
+        */
+        switch (target_stats.GetArmorType())
+        {
+            //no armor
+            case 0:
+                return damage;
+            //regular armor 1/3 damage reduction
+            case 1:
+                int armor_damage = damage / 3;
+                int player_damage = (2 * damage) / 3;
+                if (target_stats.GetArmor() - armor_damage < 0)
+                {
+                    player_damage += Mathf.Abs(target_stats.GetArmor() - armor_damage);
+                }
+                return player_damage;
+            //super armor 1/2 damage reduction
+            case 2:
+                armor_damage = damage / 2;
+                player_damage = damage / 2;
+                if (target_stats.GetArmor() - armor_damage < 0)
+                {
+                    player_damage += Mathf.Abs(target_stats.GetArmor() - armor_damage);
+                }
+                return player_damage;
+            default:
+                return damage;
+        }
     }
     
     [Command]
@@ -139,7 +181,6 @@ public class WeaponBehavior : NetworkBehaviour
             //no armor
             case 0:
                 target_stats.SetHealth(target_stats.GetHealth() - damage, true);
-                damage_handler.SpawnDamageNumber(damage, target.transform.position);
                 break;
             //regular armor 1/3 damage reduction
             case 1:
@@ -152,7 +193,6 @@ public class WeaponBehavior : NetworkBehaviour
                 }
                 else target_stats.SetArmor(target_stats.GetArmor() - armor_damage);
                 target_stats.SetHealth(target_stats.GetHealth() - player_damage, true);
-                damage_handler.SpawnDamageNumber(player_damage, target.transform.position);
                 break;
             //super armor 1/2 damage reduction
             case 2:
@@ -165,11 +205,9 @@ public class WeaponBehavior : NetworkBehaviour
                 }
                 else target_stats.SetArmor(target_stats.GetArmor() - armor_damage);
                 target_stats.SetHealth(target_stats.GetHealth() - player_damage, true);
-                damage_handler.SpawnDamageNumber(player_damage, target.transform.position);
                 break;
             default:
                 target_stats.SetHealth(target_stats.GetHealth() - damage, true);
-                damage_handler.SpawnDamageNumber(damage, target.transform.position);
                 break;
         }
     }
@@ -192,7 +230,6 @@ public class WeaponBehavior : NetworkBehaviour
             //no armor
             case 0:
                 target_stats.SetHealth(target_stats.GetHealth() - damage, true);
-                damage_handler.SpawnDamageNumber(damage, target.transform.position);
                 break;
             //regular armor 1/3 damage reduction
             case 1:
@@ -205,7 +242,6 @@ public class WeaponBehavior : NetworkBehaviour
                 }
                 else target_stats.SetArmor(target_stats.GetArmor() - armor_damage);
                 target_stats.SetHealth(target_stats.GetHealth() - player_damage, true);
-                damage_handler.SpawnDamageNumber(player_damage, target.transform.position);
                 break;
             //super armor 1/2 damage reduction
             case 2:
@@ -218,11 +254,9 @@ public class WeaponBehavior : NetworkBehaviour
                 }
                 else target_stats.SetArmor(target_stats.GetArmor() - armor_damage);
                 target_stats.SetHealth(target_stats.GetHealth() - player_damage, true);
-                damage_handler.SpawnDamageNumber(player_damage, target.transform.position);
                 break;
             default:
                 target_stats.SetHealth(target_stats.GetHealth() - damage, true);
-                damage_handler.SpawnDamageNumber(damage, target.transform.position);
                 break;
         }
         target_stats.SetHealth(target_stats.GetHealth() - damage, true);
@@ -247,6 +281,19 @@ public class WeaponBehavior : NetworkBehaviour
         if(damaged != null) temp.AddObject(ref damaged);
 
         NetworkServer.Spawn(explosion);
+    }
+
+    public void SpawnGeneric(int index, Vector3 position, Quaternion rotation) { Rpc_SpawnGeneric(index, position, rotation); }
+
+    [ClientRpc]
+    private void Rpc_SpawnGeneric(int index, Vector3 position, Quaternion rotation)
+    {
+        //attempt to spawn a projectile at the index
+        NetworkManager manager = GameObject.FindGameObjectWithTag("NetworkManager").GetComponent<NetworkManager>();
+        if (index < 0 || index > manager.spawnPrefabs.Count - 1) Debug.LogError($"Index provided: {index}, is invalid, no such spawnable exists.");
+
+        GameObject generic = (GameObject)Instantiate(manager.spawnPrefabs[index], position, rotation);
+        NetworkServer.Spawn(generic);
     }
 
     IEnumerator BurstProjectile(Weapon weapon)

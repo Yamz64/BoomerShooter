@@ -45,6 +45,9 @@ public class BlastRadiusBehavior : NetworkBehaviour
         StartCoroutine(BlastDeath());
         if(damaged_objects == null)
         damaged_objects = new List<GameObject>();
+
+        //remove the explosion parent's effect
+        transform.GetChild(0).parent = null;
     }
 
     private void OnTriggerStay(Collider other)

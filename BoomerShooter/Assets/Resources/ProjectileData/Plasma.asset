@@ -13,11 +13,13 @@ MonoBehaviour:
   m_Name: Plasma
   m_EditorClassIdentifier: 
   network_index: 2
+  effect_index: 6
   damage: 25
   explosive: 0
   die_after_other_collision: 1
   die_on_contact: 1
   die_after_time: 0
+  spawn_effect: 1
   mass: 1
   life_time: Infinity
   knockback: 100

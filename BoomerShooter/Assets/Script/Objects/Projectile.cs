@@ -6,11 +6,13 @@ using UnityEngine;
 public class Projectile : ScriptableObject
 {
     public int network_index;
+    public int effect_index;
     public int damage;
     public bool explosive;
     public bool die_after_other_collision;
     public bool die_on_contact;
     public bool die_after_time;
+    public bool spawn_effect;
     public float mass;
     public float life_time;
     public float knockback;
