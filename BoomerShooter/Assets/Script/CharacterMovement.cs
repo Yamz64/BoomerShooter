@@ -166,7 +166,7 @@ public class CharacterMovement : NetworkBehaviour
                     grounded = false;
                 }
 
-                if (frame_check && Input.GetButton("Jump")) rb.velocity += new Vector3(0.0f, jump_speed, 0.0f);
+                if (frame_check && Input.GetButton("Jump") && !GetComponent<PlayerStats>().GetInteractionLock()) rb.velocity += new Vector3(0.0f, jump_speed, 0.0f);
 
                 Vector3 move_dir_forward = transform.forward;
                 Vector3 move_dir_right = -(Vector3.Cross(move_dir_forward, Vector3.up).normalized);

@@ -15,6 +15,12 @@ public class PlayerStats : NetworkBehaviour
     private int max_armor, max_health, max_bullets, max_shells, max_explosives, max_energy, armor_type;
     [SyncVar]
     private float overheal_decay_delay;
+    [SyncVar][SerializeField]
+    private string player_name;
+    [SyncVar][SerializeField]
+    private Color player_color_primary;
+    [SyncVar][SerializeField]
+    private Color player_color_secondary;
 
     public GameObject canvas;
 
@@ -31,12 +37,15 @@ public class PlayerStats : NetworkBehaviour
     public int GetExplosives() { return explosives; }
     public int GetEnergy() { return energy; }
     public int GetMaxArmor() { return max_armor; }
+    public string GetPlayerName() { return player_name; }
     public int GetMaxHealth() { return max_health; }
     public int GetMaxBullets() { return max_bullets; }
     public int GetMaxShells() { return max_shells; }
     public int GetMaxExplosives() { return max_explosives; }
     public int GetMaxEnergy() { return max_energy; }
     public int GetArmorType() { return armor_type; }
+    public Color GetPrimaryColor() { return player_color_primary; }
+    public Color GetSecondaryColor() { return player_color_secondary; }
 
     //--MODIFIERS--
     [ClientCallback]
@@ -76,6 +85,8 @@ public class PlayerStats : NetworkBehaviour
     public void SetEnergy(int e) { energy = e; if (energy > max_energy) energy = max_energy; }
     [ClientCallback]
     public void SetMaxArmor(int a) { max_armor = a; }
+    [Command]
+    public void SetPlayerName(string n) { player_name = n; }
     [ClientCallback]
     public void SetMaxHealth(int h) { max_health = h; }
     [ClientCallback]
@@ -95,6 +106,10 @@ public class PlayerStats : NetworkBehaviour
         }
         armor_type = a;
     }
+    [Command]
+    public void SetPrimaryColor(float r, float g, float b) { player_color_primary = new Color(r, g, b); }
+    [Command]
+    public void SetSecondaryColor(float r, float g, float b) { player_color_secondary = new Color(r, g, b); }
 
     //--MISC--  
     [ClientCallback]

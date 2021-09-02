@@ -14,6 +14,8 @@ public class WeaponBehavior : NetworkBehaviour
     public Weapon[] weapons;
     public Object bullet_decal;
 
+    [SyncVar]
+    private int id;
     private bool firing;
     private float max_interval;
     private List<List<Weapon>> held_weapons;
@@ -106,6 +108,17 @@ public class WeaponBehavior : NetworkBehaviour
 
         NetworkServer.Spawn(temp, connectionToClient);
     }
+
+    [Command]
+    private void UpdateID()
+    {
+        id = connectionToClient.connectionId;
+    }
+
+    public int GetID()
+    {
+        return id;
+    }
     
     public void DealDamage(GameObject target, int damage)
     {
@@ -113,6 +126,51 @@ public class WeaponBehavior : NetworkBehaviour
         if (target.GetComponent<NetworkIdentity>() == null || target.GetComponent<PlayerStats>() == null) return;
         Cmd_DealDamage(target, damage);
         if (isLocalPlayer) damage_handler.SpawnDamageNumber(CalculateDamage(target, damage), target.transform.position);
+        if (target.GetComponent<PlayerStats>().GetHealth() - CalculateDamage(target, damage) <= 0)
+        {
+            int state = 0;
+            //both don't have names
+            if ((stats.GetPlayerName() == null || stats.GetPlayerName() == "") && (target.GetComponent<PlayerStats>().GetPlayerName() == null || target.GetComponent<PlayerStats>().GetPlayerName() == "")) state = 0;
+            //the target doesn't have a name
+            else if ((stats.GetPlayerName() != null || stats.GetPlayerName() != "") && (target.GetComponent<PlayerStats>().GetPlayerName() == null || target.GetComponent<PlayerStats>().GetPlayerName() == "")) state = 1;
+            //this object doesn't have a name
+            else if ((stats.GetPlayerName() == null || stats.GetPlayerName() == "") && (target.GetComponent<PlayerStats>().GetPlayerName() != null || target.GetComponent<PlayerStats>().GetPlayerName() != "")) state = 2;
+            //they both have names
+            else if ((stats.GetPlayerName() != null || stats.GetPlayerName() != "") && (target.GetComponent<PlayerStats>().GetPlayerName() != null || target.GetComponent<PlayerStats>().GetPlayerName() != "")) state = 3;
+
+            //make sure if this connection is a host or has no netid it has something to print
+            string a = null;
+            string b = null;
+            a = id.ToString();
+            b = target.GetComponent<WeaponBehavior>().GetID().ToString();
+            
+            if (a == null || isServer) a = "Server";
+            if (b == null || b == "0") b = "Server";
+
+            switch (state) {
+                case 0:
+                    GetComponent<ChatBehavior>().SendMisc($"<#{ColorUtility.ToHtmlStringRGB(stats.GetPrimaryColor())}>{a}</color> <color=red>fragged</color> " +
+                        $"<#{ColorUtility.ToHtmlStringRGB(target.GetComponent<PlayerStats>().GetPrimaryColor())}>{b}</color> " +
+                        $"<color=red>with</color> {held_weapons[active_type][active_weapon].name}<color=red>!</color>");
+                    break;
+                case 1:
+                    GetComponent<ChatBehavior>().SendMisc($"<#{ColorUtility.ToHtmlStringRGB(stats.GetPrimaryColor())}>{stats.GetPlayerName()}</color> <color=red>fragged</color> " +
+                     $"<#{ColorUtility.ToHtmlStringRGB(target.GetComponent<PlayerStats>().GetPrimaryColor())}>{b}</color> " +
+                     $"<color=red>with</color> {held_weapons[active_type][active_weapon].name}<color=red>!</color>");
+                    break;
+                case 2:
+                    GetComponent<ChatBehavior>().SendMisc($"<#{ColorUtility.ToHtmlStringRGB(stats.GetPrimaryColor())}>{a}</color> <color=red>fragged</color> " +
+                     $"<#{ColorUtility.ToHtmlStringRGB(target.GetComponent<PlayerStats>().GetPrimaryColor())}>{target.GetComponent<PlayerStats>().GetPlayerName()}</color> " +
+                     $"<color=red>with</color> {held_weapons[active_type][active_weapon].name}<color=red>!</color>");
+                    break;
+                case 3:
+                    GetComponent<ChatBehavior>().SendMisc($"<#{ColorUtility.ToHtmlStringRGB(stats.GetPrimaryColor())}>{stats.GetPlayerName()}</color> <color=red>fragged</color> " +
+                     $"<#{ColorUtility.ToHtmlStringRGB(target.GetComponent<PlayerStats>().GetPrimaryColor())}>{target.GetComponent<PlayerStats>().GetPlayerName()}</color> " +
+                     $"<color=red>with</color> {held_weapons[active_type][active_weapon].name}<color=red>!</color>");
+                    break;
+
+            }
+        }
     }
 
     public void DealDamageRPC(GameObject target, int damage)
@@ -121,6 +179,9 @@ public class WeaponBehavior : NetworkBehaviour
         if (target.GetComponent<NetworkIdentity>() == null || target.GetComponent<PlayerStats>() == null) return;
         Rpc_DealDamage(target, damage);
         if (isLocalPlayer) damage_handler.SpawnDamageNumber(CalculateDamage(target, damage), target.transform.position);
+        if (target.GetComponent<PlayerStats>().GetHealth() - CalculateDamage(target, damage) <= 0)
+            GetComponent<ChatBehavior>().SendMisc($"<#{ColorUtility.ToHtmlStringRGB(stats.GetPrimaryColor())}>{stats.GetPlayerName()}</Color> fragged " +
+                $"<#{ColorUtility.ToHtmlStringRGB(target.GetComponent<PlayerStats>().GetPrimaryColor())}>{target.GetComponent<PlayerStats>().GetPlayerName()}</Color> with {held_weapons[active_type][active_weapon].name}!");
     }
 
     public int CalculateDamage(GameObject target, int damage)
@@ -760,6 +821,8 @@ public class WeaponBehavior : NetworkBehaviour
 
         //initialize list for keeping track of bullet holes
         bullet_holes = new List<GameObject>();
+
+        UpdateID();
     }
 
     // Update is called once per frame

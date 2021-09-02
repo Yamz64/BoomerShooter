@@ -50,3 +50,18 @@ public class ConsoleCommand<T> : ConsoleCommandBase
         command.Invoke(value);
     }
 }
+
+public class ConsoleCommand<T, U, V> : ConsoleCommandBase
+{
+    private Action<T, U, V> command;
+
+    public ConsoleCommand(string id, string description, string format, Action<T, U, V> command) : base(id, description, format)
+    {
+        this.command = command;
+    }
+
+    public void Invoke(T val1, U val2, V val3)
+    {
+        command.Invoke(val1, val2, val3);
+    }
+}

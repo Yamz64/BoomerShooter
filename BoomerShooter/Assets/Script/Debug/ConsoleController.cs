@@ -12,8 +12,12 @@ public class ConsoleController : NetworkBehaviour
     //COMMANDS
     public static ConsoleCommand HELP, KILL, NOCLIP;
     public static ConsoleCommand<float> SET_FOV, SET_VIEWMODEL_FOV, SET_MOUSE_SENS;
+    public static ConsoleCommand<string> SET_NAME;
+    public static ConsoleCommand<float, float, float> SET_COLOR_1, SET_COLOR_2;
 
     public List<object> command_list;
+
+    public bool GetConsoleOpen() { return show_console; }
 
     private void Awake()
     {
@@ -63,6 +67,30 @@ public class ConsoleController : NetworkBehaviour
                 GetComponent<CharacterMovement>().SetSensitivity(sensitivity);
             }
         });
+        
+        SET_NAME = new ConsoleCommand<string>("set_name", "What's your name?", "set_name <name>", (name) =>
+        {
+            if (isLocalPlayer)
+            {
+                GetComponent<PlayerStats>().SetPlayerName(name);
+            }
+        });
+
+        SET_COLOR_1 = new ConsoleCommand<float, float, float>("set_color_1", "Sets the player's primary color", "set_color_1 <R> <G> <B>", (r, g, b) =>
+        {
+            if (isLocalPlayer)
+            {
+                GetComponent<PlayerStats>().SetPrimaryColor(r, g, b);
+            }
+        });
+        
+        SET_COLOR_2 = new ConsoleCommand<float, float, float>("set_color_2", "Sets the player's secondary color", "set_color_2 <R> <G> <B>", (r, g, b) =>
+        {
+            if (isLocalPlayer)
+            {
+                GetComponent<PlayerStats>().SetSecondaryColor(r, g, b);
+            }
+        });
 
         //populate the command_list
         command_list = new List<object>
@@ -72,7 +100,10 @@ public class ConsoleController : NetworkBehaviour
             NOCLIP,
             SET_FOV,
             SET_VIEWMODEL_FOV,
-            SET_MOUSE_SENS
+            SET_MOUSE_SENS,
+            SET_NAME,
+            SET_COLOR_1,
+            SET_COLOR_2
         };
     }
 
@@ -91,11 +122,11 @@ public class ConsoleController : NetworkBehaviour
             {
                 for(int i = 0; i<input.Length; i++)
                 {
-                    if (input[i] == '`') toggle = true;
+                    if (input[i] == '`' && !GetComponent<ChatBehavior>().chat_open) toggle = true;
                 }
             }
             //handle opening the console
-            if (Input.GetKeyDown(KeyCode.BackQuote) || toggle)
+            if ((Input.GetKeyDown(KeyCode.BackQuote) || toggle) && !GetComponent<ChatBehavior>().chat_open)
             {
                 show_console = !show_console;
                 GetComponent<PlayerStats>().SetInteractionLock(!GetComponent<PlayerStats>().GetInteractionLock());
@@ -176,13 +207,20 @@ public class ConsoleController : NetworkBehaviour
 
             if (input.Contains(command_base.GetCommandID()))
             {
-                if(command_list[i] as ConsoleCommand != null)
+                if (command_list[i] as ConsoleCommand != null)
                 {
                     (command_list[i] as ConsoleCommand).Invoke();
                 }
-                else if(command_list[i] as ConsoleCommand<float> != null)
+                else if (command_list[i] as ConsoleCommand<float> != null)
                 {
                     (command_list[i] as ConsoleCommand<float>).Invoke(float.Parse(properties[1]));
+                //THIS MUST ALWAYS BE LAST IN THE LIST OF SINGLE TYPES!!!
+                }else if(command_list[i] as ConsoleCommand<string> != null)
+                {
+                    (command_list[i] as ConsoleCommand<string>).Invoke(properties[1]);
+                }else if(command_list[i] as ConsoleCommand<float, float, float> != null)
+                {
+                    (command_list[i] as ConsoleCommand<float, float, float>).Invoke(float.Parse(properties[1]), float.Parse(properties[2]), float.Parse(properties[3]));
                 }
             }
         }
