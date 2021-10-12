@@ -138,6 +138,11 @@ public class CharacterMovement : NetworkBehaviour
             cam.enabled = false;
             cam.GetComponent<AudioListener>().enabled = false;
         }
+        else
+        {
+            //hide the playermodel on the client's side
+            Destroy(transform.GetChild(2).gameObject);
+        }
     }
 
     // Update is called once per frame
