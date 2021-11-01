@@ -107,9 +107,15 @@ public class PlayerStats : NetworkBehaviour
         armor_type = a;
     }
     [Command]
-    public void SetPrimaryColor(float r, float g, float b) { player_color_primary = new Color(r, g, b); }
+    public void SetPrimaryColor(float r, float g, float b) {
+        player_color_primary = new Color(r, g, b);
+        StartCoroutine(LateColorCall());
+    }
     [Command]
-    public void SetSecondaryColor(float r, float g, float b) { player_color_secondary = new Color(r, g, b); }
+    public void SetSecondaryColor(float r, float g, float b) {
+        player_color_secondary = new Color(r, g, b);
+        StartCoroutine(LateColorCall());
+    }
 
     //--MISC--  
     [ClientCallback]
@@ -201,6 +207,17 @@ public class PlayerStats : NetworkBehaviour
     {
         yield return new WaitForEndOfFrame();
         UpdateUI();
+    }
+
+    IEnumerator LateColorCall()
+    {
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+
+        GetComponent<UpdatePlayerColor>().UpdatePlayerColorRPC();
     }
 
     //function will decay overheal over time
