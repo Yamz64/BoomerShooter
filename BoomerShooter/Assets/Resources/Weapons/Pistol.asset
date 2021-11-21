@@ -31,10 +31,11 @@ MonoBehaviour:
   shot_direction: {x: 0, y: 0, z: 0}
   shot_torque: {x: 0, y: 0, z: 0}
   model: {fileID: -2432090755550338912, guid: 1f6241be5e2b03a45b921217821dcce3, type: 3}
+  view_model: {fileID: 5318499948989892798, guid: e9e56c1bb13b05e4c91a5669e233cbca, type: 3}
   mats:
   - {fileID: 7741625113677808684, guid: 1f6241be5e2b03a45b921217821dcce3, type: 3}
   projectile: {fileID: 0}
-  anim: {fileID: 9100000, guid: 8a208d3a32c97be4d8942d978c648ac9, type: 2}
+  anim: {fileID: 9100000, guid: 279e744d353d0fa489bccc000e14b281, type: 2}
   fire_sound: {fileID: 8300000, guid: d83e208e2ce21844d8c576faa09b683c, type: 3}
   shot_miss:
   - {fileID: 8300000, guid: 03e054cd650890a4ea18856830e19f23, type: 3}

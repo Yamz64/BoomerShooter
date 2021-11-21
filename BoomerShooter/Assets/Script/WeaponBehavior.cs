@@ -44,10 +44,41 @@ public class WeaponBehavior : NetworkBehaviour
     void UpdateViewmodel(Weapon weapon)
     {
         //update the the viewmodel's model
-        viewmodel.GetComponent<MeshFilter>().mesh = weapon.model;
-        Material[] new_mats = new Material[weapon.mats.Length];
-        viewmodel.GetComponent<MeshRenderer>().materials = new_mats;
-        for(int i=0; i<weapon.mats.Length; i++) { viewmodel.GetComponent<MeshRenderer>().materials[i] = weapon.mats[i]; }
+        if (weapon.view_model == null)
+        {
+            //clear all children of the viewmodel if any
+            foreach(Transform child in viewmodel.transform)
+            {
+                Destroy(child.gameObject);
+            }
+
+            //enable the viewmodel's default members
+            viewmodel.GetComponent<MeshRenderer>().enabled = true;
+
+            //write to the members
+            viewmodel.GetComponent<MeshFilter>().mesh = weapon.model;
+            Material[] new_mats = new Material[weapon.mats.Length];
+            viewmodel.GetComponent<MeshRenderer>().materials = new_mats;
+            for (int i = 0; i < weapon.mats.Length; i++) { viewmodel.GetComponent<MeshRenderer>().materials[i] = weapon.mats[i]; }
+            anim = viewmodel.GetComponent<Animator>();
+        }
+        else
+        {
+            //clear all children of the viewmodel if any
+            foreach (Transform child in viewmodel.transform)
+            {
+                Destroy(child.gameObject);
+            }
+
+            //disable the viewmodel's mesh renderer
+            viewmodel.GetComponent<MeshRenderer>().enabled = false;
+            Material[] new_mats = new Material[0];
+            viewmodel.GetComponent<MeshRenderer>().materials = new_mats;
+
+            //spawn the viewmodel as a child and set it's animator as the animator
+            Instantiate(weapon.view_model, viewmodel.transform);
+            anim = viewmodel.transform.GetChild(0).GetComponent<Animator>();
+        }
 
         //update the viewmodel's position and shot_spawn position
         physics_parent.transform.localPosition = weapon.weapon_spawn;

@@ -33,6 +33,8 @@ public class Weapon : ScriptableObject
     [Tooltip("Torque added to projectile weapons")]
     public Vector3 shot_torque;
     public Mesh model;
+    [Tooltip("Overrides the model member")]
+    public Object view_model;
     [SerializeField]
     public Material[] mats;
     public Object projectile;
