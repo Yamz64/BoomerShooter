@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5831600243095284970}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Skeleton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,7 +40,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3189506363198140495}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Hammer.002_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -70,7 +70,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5739787974385092915}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -101,7 +101,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4493487200618641778}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Hammer.002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -132,7 +132,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8276206242437062386}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Hammer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -163,7 +163,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1984154934486169493}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: HammerController_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -193,7 +193,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1554722787984506723}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -226,7 +226,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1645734927840001335}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Trigger_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -256,7 +256,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4606156178469918110}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: HammerController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -288,7 +288,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4793179288969515524}
   - component: {fileID: 5508845996616503125}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: LugerViewmodel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -342,7 +342,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4118830420600785932}
   - component: {fileID: 8616696237453651138}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Lo-Poly
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -430,7 +430,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8306923735074268729}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Hammer.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -462,7 +462,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8139479305113107745}
   - component: {fileID: 7524399802796253616}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: BulletUnfired
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -552,7 +552,7 @@ GameObject:
   - component: {fileID: 8144675275551517048}
   - component: {fileID: 3648194774511069546}
   - component: {fileID: 7230419363481704555}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: BulletFired
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -25,16 +25,17 @@ MonoBehaviour:
   shot_rate: 0
   shot_interval: 0.75
   kick_back: 250
-  weapon_name: Revolver
-  weapon_spawn: {x: 0, y: -0.115, z: 0.387}
+  weapon_name: Magnum
+  weapon_spawn: {x: 0, y: -0.115, z: 0.637}
   shot_spawn: {x: 0, y: 0, z: 0}
   shot_direction: {x: 0, y: 0, z: 0}
   shot_torque: {x: 0, y: 0, z: 0}
   model: {fileID: -2432090755550338912, guid: dec2797cf1b1b7b4095fe8d3b6359cc0, type: 3}
+  view_model: {fileID: 3787803641238296730, guid: 85c51666afcc1f24f9b7695ab539fa16, type: 3}
   mats:
   - {fileID: 7741625113677808684, guid: 993dc119b5a0f754c95c5153cc2f4e0c, type: 3}
   projectile: {fileID: 0}
-  anim: {fileID: 9100000, guid: 7ed2ac56dbbf50b4e999f04ee9c839e0, type: 2}
+  anim: {fileID: 9100000, guid: a18e888e74bfcfe40aec923893075aae, type: 2}
   fire_sound: {fileID: 8300000, guid: 5150f3c7f7b1dc345a9122cf09e67adc, type: 3}
   shot_miss:
   - {fileID: 8300000, guid: 03e054cd650890a4ea18856830e19f23, type: 3}

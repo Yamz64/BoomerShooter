@@ -76,8 +76,8 @@ public class WeaponBehavior : NetworkBehaviour
             viewmodel.GetComponent<MeshRenderer>().materials = new_mats;
 
             //spawn the viewmodel as a child and set it's animator as the animator
-            Instantiate(weapon.view_model, viewmodel.transform);
-            anim = viewmodel.transform.GetChild(0).GetComponent<Animator>();
+            GameObject new_model = (GameObject)Instantiate(weapon.view_model, viewmodel.transform);
+            anim = new_model.GetComponent<Animator>();
         }
 
         //update the viewmodel's position and shot_spawn position

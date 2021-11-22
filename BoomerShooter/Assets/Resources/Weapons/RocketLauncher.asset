@@ -26,11 +26,12 @@ MonoBehaviour:
   shot_interval: 0.8
   kick_back: 0
   weapon_name: Rocket Launcher
-  weapon_spawn: {x: 0, y: 0, z: 0}
+  weapon_spawn: {x: 0, y: 0, z: -0.5}
   shot_spawn: {x: 0, y: -0.1, z: 0.4}
   shot_direction: {x: 0, y: 0, z: 0}
   shot_torque: {x: 0, y: 0, z: 0}
   model: {fileID: -2432090755550338912, guid: 2d21dd4c6ba67d343a733cd0c30a6a1e, type: 3}
+  view_model: {fileID: 0}
   mats:
   - {fileID: 7741625113677808684, guid: 2d21dd4c6ba67d343a733cd0c30a6a1e, type: 3}
   projectile: {fileID: 2907262764750256196, guid: eee65341114678b4da1e5647fb12b8ef, type: 3}
