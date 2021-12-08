@@ -26,7 +26,7 @@ MonoBehaviour:
   shot_interval: 1.5
   kick_back: 500
   weapon_name: Super Shotgun
-  weapon_spawn: {x: 0, y: -0.25, z: 0.35}
+  weapon_spawn: {x: 0, y: -0.2, z: 1}
   shot_spawn: {x: 0, y: 0, z: 0}
   shot_direction: {x: 0, y: 0, z: 0}
   shot_torque: {x: 0, y: 0, z: 0}

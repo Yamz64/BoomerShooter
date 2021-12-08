@@ -1,0 +1,111 @@
+<?xml version="1.0" standalone="no" ?>
+<!DOCTYPE project PUBLIC "-//audacityproject-1.3.0//DTD//EN" "http://audacity.sourceforge.net/xml/audacityproject-1.3.0.dtd" >
+<project xmlns="http://audacity.sourceforge.net/xml/" projname="SuperShotgun_Fire_data" version="1.3.0" audacityversion="2.3.0" sel0="0.0000000000" sel1="0.0000000000" vpos="32" h="0.0000000000" zoom="411.5183566791" rate="44100.0" snapto="off" selectionformat="hh:mm:ss + milliseconds" frequencyformat="Hz" bandwidthformat="octaves">
+	<tags>
+		<tag name="YEAR" value="2009-02-10"/>
+		<tag name="Software" value="Sony Sound Forge 8.0"/>
+		<tag name="major_brand" value="dash"/>
+		<tag name="minor_version" value="0"/>
+		<tag name="compatible_brands" value="iso6mp41"/>
+	</tags>
+	<wavetrack name="SuperShotgun_Fire" channel="0" linked="1" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="44100" gain="1.0" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="57794">
+				<waveblock start="0">
+					<simpleblockfile filename="e080864f.au" len="57794" min="-1.0" max="0.999969" rms="0.46863"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="SuperShotgun_Fire" channel="1" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="44100" gain="1.0" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="57794">
+				<waveblock start="0">
+					<simpleblockfile filename="e0808080.au" len="57794" min="-1.0" max="0.999969" rms="0.445378"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="dsdbopn" channel="2" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="22050" gain="5.623413" pan="0.0" colorindex="0">
+		<waveclip offset="0.63088435" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="3255">
+				<waveblock start="0">
+					<simpleblockfile filename="e0808175.au" len="3255" min="-0.992065" max="0.909698" rms="0.092457"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="Steam Release sound effect" channel="0" linked="1" mute="0" solo="0" height="150" minimized="0" isSelected="1" rate="44100" gain="0.794328" pan="0.0" colorindex="0">
+		<waveclip offset="0.51034014" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="62742">
+				<waveblock start="0">
+					<simpleblockfile filename="e080841d.au" len="62742" min="-0.773683" max="0.795356" rms="0.095126"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="Steam Release sound effect" channel="1" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="1" rate="44100" gain="0.794328" pan="0.0" colorindex="0">
+		<waveclip offset="0.51034014" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="62742">
+				<waveblock start="0">
+					<simpleblockfile filename="e080823c.au" len="62742" min="-0.696039" max="0.697998" rms="0.097724"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="Shotgun Shells Falling Sound Effect _Copyright FREE" channel="0" linked="1" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="44100" gain="0.199526" pan="0.0" colorindex="0">
+		<waveclip offset="1.05950113" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="29708">
+				<waveblock start="0">
+					<simpleblockfile filename="e0808fab.au" len="29708" min="-0.62793" max="0.679291" rms="0.055055"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="Shotgun Shells Falling Sound Effect _Copyright FREE" channel="1" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="44100" gain="0.199526" pan="0.0" colorindex="0">
+		<waveclip offset="1.05950113" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="29708">
+				<waveblock start="0">
+					<simpleblockfile filename="e0808abe.au" len="29708" min="-0.627777" max="0.679321" rms="0.055055"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="LoadShell" channel="0" linked="1" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="48000" gain="1.0" pan="0.0" colorindex="0">
+		<waveclip offset="1.15912500" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="11997">
+				<waveblock start="0">
+					<simpleblockfile filename="e0808586.au" len="11997" min="-0.892517" max="0.866394" rms="0.053691"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="LoadShell" channel="1" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="48000" gain="1.0" pan="0.0" colorindex="0">
+		<waveclip offset="1.15912500" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="11997">
+				<waveblock start="0">
+					<simpleblockfile filename="e08081d5.au" len="11997" min="-0.89267" max="0.866425" rms="0.053706"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="CloseSSG" channel="2" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="44100" gain="1.0" pan="0.0" colorindex="0">
+		<waveclip offset="1.45072562" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="11568">
+				<waveblock start="0">
+					<simpleblockfile filename="e0808d03.au" len="11568" min="-0.917694" max="0.934479" rms="0.122232"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+</project>
