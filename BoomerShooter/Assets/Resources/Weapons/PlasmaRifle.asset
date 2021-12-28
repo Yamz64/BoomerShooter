@@ -26,15 +26,16 @@ MonoBehaviour:
   shot_interval: 0.083333336
   kick_back: 0
   weapon_name: Plasma Rifle
-  weapon_spawn: {x: 0, y: -0.167, z: -0.58}
+  weapon_spawn: {x: 0, y: -0.167, z: 0}
   shot_spawn: {x: 0, y: -0.25, z: 0.5}
   shot_direction: {x: 0, y: 0, z: 0}
   shot_torque: {x: 0, y: 0, z: 0}
   model: {fileID: -2432090755550338912, guid: 9fb08387395fedb45bca446b2d57d90f, type: 3}
+  view_model: {fileID: 6532586466548057977, guid: 75d5a5b81d8f1294faeec8e9fa6e2694, type: 3}
   mats:
   - {fileID: 7741625113677808684, guid: dec2797cf1b1b7b4095fe8d3b6359cc0, type: 3}
   projectile: {fileID: 2907262764750256196, guid: c88507dacb3c0ce488e5e0471fcc8f7a, type: 3}
-  anim: {fileID: 9100000, guid: d20b5a138945c3b4ba267a8253b59d66, type: 2}
+  anim: {fileID: 9100000, guid: 1cf4014bb9261e643898b0d5ded1c882, type: 2}
   fire_sound: {fileID: 8300000, guid: 3f00faabb4a478e408797ad296d53139, type: 3}
   shot_miss: []
   shot_hit: []
