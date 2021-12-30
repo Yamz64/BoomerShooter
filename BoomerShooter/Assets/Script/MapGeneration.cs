@@ -36,6 +36,23 @@ public class MapGeneration : MonoBehaviour
         }
     }
 
+    //Calculate the area of a triangle given it's 3 points
+    float CalculateAreaTri(Vector3 a, Vector3 b, Vector3 c)
+    {
+        //Debug.Log($"A: {a}, B: {b}, C: {c}");
+        Vector3 d = ((Vector3.Dot(b - a, c - a)/Mathf.Pow((c - a).magnitude,2)) * (c - a)) + a;
+        float based = Vector3.Distance(c, a);
+        float height = Vector3.Distance(b, d);
+        float area = .5f * based * height;
+        //handle rounding errors
+        if (area < .01f) area = 0f;
+
+        area = (float)Math.Round(area * 100f) / 100f;
+        //Debug.Log($"Base: {based}, Height: {height}, Area: {area}");
+
+        return area;
+    }
+
     //returns true if point p is within triangle abc, given they are all within the same plane
     bool WithinTri(Vector3 a, Vector3 b, Vector3 c, Vector3 p)
     {
@@ -79,15 +96,20 @@ public class MapGeneration : MonoBehaviour
         }
 
         //USE THE AREA TEST TO NOW SEE IF THE POINT IS WITHIN THE TRIANGLE
-        //1) find the area of triangle abc
-        float triangle_area = .5f * Vector3.Distance(c_p, a_p) * Vector3.Distance(b_p, a_p + Vector3.Dot(b_p - a_p, c_p - a_p) * (c_p - a_p));
+        //1) find the area of triangle abc        
+        float triangle_area = CalculateAreaTri(a_p, b_p, c_p);
+
+        //failsafe to see if the triangle is even worth checking as a valid triangle
+        if (triangle_area == 0) return true;
 
         //2) find the areas of the 3 possible triangles between points abp, acp, bcp
-        float abp_area = .5f * Vector3.Distance(a_p, b_p) * Vector3.Distance(p_p, b_p + Vector3.Dot(p_p - b_p, a_p - b_p) * (a_p - b_p));
-        float acp_area = .5f * Vector3.Distance(b_p, c_p) * Vector3.Distance(p_p, c_p + Vector3.Dot(p_p - c_p, b_p - c_p) * (b_p - c_p));
-        float bcp_area = .5f * Vector3.Distance(c_p, a_p) * Vector3.Distance(p_p, a_p + Vector3.Dot(p_p - a_p, c_p - a_p) * (c_p - a_p));
+        float abp_area = CalculateAreaTri(a_p, p_p, b_p);
+        float acp_area = CalculateAreaTri(a_p, p_p, c_p);
+        float bcp_area = CalculateAreaTri(b_p, p_p, c_p);
 
         //3) check if the 3 resultant areas equal the full triangle's area, if they do then the point lies within the triangle or on the triangle so return true
+        //Debug.Log($"Reassurance: TRI {triangle_area}, ABP {abp_area}, ACP {acp_area}, BCP {bcp_area}");
+        //Debug.Log(triangle_area == abp_area + acp_area + bcp_area);
         return triangle_area == abp_area + acp_area + bcp_area;
     }
 
@@ -112,10 +134,11 @@ public class MapGeneration : MonoBehaviour
             }
 
             //while the remaining face is not a triangle
+            int edge_check = 0;
             while(face_verts.Count > 3)
             {
                 //1) pick an edge
-                Tuple<int, int> border_edge = face_edges[0];
+                Tuple<int, int> border_edge = face_edges[edge_check];
 
                 //2) pick a vert on that edge
                 int first = border_edge.Item1;
@@ -146,8 +169,10 @@ public class MapGeneration : MonoBehaviour
                     {
                         //make sure we're checking verts that aren't the first, chosen, or vert we're checking
                         if (face_verts[k].Item1 == first || face_verts[k].Item1 == chosen || face_verts[k].Item1 == face_verts[j].Item1) continue;
+                        //Debug.Log($"Checking {face_verts[k].Item2}");
                         if (WithinTri(brush.verts[first], brush.verts[chosen], face_verts[j].Item2, face_verts[k].Item2))
                         {
+                            //Debug.Log("FAILED!");
                             skip = true;
                             break;
                         }
@@ -156,6 +181,12 @@ public class MapGeneration : MonoBehaviour
 
                     third = face_verts[j].Item1;
                     break;
+                }
+                //if the end has been reached and third is still -1 then no valid vert has been found increment edge check and continue looping that face
+                if(third == -1)
+                {
+                    edge_check++;
+                    continue;
                 }
 
                 //4) store these 3 verts as valid points in a tri
@@ -202,34 +233,90 @@ public class MapGeneration : MonoBehaviour
         int[] e_tris = exported_tris.ToArray();
         return e_tris;
     }
-    /*
+    
     //function takes in a brush and calculates vert uvs based on planar projection of individual faces
     public Vector2[] CalculateUVS(Brush brush)
     {
-        //initialize all uvs at (0,0)
-        List<Vector2> e_uvs = new List<Vector2>();
+        //for every vert there is a uv
+        Vector2[] exported_uvs = new Vector2[brush.verts.Count];
 
-        //loop through all faces
+        //perform this operation for every face in the mesh
         for(int i=0; i<brush.faces.Count; i++)
         {
-            //first find the longest distance between vertices in the face
-            SortedSet<Tuple<Tuple<int, int>, float>> point_distance = new SortedSet<Tuple<Tuple<int, int>, float>>(new UVComparer<Tuple<Tuple<int,int>,float>>((a, b) => a.Item2 > b.Item2 ? -1 : a.Item2 < b.Item2 ? 1 : 0));
+            //find the longest distance between verts in the face
+            float longest = 0;
+            Vector3 u_vector = Vector3.zero;
             for(int j=0; j<brush.faces[i].Count; j++)
             {
                 for(int k=0; k<brush.faces[i].Count; k++)
                 {
-                    if(brush.faces[i][j] != brush.faces[i][k])
+                    //don't waste time checking the same verts :)
+                    if (i == k) continue;
+
+                    //calculate distance between 2 verts being checked record it if it's longer than the previous recorded distance, along with the vector they make
+                    float distance = Vector3.Distance(brush.verts[brush.faces[i][j]], brush.verts[brush.faces[i][k]]);
+                    if (distance > longest)
                     {
-                        point_distance.Add(new Tuple<Tuple<int, int>, float>(new Tuple<int, int>(brush.faces[i][j], brush.faces[i][k]), Vector3.Distance(brush.verts[brush.faces[i][j]], brush.verts[brush.faces[i][k]])));
+                        longest = distance;
+                        u_vector = (brush.verts[brush.faces[i][k]] - brush.verts[brush.faces[i][j]]).normalized;
                     }
                 }
             }
 
+            //Attempt to find the orthogonal to the U vector by first finding another vector across the polygon
+            Vector3 v_vector = Vector3.zero;
+            for(int j=1; j<brush.faces[i].Count; j++)
+            {
+                //calculate a vector between vertices if it's the same as the u_vector try again
+                Vector3 temp = (brush.verts[brush.faces[i][j]] - brush.verts[brush.faces[i][0]]).normalized;
 
+                if (temp == u_vector) continue;
+
+                //find the v_vector by calculating 2 orthogonals
+                v_vector = Vector3.Cross(u_vector, Vector3.Cross(u_vector, temp));
+            }
+
+            //create 2D coordinates with respect to the newly calculated UV vector coords for all verts in the face
+            List<Vector2> face_vert_uv_coords = new List<Vector2>();
+            for(int j=0; j<brush.faces[i].Count; j++)
+            {
+                //project the vertex onto the U an v vectors
+                float u_coord = Vector3.Dot(brush.verts[brush.faces[i][j]], u_vector)/Mathf.Pow(u_vector.magnitude, 2);
+                float v_coord = Vector3.Dot(brush.verts[brush.faces[i][j]], v_vector)/Mathf.Pow(v_vector.magnitude, 2);
+
+                //record these coords
+                face_vert_uv_coords.Add(new Vector2(u_coord, v_coord));
+            }
+
+            //transform the uv coords to Quadrant I of the cartesian plane (the positive one) by finding the most negative x and y points with respect to u_vector an v_vector
+            float lowest_u = 0;
+            float lowest_v = 0;
+            for(int j=0; j<face_vert_uv_coords.Count; j++)
+            {
+                if (face_vert_uv_coords[j].x < lowest_u) lowest_u = face_vert_uv_coords[j].x;
+                if (face_vert_uv_coords[j].y < lowest_v) lowest_v = face_vert_uv_coords[j].y;
+            }
+
+            for(int j=0; j<face_vert_uv_coords.Count; j++)
+            {
+                face_vert_uv_coords[j] = new Vector2(face_vert_uv_coords[j].x - lowest_u, face_vert_uv_coords[j].y - lowest_v);
+            }
+            
+            //scale back the uv coords with respect to the longest distance calculated earlier
+            for(int j=0; j<face_vert_uv_coords.Count; j++)
+            {
+                face_vert_uv_coords[j] = new Vector2(face_vert_uv_coords[j].x / longest, face_vert_uv_coords[j].y / longest);
+            }
+
+            //write the new uv coords to the exported uvs array
+            for(int j=0; j<brush.faces[i].Count; j++)
+            {
+                exported_uvs[brush.faces[i][j]] = face_vert_uv_coords[j];
+            }
         }
-
+        return exported_uvs;
     }
-    */
+    
 
     //given a list of vertex positions this function will generate a brush at the specified points
     public void GenerateBrush(Brush brush)
@@ -242,9 +329,13 @@ public class MapGeneration : MonoBehaviour
 
         int[] tris;
         tris = TriangulateBrush(brush);
-        
-        //temporary UV function
-        for(int i=0; i<uvs.Length; i++) { uvs[i] = new Vector2(0, 0); }
+        foreach(int vert in tris)
+        {
+            Debug.Log(vert);
+        }
+
+        uvs = CalculateUVS(brush);
+
 
         //instance mesh and set it's members to declared members
         Mesh mesh = new Mesh();
@@ -252,6 +343,7 @@ public class MapGeneration : MonoBehaviour
         mesh.vertices = verts;
         mesh.uv = uvs;
         mesh.triangles = tris;
+        mesh.RecalculateNormals();
 
         //create an object to use the mesh with
         GameObject w_mesh = new GameObject("Name", typeof(MeshFilter), typeof(MeshRenderer));
@@ -268,48 +360,25 @@ public class MapGeneration : MonoBehaviour
         //generate a test brush to test generation function
         Brush test = new Brush();
         test.name = "test";
+
+        /*
         test.verts = new List<Vector3>()
         {
-            new Vector3(-1f, -1f, -1f), new Vector3(-1f, -1f, 1f), new Vector3(1f, -1f, 1f),
-            new Vector3(1f, -1f, -1f), new Vector3(-1f, 1f, -1f), new Vector3(-1f, 1f, 1f),
-            new Vector3(1f, 1f, 1f), new Vector3(1f, 1f, -1f)
+            new Vector3(1f, -1f, -1f), new Vector3(1f, -1f, 1f), new Vector3(-1f, -1f, 1f), new Vector3(-1f, -1f, -1f),
+            new Vector3(-1f, -1f, 1f), new Vector3(-1f, 1f, 1f), new Vector3(-1f, 1f, -1f), new Vector3(-1f, -1f, -1f),
+            new Vector3(1f, -1f, 1f), new Vector3(1f, 1f, 1f), new Vector3(-1f, 1f, 1f), new Vector3(-1f, -1f, 1f),
+            new Vector3(1f, -1f, -1f), new Vector3(1f, 1f, -1f), new Vector3(1f, 1f, 1f), new Vector3(1f, -1f, 1f),
+            new Vector3(-1f, -1f, -1f), new Vector3(-1f, 1f, -1f), new Vector3(1f, 1f, -1f), new Vector3(1f, -1f, -1f),
+            new Vector3(-1f, 1f, -1f), new Vector3(-1f, 1f, 1f), new Vector3(1f, 1f, 1f), new Vector3(1f, 1f, -1f)
         };
         test.edges = new List<List<Tuple<int, int>>>()
         {
             new List<Tuple<int, int>>()
             {
-                new Tuple<int, int>(3, 2),
-                new Tuple<int, int>(2, 1),
-                new Tuple<int, int>(1, 0),
-                new Tuple<int, int>(0, 3)
-            },
-            new List<Tuple<int, int>>()
-            {
                 new Tuple<int, int>(0, 1),
-                new Tuple<int, int>(1, 5),
-                new Tuple<int, int>(5, 4),
-                new Tuple<int, int>(4, 0)
-            },
-            new List<Tuple<int, int>>()
-            {
-                new Tuple<int, int>(0, 4),
-                new Tuple<int, int>(4, 7),
-                new Tuple<int, int>(7, 3),
+                new Tuple<int, int>(1, 2),
+                new Tuple<int, int>(2, 3),
                 new Tuple<int, int>(3, 0)
-            },
-            new List<Tuple<int, int>>()
-            {
-                new Tuple<int, int>(3, 7),
-                new Tuple<int, int>(7, 6),
-                new Tuple<int, int>(6, 2),
-                new Tuple<int, int>(2, 3)
-            },
-            new List<Tuple<int, int>>()
-            {
-                new Tuple<int, int>(2, 6),
-                new Tuple<int, int>(6, 5),
-                new Tuple<int, int>(5, 1),
-                new Tuple<int, int>(1, 2)
             },
             new List<Tuple<int, int>>()
             {
@@ -317,16 +386,133 @@ public class MapGeneration : MonoBehaviour
                 new Tuple<int, int>(5, 6),
                 new Tuple<int, int>(6, 7),
                 new Tuple<int, int>(7, 4)
+            },
+            new List<Tuple<int, int>>()
+            {
+                new Tuple<int, int>(8, 9),
+                new Tuple<int, int>(9, 10),
+                new Tuple<int, int>(10, 11),
+                new Tuple<int, int>(11, 8)
+            },
+            new List<Tuple<int, int>>()
+            {
+                new Tuple<int, int>(12, 13),
+                new Tuple<int, int>(13, 14),
+                new Tuple<int, int>(14, 15),
+                new Tuple<int, int>(15, 12)
+            },
+            new List<Tuple<int, int>>()
+            {
+                new Tuple<int, int>(16, 17),
+                new Tuple<int, int>(17, 18),
+                new Tuple<int, int>(18, 19),
+                new Tuple<int, int>(19, 20)
+            },
+            new List<Tuple<int, int>>()
+            {
+                new Tuple<int, int>(20, 21),
+                new Tuple<int, int>(21, 22),
+                new Tuple<int, int>(22, 23),
+                new Tuple<int, int>(23, 20)
             }
         };
         test.faces = new List<List<int>>()
         {
-            new List<int>(){3, 2, 1, 0},
-            new List<int>(){0, 1, 5, 4},
-            new List<int>(){0, 4, 7, 3},
-            new List<int>(){3, 7, 6, 2},
-            new List<int>(){2, 6, 5, 1},
-            new List<int>(){4, 5, 6, 7}
+            new List<int>(){0, 1, 2, 3},
+            new List<int>(){4, 5, 6, 7},
+            new List<int>(){8, 9, 10, 11},
+            new List<int>(){12, 13, 14, 15},
+            new List<int>(){16, 17, 18, 19},
+            new List<int>(){20, 21, 22, 23}
+        };
+        */
+
+        Vector3 a = new Vector3(-1f, -1f, -1f);
+        Vector3 b = new Vector3(1f, -1f, -1f);
+        Vector3 c = new Vector3(1f, -1f, 1f);
+        Vector3 d = new Vector3(-1f, -1f, 1f);
+        Vector3 e = new Vector3(-1f, 1f, 1f);
+        Vector3 f = new Vector3(-1f, 1f, -1f);
+        Vector3 g = new Vector3(-1f, 0f, 0f);
+        Vector3 h = new Vector3(1f, 1f, 1f);
+        Vector3 i = new Vector3(1f, 1f, -1f);
+        Vector3 j = new Vector3(1f, 0f, 0f);
+
+        test.verts = new List<Vector3>()
+        {
+            a, b, c, d,
+            a, d, e, f, g,
+            f, e, h, i,
+            c, b, j, i, h,
+            a, g, j, b,
+            g, f, i, j,
+            c, h, e, d
+        };
+
+        test.edges = new List<List<Tuple<int, int>>>()
+        {
+            new List<Tuple<int, int>>()
+            {
+                new Tuple<int, int>(0, 1),
+                new Tuple<int, int>(1, 2),
+                new Tuple<int, int>(2, 3),
+                new Tuple<int, int>(3, 0)
+            },
+            new List<Tuple<int, int>>()
+            {
+                new Tuple<int, int>(4, 5),
+                new Tuple<int, int>(5, 6),
+                new Tuple<int, int>(6, 7),
+                new Tuple<int, int>(7, 8),
+                new Tuple<int, int>(8, 4)
+            },
+            new List<Tuple<int, int>>()
+            {
+                new Tuple<int, int>(9, 10),
+                new Tuple<int, int>(10, 11),
+                new Tuple<int, int>(11, 12),
+                new Tuple<int, int>(12, 9)
+            },
+            new List<Tuple<int, int>>()
+            {
+                new Tuple<int, int>(13, 14),
+                new Tuple<int, int>(14, 15),
+                new Tuple<int, int>(15, 16),
+                new Tuple<int, int>(16, 17),
+                new Tuple<int, int>(17, 13)
+            },
+            new List<Tuple<int, int>>()
+            {
+                new Tuple<int, int>(18, 19),
+                new Tuple<int, int>(19, 20),
+                new Tuple<int, int>(20, 21),
+                new Tuple<int, int>(21, 18)
+            },
+            new List<Tuple<int, int>>()
+            {
+                new Tuple<int, int>(22, 23),
+                new Tuple<int, int>(23, 24),
+                new Tuple<int, int>(24, 25),
+                new Tuple<int, int>(25, 22)
+            },
+            new List<Tuple<int, int>>()
+            {
+                new Tuple<int, int>(26, 27),
+                new Tuple<int, int>(27, 28),
+                new Tuple<int, int>(28, 29),
+                new Tuple<int, int>(29, 26)
+            }
+        };
+
+        test.faces = new List<List<int>>()
+        {
+            new List<int>() {0, 1, 2, 3},
+            new List<int>() {4, 5, 6, 7, 8},
+            new List<int>() {9, 10, 11, 12},
+            new List<int>() {13, 14, 15, 16, 17},
+            new List<int>() {18, 19, 20, 21},
+            new List<int>() {22, 23, 24, 25},
+            new List<int>() {26, 27, 28, 29},
         };
 
         GenerateBrush(test);
