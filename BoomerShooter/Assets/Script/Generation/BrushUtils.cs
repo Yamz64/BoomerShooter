@@ -3,18 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MapGeneration : MonoBehaviour
-{
+public class BrushUtils {
     public Material mat;
-
     /*simple object that holds data for a brush
-     * verts holds a list of 3D points for every vertex in the brush
-     * faces holds a list of list of indices pointing to verts that belong in faces of a mesh
-     * edges holds a list of list of ordered pairs containing edges between the verts of a face in a mesh
-     * outward holds a list of booleans determining the direction of a face in a brush
-     * 
-     * faces and edges MUST be parallel lists
-     */
+        * verts holds a list of 3D points for every vertex in the brush
+        * faces holds a list of list of indices pointing to verts that belong in faces of a mesh
+        * edges holds a list of list of ordered pairs containing edges between the verts of a face in a mesh
+        * outward holds a list of booleans determining the direction of a face in a brush
+        * 
+        * faces and edges MUST be parallel lists
+        */
     public struct Brush {
         public string name;
         public List<Vector3> verts;
@@ -114,7 +112,7 @@ public class MapGeneration : MonoBehaviour
     }
 
     //function for triangulating a brush
-    public int[] TriangulateBrush(Brush brush)
+    int[] TriangulateBrush(Brush brush)
     {
         List<int> exported_tris = new List<int>();
         //BEGIN TRIANGULATION ALGORITHM
@@ -235,7 +233,7 @@ public class MapGeneration : MonoBehaviour
     }
     
     //function takes in a brush and calculates vert uvs based on planar projection of individual faces
-    public Vector2[] CalculateUVS(Brush brush)
+    Vector2[] CalculateUVS(Brush brush)
     {
         //for every vert there is a uv
         Vector2[] exported_uvs = new Vector2[brush.verts.Count];
@@ -316,7 +314,6 @@ public class MapGeneration : MonoBehaviour
         }
         return exported_uvs;
     }
-    
 
     //given a list of vertex positions this function will generate a brush at the specified points
     public void GenerateBrush(Brush brush)
@@ -329,7 +326,7 @@ public class MapGeneration : MonoBehaviour
 
         int[] tris;
         tris = TriangulateBrush(brush);
-        foreach(int vert in tris)
+        foreach (int vert in tris)
         {
             Debug.Log(vert);
         }
@@ -352,169 +349,5 @@ public class MapGeneration : MonoBehaviour
         //set the object's mesh to the generated mesh
         w_mesh.GetComponent<MeshFilter>().mesh = mesh;
         w_mesh.GetComponent<MeshRenderer>().material = mat;
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        //generate a test brush to test generation function
-        Brush test = new Brush();
-        test.name = "test";
-
-        /*
-        test.verts = new List<Vector3>()
-        {
-            new Vector3(1f, -1f, -1f), new Vector3(1f, -1f, 1f), new Vector3(-1f, -1f, 1f), new Vector3(-1f, -1f, -1f),
-            new Vector3(-1f, -1f, 1f), new Vector3(-1f, 1f, 1f), new Vector3(-1f, 1f, -1f), new Vector3(-1f, -1f, -1f),
-            new Vector3(1f, -1f, 1f), new Vector3(1f, 1f, 1f), new Vector3(-1f, 1f, 1f), new Vector3(-1f, -1f, 1f),
-            new Vector3(1f, -1f, -1f), new Vector3(1f, 1f, -1f), new Vector3(1f, 1f, 1f), new Vector3(1f, -1f, 1f),
-            new Vector3(-1f, -1f, -1f), new Vector3(-1f, 1f, -1f), new Vector3(1f, 1f, -1f), new Vector3(1f, -1f, -1f),
-            new Vector3(-1f, 1f, -1f), new Vector3(-1f, 1f, 1f), new Vector3(1f, 1f, 1f), new Vector3(1f, 1f, -1f)
-        };
-        test.edges = new List<List<Tuple<int, int>>>()
-        {
-            new List<Tuple<int, int>>()
-            {
-                new Tuple<int, int>(0, 1),
-                new Tuple<int, int>(1, 2),
-                new Tuple<int, int>(2, 3),
-                new Tuple<int, int>(3, 0)
-            },
-            new List<Tuple<int, int>>()
-            {
-                new Tuple<int, int>(4, 5),
-                new Tuple<int, int>(5, 6),
-                new Tuple<int, int>(6, 7),
-                new Tuple<int, int>(7, 4)
-            },
-            new List<Tuple<int, int>>()
-            {
-                new Tuple<int, int>(8, 9),
-                new Tuple<int, int>(9, 10),
-                new Tuple<int, int>(10, 11),
-                new Tuple<int, int>(11, 8)
-            },
-            new List<Tuple<int, int>>()
-            {
-                new Tuple<int, int>(12, 13),
-                new Tuple<int, int>(13, 14),
-                new Tuple<int, int>(14, 15),
-                new Tuple<int, int>(15, 12)
-            },
-            new List<Tuple<int, int>>()
-            {
-                new Tuple<int, int>(16, 17),
-                new Tuple<int, int>(17, 18),
-                new Tuple<int, int>(18, 19),
-                new Tuple<int, int>(19, 20)
-            },
-            new List<Tuple<int, int>>()
-            {
-                new Tuple<int, int>(20, 21),
-                new Tuple<int, int>(21, 22),
-                new Tuple<int, int>(22, 23),
-                new Tuple<int, int>(23, 20)
-            }
-        };
-        test.faces = new List<List<int>>()
-        {
-            new List<int>(){0, 1, 2, 3},
-            new List<int>(){4, 5, 6, 7},
-            new List<int>(){8, 9, 10, 11},
-            new List<int>(){12, 13, 14, 15},
-            new List<int>(){16, 17, 18, 19},
-            new List<int>(){20, 21, 22, 23}
-        };
-        */
-
-        Vector3 a = new Vector3(-1f, -1f, -1f);
-        Vector3 b = new Vector3(1f, -1f, -1f);
-        Vector3 c = new Vector3(1f, -1f, 1f);
-        Vector3 d = new Vector3(-1f, -1f, 1f);
-        Vector3 e = new Vector3(-1f, 1f, 1f);
-        Vector3 f = new Vector3(-1f, 1f, -1f);
-        Vector3 g = new Vector3(-1f, 0f, 0f);
-        Vector3 h = new Vector3(1f, 1f, 1f);
-        Vector3 i = new Vector3(1f, 1f, -1f);
-        Vector3 j = new Vector3(1f, 0f, 0f);
-
-        test.verts = new List<Vector3>()
-        {
-            a, b, c, d,
-            a, d, e, f, g,
-            f, e, h, i,
-            c, b, j, i, h,
-            a, g, j, b,
-            g, f, i, j,
-            c, h, e, d
-        };
-
-        test.edges = new List<List<Tuple<int, int>>>()
-        {
-            new List<Tuple<int, int>>()
-            {
-                new Tuple<int, int>(0, 1),
-                new Tuple<int, int>(1, 2),
-                new Tuple<int, int>(2, 3),
-                new Tuple<int, int>(3, 0)
-            },
-            new List<Tuple<int, int>>()
-            {
-                new Tuple<int, int>(4, 5),
-                new Tuple<int, int>(5, 6),
-                new Tuple<int, int>(6, 7),
-                new Tuple<int, int>(7, 8),
-                new Tuple<int, int>(8, 4)
-            },
-            new List<Tuple<int, int>>()
-            {
-                new Tuple<int, int>(9, 10),
-                new Tuple<int, int>(10, 11),
-                new Tuple<int, int>(11, 12),
-                new Tuple<int, int>(12, 9)
-            },
-            new List<Tuple<int, int>>()
-            {
-                new Tuple<int, int>(13, 14),
-                new Tuple<int, int>(14, 15),
-                new Tuple<int, int>(15, 16),
-                new Tuple<int, int>(16, 17),
-                new Tuple<int, int>(17, 13)
-            },
-            new List<Tuple<int, int>>()
-            {
-                new Tuple<int, int>(18, 19),
-                new Tuple<int, int>(19, 20),
-                new Tuple<int, int>(20, 21),
-                new Tuple<int, int>(21, 18)
-            },
-            new List<Tuple<int, int>>()
-            {
-                new Tuple<int, int>(22, 23),
-                new Tuple<int, int>(23, 24),
-                new Tuple<int, int>(24, 25),
-                new Tuple<int, int>(25, 22)
-            },
-            new List<Tuple<int, int>>()
-            {
-                new Tuple<int, int>(26, 27),
-                new Tuple<int, int>(27, 28),
-                new Tuple<int, int>(28, 29),
-                new Tuple<int, int>(29, 26)
-            }
-        };
-
-        test.faces = new List<List<int>>()
-        {
-            new List<int>() {0, 1, 2, 3},
-            new List<int>() {4, 5, 6, 7, 8},
-            new List<int>() {9, 10, 11, 12},
-            new List<int>() {13, 14, 15, 16, 17},
-            new List<int>() {18, 19, 20, 21},
-            new List<int>() {22, 23, 24, 25},
-            new List<int>() {26, 27, 28, 29},
-        };
-
-        GenerateBrush(test);
     }
 }
