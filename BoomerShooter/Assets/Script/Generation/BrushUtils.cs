@@ -316,7 +316,7 @@ public class BrushUtils {
     }
 
     //given a list of vertex positions this function will generate a brush at the specified points
-    public void GenerateBrush(Brush brush)
+    public GameObject GenerateBrush(Brush brush)
     {
         //declare members to generate in mesh
         Vector3[] verts = new Vector3[brush.verts.Count];
@@ -343,11 +343,13 @@ public class BrushUtils {
         mesh.RecalculateNormals();
 
         //create an object to use the mesh with
-        GameObject w_mesh = new GameObject("Name", typeof(MeshFilter), typeof(MeshRenderer));
+        GameObject w_mesh = new GameObject(brush.name, typeof(MeshFilter), typeof(MeshRenderer));
         w_mesh.transform.localScale = Vector3.one;
 
         //set the object's mesh to the generated mesh
         w_mesh.GetComponent<MeshFilter>().mesh = mesh;
         w_mesh.GetComponent<MeshRenderer>().material = mat;
+
+        return w_mesh;
     }
 }

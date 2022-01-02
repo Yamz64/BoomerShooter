@@ -84,7 +84,7 @@ public class Sector
     public void Generate()
     {
         //1) Generate an object to hold all generated brushes
-        GameObject sector_geo = new GameObject("Map Geometry");
+        GameObject sector_geo = new GameObject("Sector Geometry");
 
         //2) Generate a floor Brush from the vertex data
         BrushUtils.Brush floor = new BrushUtils.Brush();
@@ -168,7 +168,8 @@ public class Sector
         //Generate the Bottom Mesh
         BrushUtils utility = new BrushUtils();
         utility.mat = floor_mat;
-        utility.GenerateBrush(floor);
+        GameObject floor_object = utility.GenerateBrush(floor);
+        floor_object.transform.parent = sector_geo.transform;
 
         //3) Generate Ceiling Brush
         BrushUtils.Brush ceiling = new BrushUtils.Brush();
@@ -275,6 +276,7 @@ public class Sector
         Debug.Log(output);
 
         utility.mat = ceiling_mat;
-        utility.GenerateBrush(ceiling);
+        GameObject ceiling_object = utility.GenerateBrush(ceiling);
+        ceiling_object.transform.parent = sector_geo.transform;
     }
 }

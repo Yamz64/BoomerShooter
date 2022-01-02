@@ -255,11 +255,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1481148721}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 200f40c937d9f864aae35514f58d91d4, type: 3}
+  m_Script: {fileID: 11500000, guid: fae52c3fbe90f584181ac5884b6fce0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  floor_mat: {fileID: 2100000, guid: 8a7199e7956e1d24c83accf136ad2cef, type: 2}
-  ceiling_mat: {fileID: 2100000, guid: f0ad43bfffdeb61499eaea0e6ad30c9d, type: 2}
+  generation_method: 0
+  map_width: 10
+  map_height: 10
+  room_number: 5
+  generation_events: []
 --- !u!1 &1820348403
 GameObject:
   m_ObjectHideFlags: 0
