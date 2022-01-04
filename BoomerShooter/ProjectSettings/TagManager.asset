@@ -6,6 +6,7 @@ TagManager:
   tags:
   - NetworkManager
   - Sound
+  - GenerationManager
   layers:
   - Default
   - TransparentFX

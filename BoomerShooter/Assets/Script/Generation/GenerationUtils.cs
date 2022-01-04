@@ -36,7 +36,7 @@ public class GenerationUtils
         }
     }
 
-    int Num_Leaves(BBox node)
+    public int Num_Leaves(BBox node)
     {
         int leaf_number = 0;
         if (node.branches.Count == 0) return 1;
@@ -87,7 +87,12 @@ public class GenerationUtils
                     while (!valid)
                     {
                         valid = true;
-                        potential_partition = (int)Mathf.Lerp(selected_room.bottom_left.y, selected_room.top_right.y, Random.Range(0f, 1f));
+                        //create a bell curve so that the partition will tend to lerp towards .5f
+                        float lerp_amount = 0;
+                        for (int j = 0; j < 30; j++) { lerp_amount += Random.Range(0f, 1f); }
+                        lerp_amount /= 30f;
+
+                        potential_partition = (int)Mathf.Lerp(selected_room.bottom_left.x, selected_room.top_right.x, Random.Range(0f, 1f));
                         if (potential_partition == 0) potential_partition = 1;
                         if (potential_partition == selected_room.top_right.y) potential_partition -= 1;
 
@@ -116,7 +121,12 @@ public class GenerationUtils
                     while (!valid)
                     {
                         valid = true;
-                        potential_partition = (int)Mathf.Lerp(selected_room.bottom_left.x, selected_room.top_right.x, Random.Range(0f, 1f));
+                        //create a bell curve so that the partition will tend to lerp towards .5f
+                        float lerp_amount = 0;
+                        for(int j=0; j<30; j++) { lerp_amount += Random.Range(0f, 1f); }
+                        lerp_amount /= 30f;
+
+                        potential_partition = (int)Mathf.Lerp(selected_room.bottom_left.y, selected_room.top_right.y, lerp_amount);
                         if (potential_partition == 0) potential_partition = 1;
                         if (potential_partition == selected_room.top_right.x) potential_partition -= 1;
 
