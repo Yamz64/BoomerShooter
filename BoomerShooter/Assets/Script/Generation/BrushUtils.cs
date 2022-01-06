@@ -15,6 +15,7 @@ public class BrushUtils {
         */
     public struct Brush {
         public string name;
+        public float uv_size;
         public List<Vector3> verts;
         public List<List<int>> faces;
         public List<List<Tuple<int, int>>> edges;
@@ -233,7 +234,7 @@ public class BrushUtils {
     }
     
     //function takes in a brush and calculates vert uvs based on planar projection of individual faces
-    Vector2[] CalculateUVS(Brush brush)
+    Vector2[] CalculateUVS(Brush brush, ref float uv_size)
     {
         //for every vert there is a uv
         Vector2[] exported_uvs = new Vector2[brush.verts.Count];
@@ -256,7 +257,9 @@ public class BrushUtils {
                     if (distance > longest)
                     {
                         longest = distance;
-                        u_vector = (brush.verts[brush.faces[i][k]] - brush.verts[brush.faces[i][j]]).normalized;
+                        u_vector = (brush.verts[brush.faces[i][k]] - brush.verts[brush.faces[i][j]]);
+                        uv_size = u_vector.magnitude;
+                        u_vector.Normalize();
                     }
                 }
             }
@@ -330,8 +333,8 @@ public class BrushUtils {
         {
             Debug.Log(vert);
         }
-
-        uvs = CalculateUVS(brush);
+        
+        uvs = CalculateUVS(brush, ref brush.uv_size);
 
 
         //instance mesh and set it's members to declared members
@@ -349,6 +352,13 @@ public class BrushUtils {
         //set the object's mesh to the generated mesh
         w_mesh.GetComponent<MeshFilter>().mesh = mesh;
         w_mesh.GetComponent<MeshRenderer>().material = mat;
+        w_mesh.GetComponent<MeshRenderer>().material.SetTextureScale("_BaseMap", new Vector2(brush.uv_size, brush.uv_size));
+        w_mesh.GetComponent<MeshRenderer>().material.SetTextureScale("_BumpMap", new Vector2(brush.uv_size, brush.uv_size));
+        w_mesh.GetComponent<MeshRenderer>().material.SetTextureScale("_EmissionMap", new Vector2(brush.uv_size, brush.uv_size));
+        w_mesh.GetComponent<MeshRenderer>().material.SetTextureScale("_MainTex", new Vector2(brush.uv_size, brush.uv_size));
+        w_mesh.GetComponent<MeshRenderer>().material.SetTextureScale("_MetallicGlossMap", new Vector2(brush.uv_size, brush.uv_size));
+        w_mesh.GetComponent<MeshRenderer>().material.SetTextureScale("_OcclusionMap", new Vector2(brush.uv_size, brush.uv_size));
+        w_mesh.GetComponent<MeshRenderer>().material.SetTextureScale("_SpecGlossMap", new Vector2(brush.uv_size, brush.uv_size));
 
         return w_mesh;
     }

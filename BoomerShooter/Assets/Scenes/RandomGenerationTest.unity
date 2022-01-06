@@ -247,6 +247,7 @@ MonoBehaviour:
   mats:
   - {fileID: 2100000, guid: e887cbd66c9790b48868f724999e511b, type: 2}
   - {fileID: 2100000, guid: 83f2bdea43381654e9675cc07a4b3e41, type: 2}
+  - {fileID: 2100000, guid: d81a0443a618cf84f8c77773fa55f0bd, type: 2}
 --- !u!4 &1061592088
 Transform:
   m_ObjectHideFlags: 0
@@ -305,9 +306,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   generation_method: 0
-  map_width: 1000
-  map_height: 1000
-  room_number: 10
+  map_width: 500
+  map_height: 500
+  room_number: 5
   generation_events:
   - m_PersistentCalls:
       m_Calls:

@@ -39,8 +39,11 @@ public class SewerGeneration : MonoBehaviour
     //Will generate a square room given a bbox
     public void GenerateSquareRSector(GenerationUtils.BBox bbox, string name = "")
     {
+        //initialize some variables ahead of time
+        GenerationUtils.Room room = new GenerationUtils.Room($"Sewer_Square_{name}");
+        //1)Generate the Floor
         //First create the ground floor vertices
-        List<Vector2> verts = new List<Vector2>()
+        List<Vector2> floor_verts = new List<Vector2>()
         {
             new Vector2(bbox.bottom_left.x + 1f, bbox.bottom_left.y + 1f),
             new Vector2(bbox.bottom_left.x + 1f, bbox.top_right.y - 1f),
@@ -59,16 +62,343 @@ public class SewerGeneration : MonoBehaviour
         d.edge = new Tuple<int, int>(3, 0);
         List<Sector.LineDev> line_devs = new List<Sector.LineDev>() { a, b, c, d };
         
-        Sector sqr_room = new Sector("Sewer_Square_Room" + "_" + name, 1.25f, 6f, verts, line_devs, mats[0], mats[1]);
-        Debug.Log("Sewer_Square_Room" + "_" + name);
-        sqr_room.Generate();
+        //Initialize the floor and add to a list of room_sectors
+        Sector floor = new Sector($"Sewer_Square_{name}_floor", 1.25f, 6f, floor_verts, line_devs, mats[0], mats[1]);
+        room.AddSector(floor);
+
+        //2) Generate the walls
+        //first create trim pillars
+        for(int i=0; i<floor_verts.Count; i++)
+        {
+            //initialize pillar variables
+            List<Vector2> trim_a_verts = new List<Vector2>() { Vector2.zero, Vector2.zero, Vector2.zero, Vector2.zero };
+            List<Vector2> trim_b_verts = new List<Vector2>() { Vector2.zero, Vector2.zero, Vector2.zero, Vector2.zero };
+
+            //each index will have unique pillar placements
+            switch (i)
+            {
+                case 0:
+                    //First Pillar
+                    trim_a_verts[0] = new Vector2(floor_verts[0].x, floor_verts[0].y - 1);
+                    trim_a_verts[1] = new Vector2(floor_verts[0].x, floor_verts[0].y);
+                    trim_a_verts[2] = new Vector2(floor_verts[0].x + 1, floor_verts[0].y);
+                    trim_a_verts[3] = new Vector2(floor_verts[0].x + 1, floor_verts[0].y - 1);
+
+                    //Second Pillar
+                    trim_b_verts[0] = new Vector2(floor_verts[0].x - 1, floor_verts[0].y);
+                    trim_b_verts[1] = new Vector2(floor_verts[0].x - 1, floor_verts[0].y + 1);
+                    trim_b_verts[2] = new Vector2(floor_verts[0].x, floor_verts[0].y + 1);
+                    trim_b_verts[3] = new Vector2(floor_verts[0].x, floor_verts[0].y);
+                    break;
+                case 1:
+                    //First Pillar
+                    trim_a_verts[0] = new Vector2(floor_verts[1].x - 1, floor_verts[1].y - 1);
+                    trim_a_verts[1] = new Vector2(floor_verts[1].x - 1, floor_verts[1].y);
+                    trim_a_verts[2] = new Vector2(floor_verts[1].x, floor_verts[1].y);
+                    trim_a_verts[3] = new Vector2(floor_verts[1].x, floor_verts[1].y - 1);
+
+                    //Second Pillar
+                    trim_b_verts[0] = new Vector2(floor_verts[1].x, floor_verts[1].y);
+                    trim_b_verts[1] = new Vector2(floor_verts[1].x, floor_verts[1].y + 1);
+                    trim_b_verts[2] = new Vector2(floor_verts[1].x + 1, floor_verts[1].y + 1);
+                    trim_b_verts[3] = new Vector2(floor_verts[1].x + 1, floor_verts[1].y);
+                    break;
+                case 2:
+                    //First Pillar
+                    trim_a_verts[0] = new Vector2(floor_verts[2].x - 1, floor_verts[2].y);
+                    trim_a_verts[1] = new Vector2(floor_verts[2].x - 1, floor_verts[2].y + 1);
+                    trim_a_verts[2] = new Vector2(floor_verts[2].x, floor_verts[2].y + 1);
+                    trim_a_verts[3] = new Vector2(floor_verts[2].x, floor_verts[2].y);
+
+                    //Second Pillar
+                    trim_b_verts[0] = new Vector2(floor_verts[2].x, floor_verts[2].y - 1);
+                    trim_b_verts[1] = new Vector2(floor_verts[2].x, floor_verts[2].y);
+                    trim_b_verts[2] = new Vector2(floor_verts[2].x + 1, floor_verts[2].y);
+                    trim_b_verts[3] = new Vector2(floor_verts[2].x + 1, floor_verts[2].y - 1);
+                    break;
+                case 3:
+                    //First Pillar
+                    trim_a_verts[0] = new Vector2(floor_verts[3].x, floor_verts[0].y);
+                    trim_a_verts[1] = new Vector2(floor_verts[3].x, floor_verts[0].y + 1);
+                    trim_a_verts[2] = new Vector2(floor_verts[3].x + 1, floor_verts[0].y + 1);
+                    trim_a_verts[3] = new Vector2(floor_verts[3].x + 1, floor_verts[0].y);
+
+                    //Second Pillar
+                    trim_b_verts[0] = new Vector2(floor_verts[3].x - 1, floor_verts[3].y - 1);
+                    trim_b_verts[1] = new Vector2(floor_verts[3].x - 1, floor_verts[3].y);
+                    trim_b_verts[2] = new Vector2(floor_verts[3].x, floor_verts[3].y);
+                    trim_b_verts[3] = new Vector2(floor_verts[3].x, floor_verts[3].y - 1);
+                    break;
+                default:
+                    Debug.LogError("Uhhh, this shouldn't be happening???");
+                    break;
+            }
+
+            //Initialize Pillar Sectors
+            Sector pillar_a = new Sector($"Sewer_Square_{name}_PillarA_{floor_verts[i]}", 6f, 6f, trim_a_verts, line_devs, mats[2], mats[2]);
+            Sector pillar_b = new Sector($"Sewer_Square_{name}_PillarB_{floor_verts[i]}", 6f, 6f, trim_b_verts, line_devs, mats[2], mats[2]);
+            room.AddSector(pillar_a);
+            room.AddSector(pillar_b);
+        }
+
+        //Roll to see which wall will become an entrance
+        int entrance_dir = UnityEngine.Random.Range(0, 4);
+        //next create wall sectors
+        for(int i=0; i < 4; i++)
+        {
+            //is this meant to be a wall and not an entrance?
+            if (i != entrance_dir)
+            {
+                List<Vector2> wall_verts = new List<Vector2>() { Vector2.zero, Vector2.zero, Vector2.zero, Vector2.zero };
+                //generate wall based on iteration
+                switch (i)
+                {
+                    //left
+                    case 0:
+                        wall_verts[0] = new Vector2(floor_verts[i].x - 1, floor_verts[i].y + 1);
+                        wall_verts[1] = new Vector2(floor_verts[i].x - 1, floor_verts[i + 1].y - 1);
+                        wall_verts[2] = new Vector2(floor_verts[i].x, floor_verts[i + 1].y - 1);
+                        wall_verts[3] = new Vector2(floor_verts[i].x, floor_verts[i].y + 1);
+                        break;
+                    //up
+                    case 1:
+                        wall_verts[0] = new Vector2(floor_verts[i].x + 1, floor_verts[i].y);
+                        wall_verts[1] = new Vector2(floor_verts[i].x + 1, floor_verts[i].y + 1);
+                        wall_verts[2] = new Vector2(floor_verts[i + 1].x - 1, floor_verts[i].y + 1);
+                        wall_verts[3] = new Vector2(floor_verts[i + 1].x - 1, floor_verts[i].y);
+                        break;
+                    //right
+                    case 2:
+                        wall_verts[0] = new Vector2(floor_verts[i].x, floor_verts[i + 1].y + 1);
+                        wall_verts[1] = new Vector2(floor_verts[i].x, floor_verts[i].y - 1);
+                        wall_verts[2] = new Vector2(floor_verts[i].x + 1, floor_verts[i].y - 1);
+                        wall_verts[3] = new Vector2(floor_verts[i].x + 1, floor_verts[i + 1].y + 1);
+                        break;
+                    //down
+                    case 3:
+                        wall_verts[0] = new Vector2(floor_verts[0].x + 1, floor_verts[0].y - 1);
+                        wall_verts[1] = new Vector2(floor_verts[0].x + 1, floor_verts[0].y);
+                        wall_verts[2] = new Vector2(floor_verts[i].x - 1, floor_verts[0].y);
+                        wall_verts[3] = new Vector2(floor_verts[i].x - 1, floor_verts[0].y - 1);
+                        break;
+                    //should literally never happen
+                    default:
+                        break;
+                }
+
+                Sector wall = new Sector($"Sewer_Square_{name}_Wall{i}", 6f, 6f, wall_verts, line_devs, mats[1], mats[1]);
+                room.AddSector(wall);
+            }
+            //if it's meant to be an entrance then 5 sectors need to be generated
+            else
+            {
+                List<Vector2> entrance_verts = new List<Vector2>() { Vector2.zero, Vector2.zero, Vector2.zero, Vector2.zero };
+                List<Vector2> trim_a_verts = new List<Vector2>() { Vector2.zero, Vector2.zero, Vector2.zero, Vector2.zero };
+                List<Vector2> trim_b_verts = new List<Vector2>() { Vector2.zero, Vector2.zero, Vector2.zero, Vector2.zero };
+                List<Vector2> wall_a_verts = new List<Vector2>() { Vector2.zero, Vector2.zero, Vector2.zero, Vector2.zero };
+                List<Vector2> wall_b_verts = new List<Vector2>() { Vector2.zero, Vector2.zero, Vector2.zero, Vector2.zero };
+
+                //generate entrance wall based on iteration
+                switch (i)
+                {
+                    //left
+                    case 0:
+                        //first generate a 9 tile wide entrance sector somewhere on the wall
+                        int first_bound = (int)UnityEngine.Random.Range(floor_verts[0].y + 3, floor_verts[1].y - 3);
+                        int second_bound = first_bound + 9;
+                        //edge case for entrance generation
+                        if (first_bound + 9 > floor_verts[1].y - 3) second_bound = first_bound - 9;
+
+                        //order first and second bound to insure clockwise generation
+                        if (second_bound < first_bound)
+                        {
+                            int temp = first_bound;
+                            first_bound = second_bound;
+                            second_bound = temp;
+                        }
+
+                        entrance_verts[0] = new Vector2(floor_verts[0].x - 1, first_bound);
+                        entrance_verts[1] = new Vector2(floor_verts[0].x - 1, second_bound);
+                        entrance_verts[2] = new Vector2(floor_verts[0].x, second_bound);
+                        entrance_verts[3] = new Vector2(floor_verts[0].x, first_bound);
+
+                        //next generate the trim walls
+                        trim_a_verts[0] = new Vector2(floor_verts[0].x - 1, first_bound - 1);
+                        trim_a_verts[1] = new Vector2(floor_verts[0].x - 1, first_bound);
+                        trim_a_verts[2] = new Vector2(floor_verts[0].x, first_bound);
+                        trim_a_verts[3] = new Vector2(floor_verts[0].x, first_bound - 1);
+
+                        trim_b_verts[0] = new Vector2(floor_verts[0].x - 1, second_bound);
+                        trim_b_verts[1] = new Vector2(floor_verts[0].x - 1, second_bound + 1);
+                        trim_b_verts[2] = new Vector2(floor_verts[0].x, second_bound + 1);
+                        trim_b_verts[3] = new Vector2(floor_verts[0].x, second_bound);
+
+                        //now generate walls
+                        wall_a_verts[0] = new Vector2(floor_verts[0].x - 1, floor_verts[0].y + 1);
+                        wall_a_verts[1] = new Vector2(floor_verts[0].x - 1, first_bound - 1);
+                        wall_a_verts[2] = new Vector2(floor_verts[0].x, first_bound - 1);
+                        wall_a_verts[3] = new Vector2(floor_verts[0].x, floor_verts[0].y + 1);
+
+                        wall_b_verts[0] = new Vector2(floor_verts[0].x - 1, second_bound + 1);
+                        wall_b_verts[1] = new Vector2(floor_verts[0].x - 1, floor_verts[1].y - 1);
+                        wall_b_verts[2] = new Vector2(floor_verts[3].x, floor_verts[1].y - 1);
+                        wall_b_verts[3] = new Vector2(floor_verts[3].x, second_bound + 1);
+                        break;
+                    //up
+                    case 1:
+                        //first generate a 9 tile wide entrance sector somewhere on the wall
+                        first_bound = (int)UnityEngine.Random.Range(floor_verts[1].x + 3, floor_verts[2].x - 3);
+                        second_bound = first_bound + 9;
+                        //edge case for entrance generation
+                        if (first_bound + 9 > floor_verts[2].x - 3) second_bound = first_bound - 9;
+
+                        //order first and second bound to insure clockwise generation
+                        if (second_bound < first_bound)
+                        {
+                            int temp = first_bound;
+                            first_bound = second_bound;
+                            second_bound = temp;
+                        }
+                        
+                        entrance_verts[0] = new Vector2(first_bound, floor_verts[1].y);
+                        entrance_verts[1] = new Vector2(first_bound, floor_verts[1].y + 1);
+                        entrance_verts[2] = new Vector2(second_bound, floor_verts[1].y + 1);
+                        entrance_verts[3] = new Vector2(second_bound, floor_verts[1].y);
+
+                        //next generate the trim walls
+                        trim_a_verts[0] = new Vector2(first_bound - 1, floor_verts[1].y);
+                        trim_a_verts[1] = new Vector2(first_bound - 1, floor_verts[1].y + 1);
+                        trim_a_verts[2] = new Vector2(first_bound, floor_verts[1].y + 1);
+                        trim_a_verts[3] = new Vector2(first_bound, floor_verts[1].y);
+
+                        trim_b_verts[0] = new Vector2(second_bound, floor_verts[1].y);
+                        trim_b_verts[1] = new Vector2(second_bound, floor_verts[1].y + 1);
+                        trim_b_verts[2] = new Vector2(second_bound + 1, floor_verts[1].y + 1);
+                        trim_b_verts[3] = new Vector2(second_bound + 1, floor_verts[1].y);
+
+                        //now generate walls
+                        wall_a_verts[0] = new Vector2(floor_verts[1].x + 1, floor_verts[1].y);
+                        wall_a_verts[1] = new Vector2(floor_verts[1].x + 1, floor_verts[1].y + 1);
+                        wall_a_verts[2] = new Vector2(first_bound - 1, floor_verts[1].y + 1);
+                        wall_a_verts[3] = new Vector2(first_bound - 1, floor_verts[1].y);
+
+                        wall_b_verts[0] = new Vector2(second_bound + 1, floor_verts[1].y);
+                        wall_b_verts[1] = new Vector2(second_bound + 1, floor_verts[1].y + 1);
+                        wall_b_verts[2] = new Vector2(floor_verts[2].x - 1, floor_verts[1].y + 1);
+                        wall_b_verts[3] = new Vector2(floor_verts[2].x - 1, floor_verts[1].y);
+                        break;
+                    //right
+                    case 2:
+                        //first generate a 9 tile wide entrance sector somewhere on the wall
+                        first_bound = (int)UnityEngine.Random.Range(floor_verts[3].y + 3, floor_verts[2].y - 3);
+                        second_bound = first_bound + 9;
+                        //edge case for entrance generation
+                        if (first_bound + 9 > floor_verts[1].y - 3) second_bound = first_bound - 9;
+
+                        //order first and second bound to insure clockwise generation
+                        if (second_bound < first_bound)
+                        {
+                            int temp = first_bound;
+                            first_bound = second_bound;
+                            second_bound = temp;
+                        }
+
+                        entrance_verts[0] = new Vector2(floor_verts[3].x, first_bound);
+                        entrance_verts[1] = new Vector2(floor_verts[3].x, second_bound);
+                        entrance_verts[2] = new Vector2(floor_verts[3].x + 1, second_bound);
+                        entrance_verts[3] = new Vector2(floor_verts[3].x + 1, first_bound);
+
+                        //next generate the trim walls
+                        trim_a_verts[0] = new Vector2(floor_verts[3].x, first_bound - 1);
+                        trim_a_verts[1] = new Vector2(floor_verts[3].x, first_bound);
+                        trim_a_verts[2] = new Vector2(floor_verts[3].x + 1, first_bound);
+                        trim_a_verts[3] = new Vector2(floor_verts[3].x + 1, first_bound - 1);
+
+                        trim_b_verts[0] = new Vector2(floor_verts[3].x, second_bound);
+                        trim_b_verts[1] = new Vector2(floor_verts[3].x, second_bound + 1);
+                        trim_b_verts[2] = new Vector2(floor_verts[3].x + 1, second_bound + 1);
+                        trim_b_verts[3] = new Vector2(floor_verts[3].x + 1, second_bound);
+
+                        //now generate walls
+                        wall_a_verts[0] = new Vector2(floor_verts[3].x, floor_verts[3].y + 1);
+                        wall_a_verts[1] = new Vector2(floor_verts[3].x, first_bound - 1);
+                        wall_a_verts[2] = new Vector2(floor_verts[3].x + 1, first_bound - 1);
+                        wall_a_verts[3] = new Vector2(floor_verts[3].x + 1, floor_verts[3].y + 1);
+
+                        wall_b_verts[0] = new Vector2(floor_verts[3].x, second_bound + 1);
+                        wall_b_verts[1] = new Vector2(floor_verts[3].x, floor_verts[2].y - 1);
+                        wall_b_verts[2] = new Vector2(floor_verts[3].x + 1, floor_verts[2].y - 1);
+                        wall_b_verts[3] = new Vector2(floor_verts[3].x + 1, second_bound + 1);
+                        break;
+                    //down
+                    case 3:
+                        //first generate a 9 tile wide entrance sector somewhere on the wall
+                        first_bound = (int)UnityEngine.Random.Range(floor_verts[0].x + 3, floor_verts[3].x - 3);
+                        second_bound = first_bound + 9;
+                        //edge case for entrance generation
+                        if (first_bound + 9 > floor_verts[3].x - 3) second_bound = first_bound - 9;
+
+                        //order first and second bound to insure clockwise generation
+                        if (second_bound < first_bound)
+                        {
+                            int temp = first_bound;
+                            first_bound = second_bound;
+                            second_bound = temp;
+                        }
+
+                        entrance_verts[0] = new Vector2(first_bound, floor_verts[0].y - 1);
+                        entrance_verts[1] = new Vector2(first_bound, floor_verts[0].y);
+                        entrance_verts[2] = new Vector2(second_bound, floor_verts[0].y);
+                        entrance_verts[3] = new Vector2(second_bound, floor_verts[0].y - 1);
+
+                        //next generate the trim walls
+                        trim_a_verts[0] = new Vector2(first_bound - 1, floor_verts[0].y - 1);
+                        trim_a_verts[1] = new Vector2(first_bound - 1, floor_verts[0].y);
+                        trim_a_verts[2] = new Vector2(first_bound, floor_verts[0].y);
+                        trim_a_verts[3] = new Vector2(first_bound, floor_verts[0].y - 1);
+
+                        trim_b_verts[0] = new Vector2(second_bound, floor_verts[0].y - 1);
+                        trim_b_verts[1] = new Vector2(second_bound, floor_verts[0].y);
+                        trim_b_verts[2] = new Vector2(second_bound + 1, floor_verts[0].y);
+                        trim_b_verts[3] = new Vector2(second_bound + 1, floor_verts[0].y - 1);
+
+                        //now generate walls
+                        wall_a_verts[0] = new Vector2(floor_verts[0].x + 1, floor_verts[0].y - 1);
+                        wall_a_verts[1] = new Vector2(floor_verts[0].x + 1, floor_verts[0].y);
+                        wall_a_verts[2] = new Vector2(first_bound - 1, floor_verts[0].y);
+                        wall_a_verts[3] = new Vector2(first_bound - 1, floor_verts[0].y - 1);
+
+                        wall_b_verts[0] = new Vector2(second_bound + 1, floor_verts[0].y - 1);
+                        wall_b_verts[1] = new Vector2(second_bound + 1, floor_verts[0].y);
+                        wall_b_verts[2] = new Vector2(floor_verts[3].x - 1, floor_verts[0].y);
+                        wall_b_verts[3] = new Vector2(floor_verts[3].x - 1, floor_verts[0].y - 1);
+                        break;
+                    //Should literally never happen
+                    default:
+                        break;
+                }
+
+                Sector entrance = new Sector($"Sewer_Square_{name}Entrance{i}", 1f, 6f, entrance_verts, line_devs, mats[0], mats[1]);
+                Sector trim_a = new Sector($"Sewer_Square_{name}EntranceTrimA{i}", 6f, 6f, trim_a_verts, line_devs, mats[2], mats[2]);
+                Sector trim_b = new Sector($"Sewer_Square_{name}EntranceTrimB{i}", 6f, 6f, trim_b_verts, line_devs, mats[2], mats[2]);
+                Sector wall_a = new Sector($"Sewer_Square_{name}EntranceWallA{i}", 6f, 6f, wall_a_verts, line_devs, mats[1], mats[1]);
+                Sector wall_b = new Sector($"Sewer_Square_{name}EntranceWallB{i}", 6f, 6f, wall_b_verts, line_devs, mats[1], mats[1]);
+
+                room.AddEntrance(entrance);
+                room.AddSector(trim_a);
+                room.AddSector(trim_b);
+                room.AddSector(wall_a);
+                room.AddSector(wall_b);
+
+            }
+        }
+        room.Generate();
     }
 
     public void GenerateRooms(GenerationUtils.BBox root)
     {
         if(root.branches.Count == 0)
         {
-            Debug.Log($"{root.bottom_left}, {root.top_right}");
             GenerateSquareRSector(root, $"{root.bottom_left}, {root.top_right}");
             return;
         }

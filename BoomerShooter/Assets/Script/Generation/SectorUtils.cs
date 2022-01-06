@@ -54,7 +54,7 @@ public class Sector
     public void SetCHeight(float c) {
         if(c <= floor_height)
         {
-            ceiling_height = c;
+            ceiling_height = floor_height;
             return;
         }
         ceiling_height = c;

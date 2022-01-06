@@ -36,6 +36,54 @@ public class GenerationUtils
         }
     }
 
+    //Class for organizing sectors into rooms
+    public class Room
+    {
+        private string name;
+        private List<Sector> sectors;
+        private List<Sector> entrances;
+
+        //CONSTRUCTOR
+        public Room(string n = "Unnamed Room", List<Sector> s = null, List<Sector> e = null)
+        {
+            name = n;
+            sectors = new List<Sector>();
+            entrances = new List<Sector>();
+            if (s != null) { for(int i=0; i<s.Count; i++) { sectors.Add(s[i]); } }
+            if (e != null) { for (int i = 0; i < e.Count; i++) { entrances.Add(s[i]); } }
+        }
+
+        //ACCESSORS
+        public string GetName() { return name; }
+        public List<Sector> GetSectors() { return sectors; }
+        public List<Sector> GetEntrances() { return entrances; }
+
+        //SETTERS
+        public void SetName(string n) { name = n; }
+        public void SetSectors(List<Sector> s)
+        {
+            sectors = new List<Sector>();
+            for(int i=0; i<s.Count; i++) { sectors.Add(s[i]); }
+        }
+        public void SetEntrances(List<Sector> e)
+        {
+            sectors = new List<Sector>();
+            for (int i = 0; i < e.Count; i++) { entrances.Add(e[i]); }
+        }
+
+        //MISC
+        public void AddSector(Sector s) { sectors.Add(s); }
+        public void AddEntrance(Sector e) { entrances.Add(e); }
+        public void RemoveSector(int i) { sectors.RemoveAt(i); }
+        public void RemoveEntrance(int i) { entrances.RemoveAt(i); }
+        public void Generate()
+        {
+            if (sectors.Count == 0 && entrances.Count == 0) return;
+            for(int i=0; i<sectors.Count; i++) { sectors[i].Generate(); }
+            for (int i = 0; i < entrances.Count; i++) { entrances[i].Generate(); }
+        }
+    }
+
     public int Num_Leaves(BBox node)
     {
         int leaf_number = 0;
