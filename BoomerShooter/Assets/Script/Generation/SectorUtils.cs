@@ -253,7 +253,6 @@ public class Sector
         {
             output += "\n\t" + ceiling.verts[i];
         }
-        Debug.Log(output);
 
         output = "Edges: ";
         for (int i = 0; i < ceiling.edges.Count; i++)
@@ -263,7 +262,6 @@ public class Sector
                 output += "\n\t" + ceiling.edges[i][j];
             }
         }
-        Debug.Log(output);
 
         output = "Faces: ";
         for (int i = 0; i < ceiling.faces.Count; i++)
@@ -273,7 +271,6 @@ public class Sector
                 output += "\n\t" + ceiling.faces[i][j];
             }
         }
-        Debug.Log(output);
 
         utility.mat = ceiling_mat;
         GameObject ceiling_object = utility.GenerateBrush(ceiling);

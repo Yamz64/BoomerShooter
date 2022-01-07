@@ -40,13 +40,16 @@ public class GenerationUtils
     public class Room
     {
         private string name;
+        private BBox bounds;
         private List<Sector> sectors;
         private List<Sector> entrances;
 
         //CONSTRUCTOR
-        public Room(string n = "Unnamed Room", List<Sector> s = null, List<Sector> e = null)
+        public Room(string n = "Unnamed Room", BBox b = null, List<Sector> s = null, List<Sector> e = null)
         {
             name = n;
+            bounds = new BBox();
+            SetBounds(b);
             sectors = new List<Sector>();
             entrances = new List<Sector>();
             if (s != null) { for(int i=0; i<s.Count; i++) { sectors.Add(s[i]); } }
@@ -55,11 +58,23 @@ public class GenerationUtils
 
         //ACCESSORS
         public string GetName() { return name; }
+        public BBox GetBounds() { return bounds; }
         public List<Sector> GetSectors() { return sectors; }
         public List<Sector> GetEntrances() { return entrances; }
 
         //SETTERS
         public void SetName(string n) { name = n; }
+        public void SetBounds(BBox b)
+        {
+            if (b != null)
+            {
+                bounds.bottom_left = b.bottom_left;
+                bounds.top_right = b.top_right;
+                bounds.root = b.root;
+                bounds.branches = new List<BBox>();
+                for (int i = 0; i < b.branches.Count; i++) { bounds.branches.Add(b.branches[i]); }
+            }
+        }
         public void SetSectors(List<Sector> s)
         {
             sectors = new List<Sector>();

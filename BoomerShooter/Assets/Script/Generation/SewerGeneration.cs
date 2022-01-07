@@ -11,6 +11,7 @@ public class SewerGeneration : MonoBehaviour
     private int map_width;
     private int map_height;
     private int room_number;
+    private List<GenerationUtils.Room> rooms;
 
     public void Awake()
     {
@@ -19,6 +20,17 @@ public class SewerGeneration : MonoBehaviour
         map_width = map_generator.map_width;
         map_height = map_generator.map_height;
         room_number = map_generator.room_number;
+    }
+
+    //function takes a vector and returns that vector rotated by deg degrees
+    public Vector2 Rotate2DVectorDeg(Vector2 vec, float deg)
+    {
+        float radians = Mathf.Deg2Rad * deg;
+
+        float new_x = Vector2.Dot(new Vector2(Mathf.Cos(radians), -Mathf.Sin(radians)), vec);
+        float new_y = Vector2.Dot(new Vector2(Mathf.Sin(radians), Mathf.Cos(radians)), vec);
+
+        return new Vector2(new_x, new_y);        
     }
 
     //called when the sewer generation event happens
@@ -30,7 +42,6 @@ public class SewerGeneration : MonoBehaviour
         //Generate shrunken bounding boxes for play
         //if this ever returns false then no rooms were generated
         if(ShrinkBoundingBoxes(bbox) == false) Debug.LogError("No valid rooms for generation unfortunately");
-        Debug.Log(utility.Num_Leaves(bbox));
 
         //given these modified bounding boxes, create room sectors
         GenerateRooms(bbox);
@@ -41,6 +52,7 @@ public class SewerGeneration : MonoBehaviour
     {
         //initialize some variables ahead of time
         GenerationUtils.Room room = new GenerationUtils.Room($"Sewer_Square_{name}");
+        room.SetBounds(bbox);
         //1)Generate the Floor
         //First create the ground floor vertices
         List<Vector2> floor_verts = new List<Vector2>()
@@ -395,11 +407,65 @@ public class SewerGeneration : MonoBehaviour
         room.Generate();
     }
 
+    public void GenerateCircularRSector(GenerationUtils.BBox bbox, string name = "")
+    {
+        //initialize some variables ahead of time
+        GenerationUtils.Room room = new GenerationUtils.Room($"Sewer_Square_{name}");
+        room.SetBounds(bbox);
+        //1)Generate the Floor
+        //First find the centerpoint of the bounding box
+        Vector2 center = new Vector2(bbox.bottom_left.x + (bbox.top_right.x - bbox.bottom_left.x) / 2f, 
+            bbox.bottom_left.y + (bbox.top_right.y - bbox.bottom_left.y) / 2f);
+
+        //Next find the radius of the circular room
+        float radius = 0f;
+        if (bbox.top_right.x - bbox.bottom_left.x > bbox.top_right.y - bbox.bottom_left.y) radius = (bbox.top_right.y - bbox.bottom_left.y) / 2f;
+        else radius = (bbox.top_right.x - bbox.bottom_left.x) / 2f;
+
+        //rotate a vector around the centerpoint by a preset random increment to generate the circular room's floor and ceiling verts
+        //14 sometimes produces a mysterious bug that prevents sectors from generating edges, never allow 14 to generate
+        int segments = UnityEngine.Random.Range(6, 17);
+        if (segments == 14) segments = 6;
+
+        List<Vector2> floor_verts = new List<Vector2>();
+        
+        for(int i=0; i<segments; i++)
+        {
+            //find vert location by adding rotated vector to centerpoint
+            float degrees = (360f / (float)segments) * i;
+
+            Vector2 new_vert = center + Rotate2DVectorDeg(-Vector2.up, -degrees) * radius;
+
+            floor_verts.Add(new_vert);
+        }
+
+        //generate the linedevs between sector's verts
+        List<Sector.LineDev> floor_line_devs = new List<Sector.LineDev>();
+        for(int i=0; i<floor_verts.Count; i++)
+        {
+            Sector.LineDev floor_line_dev = new Sector.LineDev();
+            //the last case
+            if (i == floor_verts.Count - 1) floor_line_dev.edge = new Tuple<int, int>(i, 0);
+            else floor_line_dev.edge = new Tuple<int, int>(i, i + 1);
+
+            floor_line_devs.Add(floor_line_dev);
+        }
+
+        //finally generate the floor sector
+        Sector floor = new Sector($"Sewer_Circle_{name}_floor", 1.25f, 6f, floor_verts, floor_line_devs, mats[0], mats[1]);
+        room.AddSector(floor);
+
+        room.Generate();
+    }
+
     public void GenerateRooms(GenerationUtils.BBox root)
     {
         if(root.branches.Count == 0)
         {
-            GenerateSquareRSector(root, $"{root.bottom_left}, {root.top_right}");
+            //1 in 3 chance that generated room is circular
+            int circle_chance = UnityEngine.Random.Range(0, 3);
+            if (circle_chance != 0) GenerateSquareRSector(root, $"{root.bottom_left}, {root.top_right}");
+            else GenerateCircularRSector(root, $"{root.bottom_left}, {root.top_right}");
             return;
         }
         else

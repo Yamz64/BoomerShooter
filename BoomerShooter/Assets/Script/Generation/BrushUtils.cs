@@ -151,8 +151,10 @@ public class BrushUtils {
                     //vertex equals the first or chosen vert
                     if (face_verts[j].Item1 == first || face_verts[j].Item1 == chosen) continue;
                     
+                    
                     //if skip flag is set to true then the vertex shares an edge with the chosen vert
                     bool skip = false;
+                    /*
                     for(int k=0; k<face_edges.Count; k++)
                     {
                         if((face_edges[k].Item1 == chosen && face_edges[k].Item2 == face_verts[j].Item1) || 
@@ -163,6 +165,7 @@ public class BrushUtils {
                         }
                     }
                     if (skip) continue;
+                    */
 
                     for (int k = 0; k < face_verts.Count; k++)
                     {
@@ -193,24 +196,52 @@ public class BrushUtils {
                 exported_tris.Add(chosen);
                 exported_tris.Add(third);
 
-                //5) remove vertex not picked in step 2
+                //calculate diagonal ahead of time (if picked first is flagged true then remove the first vert over the chosen
+                bool picked_first = false;
+                Tuple<int, int> diagonal = new Tuple<int, int>(0, 1);
+                for(int j=0; j < face_edges.Count; j++)
+                {
+                    if((face_edges[j].Item1 == first && face_edges[j].Item2 == third) || (face_edges[j].Item1 == third && face_edges[j].Item2 == first))
+                    {
+                        picked_first = true;
+                        diagonal = new Tuple<int, int>(chosen, third);
+                        break;
+                    }
+                    else if ((face_edges[j].Item1 == chosen && face_edges[j].Item2 == third) || (face_edges[j].Item1 == third && face_edges[j].Item2 == chosen))
+                    {
+                        diagonal = new Tuple<int, int>(third, first);
+                        break;
+                    }
+                }
+
+                //5) remove the vertex on the edge of the triangle
                 for (int j = 0; j < face_verts.Count; j++)
                 {
-                    if (face_verts[j].Item1 == first)
+                    if (face_verts[j].Item1 == first && picked_first)
+                    {
+                        face_verts.RemoveAt(j);
+                        break;
+                    }
+                    else if(face_verts[j].Item1 == chosen && !picked_first)
                     {
                         face_verts.RemoveAt(j);
                         break;
                     }
                 }
 
-                //6) remove all edges attached to that vertex
+                //7) remove all edges attached to that vertex
                 bool valid = true;
                 do
                 {
                     valid = true;
                     for(int j=0; j<face_edges.Count; j++)
                     {
-                        if(face_edges[j].Item1 == first || face_edges[j].Item2 == first)
+                        if((face_edges[j].Item1 == first || face_edges[j].Item2 == first) && picked_first)
+                        {
+                            face_edges.RemoveAt(j);
+                            valid = false;
+                            break;
+                        }else if((face_edges[j].Item1 == chosen || face_edges[j].Item2 == chosen) && !picked_first)
                         {
                             face_edges.RemoveAt(j);
                             valid = false;
@@ -219,8 +250,8 @@ public class BrushUtils {
                     }
                 } while (!valid);
 
-                //7) add new diagonal to edges
-                face_edges.Add(new Tuple<int, int>(chosen, third));
+                //8) add new diagonal to edges if it 
+                face_edges.Add(diagonal);
             }
             //8) add the remain vertices as a tri
             for(int j=0; j<face_verts.Count; j++)
@@ -329,10 +360,6 @@ public class BrushUtils {
 
         int[] tris;
         tris = TriangulateBrush(brush);
-        foreach (int vert in tris)
-        {
-            Debug.Log(vert);
-        }
         
         uvs = CalculateUVS(brush, ref brush.uv_size);
 
