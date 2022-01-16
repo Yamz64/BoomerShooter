@@ -53,7 +53,7 @@ public class BrushUtils {
     }
 
     //returns true if point p is within triangle abc, given they are all within the same plane
-    bool WithinTri(Vector3 a, Vector3 b, Vector3 c, Vector3 p)
+    public bool WithinTri(Vector3 a, Vector3 b, Vector3 c, Vector3 p)
     {
         //get orthogonal of triangle
         Vector3 l1 = (b - a).normalized;
@@ -109,7 +109,9 @@ public class BrushUtils {
         //3) check if the 3 resultant areas equal the full triangle's area, if they do then the point lies within the triangle or on the triangle so return true
         //Debug.Log($"Reassurance: TRI {triangle_area}, ABP {abp_area}, ACP {acp_area}, BCP {bcp_area}");
         //Debug.Log(triangle_area == abp_area + acp_area + bcp_area);
-        return triangle_area == abp_area + acp_area + bcp_area;
+
+        //chop off the decimal points for both the sum and total area for approximation
+        return (int)triangle_area == (int)(abp_area + acp_area + bcp_area);
     }
 
     //function for triangulating a brush

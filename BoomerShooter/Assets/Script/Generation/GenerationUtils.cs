@@ -99,6 +99,129 @@ public class GenerationUtils
         }
     }
 
+    //Not to be confused with BrushUtils triangles, this assists with Delauney Triangulation
+    public class Triangle {
+        private Vector2 _a;
+        private Vector2 _b;
+        private Vector2 _c;
+
+        //--CONSTRUCTORS--
+        public Triangle()
+        {
+            _a = Vector2.zero;
+            _b = Vector2.zero;
+            _c = Vector2.zero;
+        }
+
+        public Triangle(Vector2 a, Vector2 b, Vector2 c)
+        {
+            _a = new Vector2(a.x, a.y);
+            _b = new Vector2(b.x, b.y);
+            _c = new Vector2(c.x, c.y);
+        }
+
+        //--ACCESSORS--
+        public Vector2 GetA() { return _a; }
+        public Vector2 GetB() { return _b; }
+        public Vector2 GetC() { return _c; }
+
+        //--SETTERS--
+        public void SetA(float x, float y) { _a = new Vector2(x, y); }
+        public void SetB(float x, float y) { _b = new Vector2(x, y); }
+        public void SetC(float x, float y) { _c = new Vector2(x, y); }
+
+        //--MISC--
+        public bool WithinCircumCircle(Vector2 point)
+        {
+            //1) Find the Circumcenter of the Triangle
+            //sort the triangle's points clockwise as a failsafe
+            List<Vector2> verts = new List<Vector2>() { _a, _b, _c };
+            GenerationUtils util = new GenerationUtils();
+            util.SortClockwise(ref verts);
+            
+            //Find 2 perpindicular vectors that face into the triangle, they extend infinitely so that they will eventually intersect
+            //avoid vectors that point straight up to avoid divide by 0 errors
+            Vector2 a_b_dir = Vector3.Cross((verts[1] - verts[0]).normalized, Vector3.forward);
+            Vector2 b_c_dir = Vector3.Cross((verts[2] - verts[1]).normalized, Vector3.forward);
+
+            int overwrite_vector_mode = 0;
+            if (a_b_dir.x == 0)
+            {
+                a_b_dir = Vector3.Cross((verts[0] - verts[2]).normalized, Vector3.forward);
+                overwrite_vector_mode = 1;
+            }
+            else if (b_c_dir.x == 0)
+            {
+                b_c_dir = Vector3.Cross((verts[0] - verts[2]).normalized, Vector3.forward);
+                overwrite_vector_mode = 2;
+            }
+
+            //shift the vectors so that they become perpindicular bisectors after finding the midpoints between the legs
+            Vector2 a_b_mid = (verts[1] - verts[0])/2f + verts[0];
+            Vector2 b_c_mid = (verts[2] - verts[1])/2f + verts[1];
+
+            if(overwrite_vector_mode == 1) a_b_mid = (verts[0] - verts[2]) / 2f + verts[2];
+            else if(overwrite_vector_mode == 2) b_c_mid = (verts[0] - verts[2]) / 2f + verts[2];
+
+            //find the point that these vectors intersect and that will be the circumcircle
+            float a_b_slope = a_b_dir.y / a_b_dir.x;
+            float b_c_slope = b_c_dir.y / b_c_dir.x;
+
+            float a_b_intercept = a_b_mid.y - a_b_slope * a_b_mid.x;
+            float b_c_intercept = b_c_mid.y - b_c_slope * b_c_mid.x;
+
+            float circum_x = (a_b_intercept - b_c_intercept) / (b_c_slope - a_b_slope);
+            float circum_y = a_b_slope * circum_x + a_b_intercept;
+
+            Vector2 circum_center = new Vector2(circum_x, circum_y);
+
+            //2) Consider whether the Vector formed between the point and circumcenter is less than a vertex with the circumcenter
+            return ((point - circum_center).magnitude < (verts[0] - circum_center).magnitude);
+        }
+    }
+
+    //Function will take a List of points and sort them in a clockwise fashion starting with the bottommost point
+    public void SortClockwise(ref List<Vector2> points)
+    {
+        //1) First find the midpoint to all of these points
+        float mid_x = 0;
+        float mid_y = 0;
+        for(int i=0; i<points.Count; i++)
+        {
+            mid_x += points[i].x;
+            mid_y += points[i].y;
+        }
+        Vector2 mid_point = new Vector2(mid_x, mid_y) / (float)points.Count;
+
+        //2) Then begin sorting points based on the angle they form with each other with respect to the midpoint
+        bool valid = false;
+        while (!valid)
+        {
+            valid = true;
+            for (int i = 1; i < points.Count; i++)
+            {
+                //calculate the vectors that the point being considered forms with the previous point and then consider it's cross product
+                //(0, 0, -1) means the points are clockwise, (0, 0, 1) means that the points are counter clockwise
+                Vector2 point_a = points[i - 1];
+                Vector2 point_b = points[i];
+
+                Vector2 a_dir = (point_a - mid_point).normalized;
+                Vector2 b_dir = (point_b - mid_point).normalized;
+
+                Vector3 cross = Vector3.Cross(a_dir, b_dir).normalized;
+
+                //if the points are oriented counter clockwise swap them and start over the loop
+                if(cross.z > 0)
+                {
+                    points[i - 1] = point_b;
+                    points[i] = point_a;
+                    valid = false;
+                    break;
+                }
+            }
+        }
+    }
+    
     public int Num_Leaves(BBox node)
     {
         int leaf_number = 0;

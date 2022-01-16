@@ -20,6 +20,7 @@ public class SewerGeneration : MonoBehaviour
         map_width = map_generator.map_width;
         map_height = map_generator.map_height;
         room_number = map_generator.room_number;
+        rooms = new List<GenerationUtils.Room>();
     }
 
     //function takes a vector and returns that vector rotated by deg degrees
@@ -45,6 +46,15 @@ public class SewerGeneration : MonoBehaviour
 
         //given these modified bounding boxes, create room sectors
         GenerateRooms(bbox);
+
+        //create a Delauney Triangulation connecting all of the rooms
+        GenerationUtils.Triangle triangle = new GenerationUtils.Triangle(new Vector2(-1f, -1f), new Vector2(1f, -1f), new Vector2(0f, 1f));
+        Debug.Log(triangle.WithinCircumCircle(new Vector2(0f, 0f)));
+        List<Tuple<int, int>> d_triangulation_edges = new List<Tuple<int, int>>(GenerateDTriangulation());
+        for(int i=0; i<d_triangulation_edges.Count; i++)
+        {
+            Debug.Log(d_triangulation_edges[i]);
+        }
     }
 
     //Will generate a square room given a bbox
@@ -405,8 +415,10 @@ public class SewerGeneration : MonoBehaviour
             }
         }
         room.Generate();
+        rooms.Add(room);
     }
 
+    //Will generate a circular room of random sides 6-16 given a bbox
     public void GenerateCircularRSector(GenerationUtils.BBox bbox, string name = "")
     {
         //initialize some variables ahead of time
@@ -456,8 +468,10 @@ public class SewerGeneration : MonoBehaviour
         room.AddSector(floor);
 
         room.Generate();
+        rooms.Add(room);
     }
 
+    //driver for generating rooms
     public void GenerateRooms(GenerationUtils.BBox root)
     {
         if(root.branches.Count == 0)
@@ -476,6 +490,268 @@ public class SewerGeneration : MonoBehaviour
             }
         }
         return;
+    }
+
+    //Returns a list of tuples storing the edges between rooms after forming a Delauney Triangulation
+    public List<Tuple<int, int>> GenerateDTriangulation()
+    {
+        //1) loop through all of the rooms in the current generation and generate a list of their midpoints
+        List<Vector2> midpoints = new List<Vector2>();
+
+        for(int i=0; i<rooms.Count; i++)
+        {
+            Vector2 midpoint = (new Vector2(rooms[i].GetBounds().top_right.x - rooms[i].GetBounds().bottom_left.x, rooms[i].GetBounds().top_right.y - rooms[i].GetBounds().bottom_left.y) / 2f) + 
+                rooms[i].GetBounds().bottom_left;
+            midpoints.Add(midpoint);
+        }
+
+        //2) Now create a huge triangle that encompasses all of the points
+        //first find the midpoint of all of the points
+        Vector2 median = Vector2.zero;
+        for(int i=0; i<midpoints.Count; i++)
+        {
+            median.x += midpoints[i].x;
+            median.y += midpoints[i].y;
+        }
+        median /= midpoints.Count;
+
+        //now find the furthest point's distance from the median point
+        float furthest = 0;
+        for(int i=0; i<midpoints.Count; i++)
+        {
+            if(Vector2.Distance(median, midpoints[i]) > furthest) furthest = Vector2.Distance(median, midpoints[i]);
+        }
+
+        //generate an equilateral triangle with medians of the furthest point's distance make sure that these points are marked for later when the domain changes
+        List<GenerationUtils.Triangle> triangles = new List<GenerationUtils.Triangle>();
+        GenerationUtils.Triangle super_triangle = new GenerationUtils.Triangle();
+
+        triangles.Add(new GenerationUtils.Triangle());
+        for(int i=0; i<3; i++)
+        {
+            float degrees = 0;
+            switch (i)
+            {
+                case 0:
+                    degrees = -45;
+                    Vector2 tri_vert = median + Rotate2DVectorDeg(Vector2.down, degrees) * furthest;
+                    triangles[0].SetA(tri_vert.x, tri_vert.y);
+                    break;
+                case 1:
+                    degrees = -180;
+                    tri_vert = median + Rotate2DVectorDeg(Vector2.down, degrees) * furthest;
+                    triangles[0].SetB(tri_vert.x, tri_vert.y);
+                    break;
+                case 2:
+                    degrees = -315;
+                    tri_vert = median + Rotate2DVectorDeg(Vector2.down, degrees) * furthest;
+                    triangles[0].SetC(tri_vert.x, tri_vert.y);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        //check to see if all points are inside of the triangle, if not then double the triangle's size
+        bool valid = false;
+        while (!valid)
+        {
+            valid = true;
+            for(int i=0; i<midpoints.Count; i++)
+            {
+                BrushUtils utility = new BrushUtils();
+                if(!utility.WithinTri(triangles[0].GetA(), triangles[0].GetB(), triangles[0].GetC(), midpoints[i]))
+                {
+                    valid = false;
+                    break;
+                }
+            }
+            if (!valid)
+            {
+                //consider the super triangle's verts and calculate their median vector from the centerpoint, double this to create a new vert
+                Vector2 point = new Vector2(triangles[0].GetA().x, triangles[0].GetA().y);
+                Vector2 median_vector = point - median;
+                median_vector = median + median_vector * 2f;
+                triangles[0].SetA(median_vector.x, median_vector.y);
+
+                point = new Vector2(triangles[0].GetB().x, triangles[0].GetB().y);
+                median_vector = point - median;
+                median_vector = median + median_vector * 2f;
+                triangles[0].SetB(median_vector.x, median_vector.y);
+
+                point = new Vector2(triangles[0].GetC().x, triangles[0].GetC().y);
+                median_vector = point - median;
+                median_vector = median + median_vector * 2f;
+                triangles[0].SetC(median_vector.x, median_vector.y);
+            }
+        }
+        super_triangle = new GenerationUtils.Triangle(triangles[0].GetA(), triangles[0].GetB(), triangles[0].GetC());
+
+        List<Vector2> domain = new List<Vector2>() { triangles[0].GetA(), triangles[0].GetB(), triangles[0].GetC() };
+        GenerationUtils gen_utility = new GenerationUtils();
+        //loop through every midpoint to generate the Delauney Triangulation 
+        for(int i=0; i<midpoints.Count; i++)
+        {
+            /*
+            //3) Consider a point, remove any triangles that it lies within, and update their borders as the domain
+            valid = false;
+            while (!valid)
+            {
+                valid = true;
+                for (int j = 0; j < triangles.Count; j++)
+                {
+                    BrushUtils utility = new BrushUtils();
+                    if (utility.WithinTri(triangles[j].GetA(), triangles[j].GetB(), triangles[j].GetC(), midpoints[i]))
+                    {
+                        domain.Add(triangles[j].GetA());
+                        domain.Add(triangles[j].GetB());
+                        domain.Add(triangles[j].GetC());
+
+                        triangles.RemoveAt(j);
+                        valid = false;
+                        break;
+                    }
+                }
+            }
+            */
+            gen_utility.SortClockwise(ref domain);
+
+            //4) Create triangles with every other border edge of the domain if this is the first iteration then remove the super triangle from the list
+            for (int j = 0; j < domain.Count; j++)
+            {
+                GenerationUtils.Triangle new_tri = new GenerationUtils.Triangle();
+                if (j == domain.Count - 1)
+                {
+                    new_tri = new GenerationUtils.Triangle(midpoints[i], domain[j], domain[0]);
+                }
+                else new_tri = new GenerationUtils.Triangle(midpoints[i], domain[j], domain[j + 1]);
+                triangles.Add(new_tri);
+            }
+
+            if (i == 0) triangles.RemoveAt(0);
+
+            //5) Consider another point and see if any of the new triangles violate the delauney condition, delete these triangles,
+            //these triangle's border edges will become the new domain, remove duplicates in the domain
+            domain.Clear();
+            if (i != midpoints.Count - 1)
+            {
+                valid = false;
+                while (!valid)
+                {
+                    valid = true;
+                    for (int j = 0; j < triangles.Count; j++)
+                    {
+                        if(triangles[j].WithinCircumCircle(midpoints[i + 1]))
+                        {
+                            domain.Add(triangles[j].GetA());
+                            domain.Add(triangles[j].GetB());
+                            domain.Add(triangles[j].GetC());
+                            triangles.RemoveAt(j);
+                            valid = false;
+                            break;
+                        }
+                    }
+                }
+
+                valid = false;
+                while (!valid) {
+                    valid = true;
+                    for (int j = 0; j < domain.Count; j++)
+                    {
+                        for (int k = 0; k < domain.Count; k++)
+                        {
+                            if (j == k) continue;
+                            if (domain[j] == domain[k])
+                            {
+                                domain.RemoveAt(k);
+                                valid = false;
+                                break;
+                            }
+                        }
+                        if (!valid) break;
+                    }
+                }
+            }
+
+        }
+        //6) When all points have been considered remove any triangles that have to do with the super triangle
+        valid = false;
+        while (!valid)
+        {
+            valid = true;
+            for (int j = 0; j < triangles.Count; j++)
+            {
+                for (int k = 0; k < 3; k++)
+                {
+                    Vector2 considered_vert = new Vector2();
+                    switch (k)
+                    {
+                        case 0:
+                            considered_vert = triangles[j].GetA();
+                            break;
+                        case 1:
+                            considered_vert = triangles[j].GetB();
+                            break;
+                        case 2:
+                            considered_vert = triangles[j].GetC();
+                            break;
+                        default:
+                            considered_vert = triangles[j].GetA();
+                            break;
+                    }
+
+                    if (considered_vert == super_triangle.GetA() || considered_vert == super_triangle.GetB() || considered_vert == super_triangle.GetC())
+                    {
+                        triangles.RemoveAt(j);
+                        valid = false;
+                        break;
+                    }
+                }
+                if (!valid) break;
+            }
+        }
+
+        //7) Convert all triangles to edges, remove duplicates, and then return
+        List<Tuple<int, int>> exported_edges = new List<Tuple<int, int>>();
+        for(int i=0; i<triangles.Count; i++)
+        {
+            int a_index = -1;
+            int b_index = -1;
+            int c_index = -1;
+            for(int j=0; j<midpoints.Count; j++)
+            {
+                if (triangles[i].GetA() == midpoints[j]) a_index = j;
+                else if (triangles[i].GetB() == midpoints[j]) b_index = j;
+                else if (triangles[i].GetC() == midpoints[j]) c_index = j;
+                if (a_index != -1 && b_index != -1 && c_index != -1) break;
+            }
+            exported_edges.Add(new Tuple<int, int>(a_index, b_index));
+            exported_edges.Add(new Tuple<int, int>(b_index, c_index));
+            exported_edges.Add(new Tuple<int, int>(c_index, a_index));
+        }
+
+        valid = false;
+        while (!valid)
+        {
+            valid = true;
+            for (int i = 0; i < exported_edges.Count; i++)
+            {
+                for (int j = 0; j < exported_edges.Count; j++)
+                {
+                    if (i == j) continue;
+                    if((exported_edges[i].Item1 == exported_edges[j].Item1 && exported_edges[i].Item2 == exported_edges[j].Item2)
+                        || (exported_edges[i].Item1 == exported_edges[j].Item2 && exported_edges[i].Item2 == exported_edges[j].Item1))
+                    {
+                        exported_edges.RemoveAt(j);
+                        valid = false;
+                        break;
+                    }
+                }
+                if (!valid) break;
+            }
+        }
+
+        return exported_edges;
     }
 
     //Function will recursively attempt to reach room leaf nodes and shrink their bounding boxes down by 9 units returns false if a leaf is deemed invalid
