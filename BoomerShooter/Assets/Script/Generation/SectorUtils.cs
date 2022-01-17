@@ -19,6 +19,7 @@ public class Sector
     private List<LineDev> line_devs;    //basically edges of vertices
     private Material floor_mat;         //the material attached to the sector's floor brush
     private Material ceiling_mat;       //the material attached to the sector's ceiling brush
+    private GameObject parent;          //the parent object for the generated sector
 
     //CONSTRUCTOR
     public Sector(string n = "Unnamed Sector", float f = 0, float c = 0, List<Vector2> v = null, List<LineDev> l = null, Material f_mat = null, Material c_mat = null)
@@ -32,6 +33,7 @@ public class Sector
         SetLineDevs(l);
         floor_mat = f_mat;
         ceiling_mat = c_mat;
+        parent = null;
     }
 
     //ACCESSORS
@@ -40,6 +42,9 @@ public class Sector
     public float GetCHeight() { return ceiling_height; }
     public List<Vector2> GetVerts() { return verts; }
     public List<LineDev> GetLineDevs() { return line_devs; }
+    public Material GetFloorMat() { return floor_mat; }
+    public Material GetCeilingMat() { return ceiling_mat; }
+    public GameObject GetParent() { return parent; }
 
     //SETTERS
     public void SetName(string n) { name = n; }
@@ -71,6 +76,7 @@ public class Sector
     }
     public void SetFloorMat(Material m) { floor_mat = m; }
     public void SetCeilingMat(Material m) { ceiling_mat = m; }
+    public void SetParent(GameObject p) { parent = p; }
 
     //MISC
     public void AddVert(Vector2 v) { verts.Add(v); }
@@ -275,5 +281,6 @@ public class Sector
         utility.mat = ceiling_mat;
         GameObject ceiling_object = utility.GenerateBrush(ceiling);
         ceiling_object.transform.parent = sector_geo.transform;
+        parent = sector_geo;
     }
 }

@@ -42,18 +42,94 @@ public class SewerGeneration : MonoBehaviour
 
         //Generate shrunken bounding boxes for play
         //if this ever returns false then no rooms were generated
-        if(ShrinkBoundingBoxes(bbox) == false) Debug.LogError("No valid rooms for generation unfortunately");
+        if (ShrinkBoundingBoxes(bbox) == false) Debug.LogError("No valid rooms for generation unfortunately");
 
         //given these modified bounding boxes, create room sectors
         GenerateRooms(bbox);
 
         //create a Delauney Triangulation connecting all of the rooms
-        GenerationUtils.Triangle triangle = new GenerationUtils.Triangle(new Vector2(-1f, -1f), new Vector2(1f, -1f), new Vector2(0f, 1f));
-        Debug.Log(triangle.WithinCircumCircle(new Vector2(0f, 0f)));
         List<Tuple<int, int>> d_triangulation_edges = new List<Tuple<int, int>>(GenerateDTriangulation());
-        for(int i=0; i<d_triangulation_edges.Count; i++)
+        for (int i = 0; i < d_triangulation_edges.Count; i++)
         {
             Debug.Log(d_triangulation_edges[i]);
+        }
+
+        //if the delaunay Triangulation does not contain all generated rooms, does not generate, or one big room is generated then regenerate the whole map
+        bool valid = ValidateDTriangulation(d_triangulation_edges);
+        if (d_triangulation_edges.Count == 0 || rooms.Count == 1) valid = false;
+        while (!valid)
+        {
+            Debug.Log("Generated an invalid triangulation, regenerating!");
+            DestroyRooms();
+
+            bbox = new GenerationUtils.BBox(utility.GenerateMapBounds(map_width, map_height, room_number));
+            if (ShrinkBoundingBoxes(bbox) == false) Debug.LogError("No valid rooms for generation unfortunately");
+            GenerateRooms(bbox); d_triangulation_edges = new List<Tuple<int, int>>(GenerateDTriangulation());
+
+            for (int i = 0; i < d_triangulation_edges.Count; i++)
+            {
+                Debug.Log(d_triangulation_edges[i]);
+            }
+            valid = ValidateDTriangulation(d_triangulation_edges);
+            if (d_triangulation_edges.Count == 0 || rooms.Count == 1) valid = false;
+        }
+
+        //create a minimum spanning tree to connect the closest rooms
+        Debug.Log("--MST--");
+        List<Tuple<int, int>> mst = new List<Tuple<int, int>>(GenerateMST(d_triangulation_edges));
+        for (int i = 0; i < mst.Count; i++)
+        {
+            Debug.Log(mst[i]);
+        }
+
+        //add some additional paths to the MST, based on random chance from the Delaunay Triangulation
+        for(int i=0; i<d_triangulation_edges.Count; i++)
+        {
+            bool skip = false;
+            for (int j = 0; j < mst.Count; j++)
+            {
+                if((d_triangulation_edges[i].Item1 == mst[j].Item1 && d_triangulation_edges[i].Item2 == mst[j].Item2) ||
+                    (d_triangulation_edges[i].Item1 == mst[j].Item2 && d_triangulation_edges[i].Item2 == mst[j].Item1))
+                {
+                    skip = true;
+                    continue;
+                }
+            }
+            if (skip) continue;
+
+            float add_path = UnityEngine.Random.Range(0, 100f);
+
+            if(add_path <= 12.5f)
+            {
+                Debug.Log($"Added new path: {d_triangulation_edges[i]}!");
+                mst.Add(d_triangulation_edges[i]);
+            }
+        }
+
+        //draw some debugging rays
+        List<Vector2> midpoints = new List<Vector2>();
+
+        for (int i = 0; i < rooms.Count; i++)
+        {
+            Vector2 midpoint = (new Vector2(rooms[i].GetBounds().top_right.x - rooms[i].GetBounds().bottom_left.x, rooms[i].GetBounds().top_right.y - rooms[i].GetBounds().bottom_left.y) / 2f) +
+                rooms[i].GetBounds().bottom_left;
+            midpoints.Add(midpoint);
+        }
+
+        for(int i=0; i<d_triangulation_edges.Count; i++)
+        {
+            Vector3 start = new Vector3(midpoints[d_triangulation_edges[i].Item1].x, 0.0f, midpoints[d_triangulation_edges[i].Item1].y);
+            Vector3 dir = new Vector3(midpoints[d_triangulation_edges[i].Item2].x, 0.0f, midpoints[d_triangulation_edges[i].Item2].y) - start;
+
+            Debug.DrawRay(start, dir, Color.blue, Mathf.Infinity, false);
+        }
+
+        for (int i = 0; i < mst.Count; i++)
+        {
+            Vector3 start = new Vector3(midpoints[mst[i].Item1].x, 0.0f, midpoints[mst[i].Item1].y);
+            Vector3 dir = new Vector3(midpoints[mst[i].Item2].x, 0.0f, midpoints[mst[i].Item2].y) - start;
+
+            Debug.DrawRay(start, dir, Color.green, Mathf.Infinity, false);
         }
     }
 
@@ -754,6 +830,136 @@ public class SewerGeneration : MonoBehaviour
         return exported_edges;
     }
 
+    //Returns true if the given Delaunay Triangulation contains every room in the sewer
+    public bool ValidateDTriangulation(List<Tuple<int, int>> dt_edges)
+    {
+        for(int i=0; i<dt_edges.Count; i++)
+        {
+            bool found_room = false;
+            for(int j=0; j<rooms.Count; j++)
+            {
+                if(j == dt_edges[i].Item1 || j == dt_edges[i].Item2)
+                {
+                    found_room = true;
+                    break;
+                }
+            }
+            if (!found_room) return false;
+        }
+        return true;
+    }
+
+    //Function, given an array of edges forming a Delaunay Triangulation, will generate a minimum spanning tree
+    public List<Tuple<int, int>> GenerateMST(List<Tuple<int, int>> dt_edges)
+    {
+        //failsafe if no D triangulation was generated!
+        if (dt_edges.Count == 0) return new List<Tuple<int, int>>();
+
+        //1) loop through all of the rooms in the current generation and generate a list of their midpoints
+        List<Vector2> midpoints = new List<Vector2>();
+
+        for (int i = 0; i < rooms.Count; i++)
+        {
+            Vector2 midpoint = (new Vector2(rooms[i].GetBounds().top_right.x - rooms[i].GetBounds().bottom_left.x, rooms[i].GetBounds().top_right.y - rooms[i].GetBounds().bottom_left.y) / 2f) +
+                rooms[i].GetBounds().bottom_left;
+            midpoints.Add(midpoint);
+        }
+
+        //2) Pick a room, keep track of this room
+        List<int> visited = new List<int>();
+        List<Tuple<int, int>> mst_edges = new List<Tuple<int, int>>();
+
+        visited.Add(0);
+        while(visited.Count < rooms.Count)
+        {
+            //3) Examine all rooms reachable from the visited rooms (store in list of tuples storing connecting room indices, and distance between rooms for ease of access)
+            List<Tuple<Tuple<int, int>, float>> reachable_edges = new List<Tuple<Tuple<int, int>, float>>();
+
+            //first pass for adding all reachable edges
+            for(int i=0; i<visited.Count; i++)
+            {
+                for(int j=0; j<dt_edges.Count; j++)
+                {
+                    if(dt_edges[j].Item1 == visited[i] || dt_edges[j].Item2 == visited[i])
+                    {
+                        float distance = Vector2.Distance(midpoints[dt_edges[j].Item1], midpoints[dt_edges[j].Item2]);
+                        Tuple<int, int> connected_rooms = new Tuple<int, int>(dt_edges[j].Item1, dt_edges[j].Item2);
+                        reachable_edges.Add(new Tuple<Tuple<int, int>, float>(connected_rooms, distance));
+                    }
+                }
+            }
+
+            //remove duplicate edges
+            bool valid = false;
+            while (!valid)
+            {
+                valid = true;
+                for(int i=0; i<reachable_edges.Count; i++)
+                {
+                    for(int j=0; j<reachable_edges.Count; j++)
+                    {
+                        if (i == j) continue;
+                        if((reachable_edges[i].Item1.Item1 == reachable_edges[j].Item1.Item1 && reachable_edges[i].Item1.Item2 == reachable_edges[j].Item1.Item2) ||
+                            (reachable_edges[i].Item1.Item1 == reachable_edges[j].Item1.Item2 && reachable_edges[i].Item1.Item2 == reachable_edges[j].Item1.Item1))
+                        {
+                            reachable_edges.RemoveAt(j);
+                            valid = false;
+                            break;
+                        }
+                    }
+                    if (!valid) break;
+                }
+            }
+
+            //remove any edges already in the MST
+            valid = false;
+            while (!valid)
+            {
+                valid = true;
+                for(int i=0; i<reachable_edges.Count; i++)
+                {
+                    for(int j = 0; j<mst_edges.Count; j++)
+                    {
+                        if ((reachable_edges[i].Item1.Item1 == mst_edges[j].Item1 && reachable_edges[i].Item1.Item2 == mst_edges[j].Item2) ||
+                            (reachable_edges[i].Item1.Item1 == mst_edges[j].Item2 && reachable_edges[i].Item1.Item2 == mst_edges[j].Item1))
+                        {
+                            reachable_edges.RemoveAt(i);
+                            valid = false;
+                            break;
+                        }
+                    }
+                    if (!valid) break;
+                }
+            }
+
+            //4) Select the shortest edge that connects to an unvisited node, add this unvisited node to visited
+            reachable_edges.Sort((a, b) => a.Item2.CompareTo(b.Item2));
+
+            for(int i=0; i<reachable_edges.Count; i++)
+            {
+                bool first_visited = false;
+                bool second_visited = false;
+                for(int j = 0; j<visited.Count; j++)
+                {
+                    if (reachable_edges[i].Item1.Item1 == visited[j]) first_visited = true;
+                    if (reachable_edges[i].Item1.Item2 == visited[j]) second_visited = true;
+                }
+
+                if(!first_visited || !second_visited)
+                {
+                    mst_edges.Add(reachable_edges[i].Item1);
+                    if (!first_visited) visited.Add(reachable_edges[i].Item1.Item1);
+                    else if (!second_visited) visited.Add(reachable_edges[i].Item1.Item2);
+                    break;
+                }
+            }
+
+            //5) Repeat this process until all nodes have been visited
+        }
+
+        return mst_edges;
+    }
+
     //Function will recursively attempt to reach room leaf nodes and shrink their bounding boxes down by 9 units returns false if a leaf is deemed invalid
     //this allows for removal of leaves from generation
     public bool ShrinkBoundingBoxes(GenerationUtils.BBox bbox, int depth = 0)
@@ -817,5 +1023,23 @@ public class SewerGeneration : MonoBehaviour
             if (bbox.branches.Count == 0) return ShrinkBoundingBoxes(bbox, depth);
             return true;
         }
+    }
+
+    //Function will destroy all generated room sectors
+    public void DestroyRooms()
+    {
+        if (rooms.Count == 0) return;
+        for (int i = 0; i < rooms.Count; i++)
+        {
+            for (int j = 0; j < rooms[i].GetSectors().Count; j++)
+            {
+                Destroy(rooms[i].GetSectors()[j].GetParent());
+            }
+            for (int j = 0; j < rooms[i].GetEntrances().Count; j++)
+            {
+                Destroy(rooms[i].GetEntrances()[j].GetParent());
+            }
+        }
+        rooms = new List<GenerationUtils.Room>();
     }
 }
