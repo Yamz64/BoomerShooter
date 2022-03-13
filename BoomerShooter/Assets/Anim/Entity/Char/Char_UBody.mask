@@ -1,0 +1,253 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!319 &31900000
+AvatarMask:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Char_UBody
+  m_Mask: 00000000010000000100000000000000000000000100000001000000010000000100000000000000000000000100000001000000
+  m_Elements:
+  - m_Path: 
+    m_Weight: 1
+  - m_Path: Char
+    m_Weight: 0
+  - m_Path: Skeleton
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/A,Ah,L,RRoot
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/A,Ah,L,RRoot/A,Ah,L,RController
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/A,Ah,L,RRoot/A,Ah,L,RController/A,Ah,L,RController_end
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/AngryRoot
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/AngryRoot/AngryController
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/AngryRoot/AngryController/AngryController_end
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/F,VRoot
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/F,VRoot/F,VController
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/F,VRoot/F,VController/F,VController_end
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/FrownRoot
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/FrownRoot/FrownController
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/FrownRoot/FrownController/FrownController_end
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/HipController
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/HipController/HipController_end
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/I,ERoot
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/I,ERoot/I,EController
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/I,ERoot/I,EController/I,EController_end
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/LeftElbowTarget
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/LeftElbowTarget/LeftElbowTarget_end
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/LeftFootController
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/LeftFootController/LeftFootController_end
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/LeftHandController
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/LeftHandController/LeftHandController_end
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/LeftHip
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/LeftHip/LeftThigh
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/LeftHip/LeftThigh/LeftShin
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/LeftHip/LeftThigh/LeftShin/LeftFoot
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/LeftHip/LeftThigh/LeftShin/LeftFoot/LeftFoot_end
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/LeftKneeTarget
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/LeftKneeTarget/LeftKneeTarget_end
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/LeftShoulderController
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/LeftShoulderController/LeftShoulderController_end
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/O,U,W,QRoot
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/O,U,W,QRoot/O,U,W,QController
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/O,U,W,QRoot/O,U,W,QController/O,U,W,QController_end
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/RightElbowTarget
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/RightElbowTarget/RightElbowTarget_end
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/RightFootController
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/RightFootController/RightFootController_end
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/RightHandController
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/RightHandController/RightHandController_end
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/RightHip
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/RightHip/RightThigh
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/RightHip/RightThigh/RightShin
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/RightHip/RightThigh/RightShin/RightFoot
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/RightHip/RightThigh/RightShin/RightFoot/RightFoot_end
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/RightKneeTarget
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/RightKneeTarget/RightKneeTarget_end
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/RightShoulderController
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/RightShoulderController/RightShoulderController_end
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/SmileRoot
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/SmileRoot/SmileController
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/SmileRoot/SmileController/SmileController_end
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/Stomach
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/LeftShoulder
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/LeftShoulder/LeftUpperArm
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/LeftShoulder/LeftUpperArm/LeftForearm
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/LeftShoulder/LeftUpperArm/LeftForearm/LeftIndex1
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/LeftShoulder/LeftUpperArm/LeftForearm/LeftIndex1/LeftIndex2
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/LeftShoulder/LeftUpperArm/LeftForearm/LeftIndex1/LeftIndex2/LeftIndex3
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/LeftShoulder/LeftUpperArm/LeftForearm/LeftIndex1/LeftIndex2/LeftIndex3/LeftIndex4
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/LeftShoulder/LeftUpperArm/LeftForearm/LeftIndex1/LeftIndex2/LeftIndex3/LeftIndex4/LeftIndex4_end
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/LeftShoulder/LeftUpperArm/LeftForearm/LeftMiddle1
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/LeftShoulder/LeftUpperArm/LeftForearm/LeftMiddle1/LeftMiddle2
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/LeftShoulder/LeftUpperArm/LeftForearm/LeftMiddle1/LeftMiddle2/LeftMiddle3
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/LeftShoulder/LeftUpperArm/LeftForearm/LeftMiddle1/LeftMiddle2/LeftMiddle3/LeftMiddle4
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/LeftShoulder/LeftUpperArm/LeftForearm/LeftMiddle1/LeftMiddle2/LeftMiddle3/LeftMiddle4/LeftMiddle4_end
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/LeftShoulder/LeftUpperArm/LeftForearm/LeftPinkie1
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/LeftShoulder/LeftUpperArm/LeftForearm/LeftPinkie1/LeftPinkie2
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/LeftShoulder/LeftUpperArm/LeftForearm/LeftPinkie1/LeftPinkie2/LeftPinkie3
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/LeftShoulder/LeftUpperArm/LeftForearm/LeftPinkie1/LeftPinkie2/LeftPinkie3/LeftPinkie4
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/LeftShoulder/LeftUpperArm/LeftForearm/LeftPinkie1/LeftPinkie2/LeftPinkie3/LeftPinkie4/LeftPinkie4_end
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/LeftShoulder/LeftUpperArm/LeftForearm/LeftRing1
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/LeftShoulder/LeftUpperArm/LeftForearm/LeftRing1/LeftRing2
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/LeftShoulder/LeftUpperArm/LeftForearm/LeftRing1/LeftRing2/LeftRing3
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/LeftShoulder/LeftUpperArm/LeftForearm/LeftRing1/LeftRing2/LeftRing3/LeftRing4
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/LeftShoulder/LeftUpperArm/LeftForearm/LeftRing1/LeftRing2/LeftRing3/LeftRing4/LeftRing4_end
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/LeftShoulder/LeftUpperArm/LeftForearm/LeftThumb1
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/LeftShoulder/LeftUpperArm/LeftForearm/LeftThumb1/LeftThumb2
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/Stomach/Chest/LeftShoulder/LeftUpperArm/LeftForearm/LeftThumb1/LeftThumb2/LeftThumb3
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/Stomach/Chest/LeftShoulder/LeftUpperArm/LeftForearm/LeftThumb1/LeftThumb2/LeftThumb3/LeftThumb3_end
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/Stomach/Chest/RightShoulder
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/RightShoulder/RightUpperArm
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/RightShoulder/RightUpperArm/RightForearm
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/RightShoulder/RightUpperArm/RightForearm/RightIndex1
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/RightShoulder/RightUpperArm/RightForearm/RightIndex1/RightIndex2
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/RightShoulder/RightUpperArm/RightForearm/RightIndex1/RightIndex2/RightIndex3
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/RightShoulder/RightUpperArm/RightForearm/RightIndex1/RightIndex2/RightIndex3/RightIndex4
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/RightShoulder/RightUpperArm/RightForearm/RightIndex1/RightIndex2/RightIndex3/RightIndex4/RightIndex4_end
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/RightShoulder/RightUpperArm/RightForearm/RightMiddle1
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/RightShoulder/RightUpperArm/RightForearm/RightMiddle1/RightMiddle2
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/RightShoulder/RightUpperArm/RightForearm/RightMiddle1/RightMiddle2/RightMiddle3
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/RightShoulder/RightUpperArm/RightForearm/RightMiddle1/RightMiddle2/RightMiddle3/RightMiddle4
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/RightShoulder/RightUpperArm/RightForearm/RightMiddle1/RightMiddle2/RightMiddle3/RightMiddle4/RightMiddle4_end
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/RightShoulder/RightUpperArm/RightForearm/RightPinkie1
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/RightShoulder/RightUpperArm/RightForearm/RightPinkie1/RightPinkie2
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/RightShoulder/RightUpperArm/RightForearm/RightPinkie1/RightPinkie2/RightPinkie3
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/RightShoulder/RightUpperArm/RightForearm/RightPinkie1/RightPinkie2/RightPinkie3/RightPinkie4
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/RightShoulder/RightUpperArm/RightForearm/RightPinkie1/RightPinkie2/RightPinkie3/RightPinkie4/RightPinkie4_end
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/RightShoulder/RightUpperArm/RightForearm/RightRing1
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/RightShoulder/RightUpperArm/RightForearm/RightRing1/RightRing2
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/RightShoulder/RightUpperArm/RightForearm/RightRing1/RightRing2/RightRing3
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/RightShoulder/RightUpperArm/RightForearm/RightRing1/RightRing2/RightRing3/RightRing4
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/RightShoulder/RightUpperArm/RightForearm/RightRing1/RightRing2/RightRing3/RightRing4/RightRing4_end
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/RightShoulder/RightUpperArm/RightForearm/RightThumb1
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/RightShoulder/RightUpperArm/RightForearm/RightThumb1/RightThumb2
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/RightShoulder/RightUpperArm/RightForearm/RightThumb1/RightThumb2/RightThumb3
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/RightShoulder/RightUpperArm/RightForearm/RightThumb1/RightThumb2/RightThumb3/RightThumb3_end
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/Skull
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/Stomach/Chest/Skull/Skull_end
+    m_Weight: 1
+  - m_Path: Skeleton/ParentController/SurprisedRoot
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/SurprisedRoot/SurprisedController
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/SurprisedRoot/SurprisedController/SurprisedController_end
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/Th,K,Ch,Gy,T,ZRoot
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/Th,K,Ch,Gy,T,ZRoot/Th,K,Ch,Gy,T,ZController
+    m_Weight: 0
+  - m_Path: Skeleton/ParentController/Th,K,Ch,Gy,T,ZRoot/Th,K,Ch,Gy,T,ZController/Th,K,Ch,Gy,T,ZController_end
+    m_Weight: 0
