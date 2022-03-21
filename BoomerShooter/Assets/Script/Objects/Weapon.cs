@@ -10,6 +10,7 @@ public class Weapon : ScriptableObject
     public int weapon_type;
     [Tooltip("How much ammo does it require to fire this weapon once?")]
     public int shot_cost;
+    public int animation_id;
     [Tooltip("Only applies to hitscan weapons, projectiles use their own damage property!")]
     public int damage;
     public bool use_projectile;
@@ -32,6 +33,12 @@ public class Weapon : ScriptableObject
     public Vector3 shot_direction;
     [Tooltip("Torque added to projectile weapons")]
     public Vector3 shot_torque;
+    [Tooltip("Vector determining a positional offset of the weapon when spawned on weapon swap in relation to the player model's right hand")]
+    public Vector3 playermodel_t_offset;
+    [Tooltip("Euler angle offset of weapon when spawned on weapon swap in relation to the player model's right hand")]
+    public Vector3 playermodel_r_offset;
+    [Tooltip("Scale of weapon on playermodel")]
+    public Vector3 playermodel_scale = Vector3.one;
     public Mesh model;
     [Tooltip("Overrides the model member")]
     public Object view_model;

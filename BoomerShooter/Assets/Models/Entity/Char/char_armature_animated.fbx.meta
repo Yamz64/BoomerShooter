@@ -591,7 +591,7 @@ ModelImporter:
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 1
+      loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -612,7 +612,7 @@ ModelImporter:
       name: Pistol_Fall
       takeName: Skeleton|SkeletonAction
       internalID: 0
-      firstFrame: 1235
+      firstFrame: 1234
       lastFrame: 1235
       wrapMode: 0
       orientationOffsetY: 0
@@ -649,7 +649,7 @@ ModelImporter:
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 1
+      loopTime: 0
       loopBlend: 1
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -1105,7 +1105,7 @@ ModelImporter:
       name: Shotgun_Fall
       takeName: Skeleton|SkeletonAction
       internalID: 0
-      firstFrame: 2588
+      firstFrame: 2587
       lastFrame: 2588
       wrapMode: 0
       orientationOffsetY: 0
@@ -1540,7 +1540,7 @@ ModelImporter:
       name: ChainGun_Fall
       takeName: Skeleton|SkeletonAction
       internalID: 0
-      firstFrame: 3948.0002
+      firstFrame: 3947
       lastFrame: 3948.0002
       wrapMode: 0
       orientationOffsetY: 0
@@ -1975,7 +1975,7 @@ ModelImporter:
       name: RL_Fall
       takeName: Skeleton|SkeletonAction
       internalID: 0
-      firstFrame: 5269
+      firstFrame: 5268
       lastFrame: 5269
       wrapMode: 0
       orientationOffsetY: 0
@@ -2410,7 +2410,7 @@ ModelImporter:
       name: GL_Fall
       takeName: Skeleton|SkeletonAction
       internalID: 0
-      firstFrame: 6608
+      firstFrame: 6607
       lastFrame: 6608
       wrapMode: 0
       orientationOffsetY: 0

@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weapon_type: 3
   shot_cost: 2
+  animation_id: 4
   damage: 15
   use_projectile: 0
   multi_shot: 0
@@ -30,6 +31,9 @@ MonoBehaviour:
   shot_spawn: {x: 0, y: 0, z: 0}
   shot_direction: {x: 0, y: 0, z: 0}
   shot_torque: {x: 0, y: 0, z: 0}
+  playermodel_t_offset: {x: 0.00002, y: 0.00534, z: -0.00099}
+  playermodel_r_offset: {x: 57.65027, y: 94.131256, z: 112.76695}
+  playermodel_scale: {x: 1.2, y: 1.2, z: 1.2}
   model: {fileID: -2432090755550338912, guid: eccb39e9e3f3693459e11c7c396127d8, type: 3}
   view_model: {fileID: 1456817682570111079, guid: 4ff5c78d42ceab748a2b4a9ae3d0044e, type: 3}
   mats:

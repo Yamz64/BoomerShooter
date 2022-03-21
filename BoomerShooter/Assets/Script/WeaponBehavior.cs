@@ -28,6 +28,18 @@ public class WeaponBehavior : NetworkBehaviour
     private PlayerStats stats;
     private HandleDamageNumbers damage_handler;
 
+    IEnumerator UpdateViewmodelSync()
+    {
+        yield return new WaitForEndOfFrame();
+        GetComponent<AnimatePlayer>().RefreshVAnim();
+    }
+
+    //Function returns if the player is currently firing
+    public bool GetFiring() { return firing; }
+
+    //Function returns the current active weapon
+    public Weapon GetActiveWeapon() { return held_weapons[active_type][active_weapon]; }
+
     //function to find the next perfect root that assists in building fixed shot patterns
     int NextRoot(int number)
     {
@@ -89,6 +101,8 @@ public class WeaponBehavior : NetworkBehaviour
         max_interval = weapon.shot_interval;
 
         anim.runtimeAnimatorController = weapon.anim;
+
+        StartCoroutine(UpdateViewmodelSync());
     }
 
     //based on the number of shots and degrees of deviation spawn a sort of weapon spread

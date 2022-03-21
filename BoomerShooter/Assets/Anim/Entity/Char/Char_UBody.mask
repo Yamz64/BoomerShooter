@@ -42,9 +42,9 @@ AvatarMask:
   - m_Path: Skeleton/ParentController/FrownRoot/FrownController/FrownController_end
     m_Weight: 0
   - m_Path: Skeleton/ParentController/HipController
-    m_Weight: 1
+    m_Weight: 0
   - m_Path: Skeleton/ParentController/HipController/HipController_end
-    m_Weight: 1
+    m_Weight: 0
   - m_Path: Skeleton/ParentController/I,ERoot
     m_Weight: 0
   - m_Path: Skeleton/ParentController/I,ERoot/I,EController
@@ -64,7 +64,7 @@ AvatarMask:
   - m_Path: Skeleton/ParentController/LeftHandController/LeftHandController_end
     m_Weight: 0
   - m_Path: Skeleton/ParentController/LeftHip
-    m_Weight: 1
+    m_Weight: 0
   - m_Path: Skeleton/ParentController/LeftHip/LeftThigh
     m_Weight: 0
   - m_Path: Skeleton/ParentController/LeftHip/LeftThigh/LeftShin
@@ -100,7 +100,7 @@ AvatarMask:
   - m_Path: Skeleton/ParentController/RightHandController/RightHandController_end
     m_Weight: 0
   - m_Path: Skeleton/ParentController/RightHip
-    m_Weight: 1
+    m_Weight: 0
   - m_Path: Skeleton/ParentController/RightHip/RightThigh
     m_Weight: 0
   - m_Path: Skeleton/ParentController/RightHip/RightThigh/RightShin
