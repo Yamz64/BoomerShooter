@@ -26,6 +26,8 @@ public class CharacterMovement : NetworkBehaviour
     private Camera cam;
     private Rigidbody rb;
     private CapsuleCollider col;
+    private Transform visuals;
+    private Transform aim_target;
     
     public void SetSensitivity(float s) { sensitivity_factor = s; }
 
@@ -98,12 +100,19 @@ public class CharacterMovement : NetworkBehaviour
                     cam_position = true;
                     col.center = new Vector3(0.0f, -col.height / 4f, 0.0f);
                     col.height = height / 2f;
+
+                    aim_target.localPosition = new Vector3(0.0f, -0.857569695f + (col.height * .75f), 1.0f);
+                    Debug.Log(aim_target.localPosition);
                 }
                 //if not grounded bring the bottom of the collider up for a crouch
                 else
                 {
                     col.center = new Vector3(0.0f, col.height / 4f, 0.0f);
                     col.height = height / 2f;
+
+                    visuals.localPosition = Vector3.zero;
+                    aim_target.localPosition = new Vector3(0.0f, -0.857569695f + (col.height * .75f), 1.0f);
+                    Debug.Log(aim_target.localPosition);
                 }
             }
         }
@@ -116,6 +125,10 @@ public class CharacterMovement : NetworkBehaviour
                 crouching = false;
                 col.center = Vector3.zero;
                 col.height = height;
+
+                visuals.localPosition = new Vector3(0.0f, -col.height / 2f, 0.0f);
+                aim_target.localPosition = new Vector3(0.0f, -0.857569695f, 1.0f);
+                Debug.Log(aim_target.localPosition);
             }
             else
             {
@@ -137,6 +150,8 @@ public class CharacterMovement : NetworkBehaviour
         col = GetComponent<CapsuleCollider>();
         height = col.height;
         Cursor.lockState = CursorLockMode.Locked;
+        visuals = transform.GetChild(2);
+        aim_target = transform.GetChild(0).GetChild(3);
         if (!isLocalPlayer)
         {
             //disable viewmodel and main camera if it is not owned by this object
