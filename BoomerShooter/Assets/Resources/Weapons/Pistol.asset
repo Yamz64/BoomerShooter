@@ -31,9 +31,10 @@ MonoBehaviour:
   shot_spawn: {x: 0, y: 0, z: 0}
   shot_direction: {x: 0, y: 0, z: 0}
   shot_torque: {x: 0, y: 0, z: 0}
-  playermodel_t_offset: {x: -0.000476, y: 0.001432, z: 0.000268}
-  playermodel_r_offset: {x: 53.541897, y: 91.25656, z: 110.39344}
+  playermodel_t_offset: {x: -0.000426, y: 0.001415, z: 0.000333}
+  playermodel_r_offset: {x: 7.935, y: -10.393, z: 34.373}
   playermodel_scale: {x: 1, y: 1, z: 1}
+  pm_model: {fileID: 1095066185926334020, guid: 750dbe935bee3e244adbb4fdf631ae34, type: 3}
   model: {fileID: -2432090755550338912, guid: 1f6241be5e2b03a45b921217821dcce3, type: 3}
   view_model: {fileID: 5318499948989892798, guid: e9e56c1bb13b05e4c91a5669e233cbca, type: 3}
   mats:

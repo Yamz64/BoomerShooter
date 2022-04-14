@@ -39,6 +39,8 @@ public class Weapon : ScriptableObject
     public Vector3 playermodel_r_offset;
     [Tooltip("Scale of weapon on playermodel")]
     public Vector3 playermodel_scale = Vector3.one;
+    [Tooltip("Model to be used with the player model")]
+    public Object pm_model;
     public Mesh model;
     [Tooltip("Overrides the model member")]
     public Object view_model;

@@ -3485,7 +3485,7 @@ AnimatorStateTransition:
   - m_ConditionMode: 6
     m_ConditionEvent: ActiveWeapon
     m_EventTreshold: 7
-  - m_ConditionMode: 2
+  - m_ConditionMode: 1
     m_ConditionEvent: Crouching
     m_EventTreshold: 0
   - m_ConditionMode: 6

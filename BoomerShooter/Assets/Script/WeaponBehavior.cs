@@ -18,6 +18,8 @@ public class WeaponBehavior : NetworkBehaviour
     private int id;
     private bool firing;
     private float max_interval;
+    [SyncVar]
+    private string active_weapon_name;
     private List<List<Weapon>> held_weapons;
     private GameObject physics_parent;
     private GameObject viewmodel;
@@ -38,7 +40,11 @@ public class WeaponBehavior : NetworkBehaviour
     public bool GetFiring() { return firing; }
 
     //Function returns the current active weapon
-    public Weapon GetActiveWeapon() { return held_weapons[active_type][active_weapon]; }
+    public Weapon GetActiveWeapon() {
+        if (held_weapons == null) return Resources.Load<Weapon>("Weapons/Pistol");
+        if(held_weapons.Count == 0) return Resources.Load<Weapon>("Weapons/Pistol");
+        return held_weapons[active_type][active_weapon];
+    }
 
     //function to find the next perfect root that assists in building fixed shot patterns
     int NextRoot(int number)
@@ -102,7 +108,11 @@ public class WeaponBehavior : NetworkBehaviour
 
         anim.runtimeAnimatorController = weapon.anim;
 
-        StartCoroutine(UpdateViewmodelSync());
+        if (isLocalPlayer)
+        {
+            SetWeaponName(held_weapons[active_type][active_weapon].weapon_name);
+            StartCoroutine(UpdateViewmodelSync());
+        }
     }
 
     //based on the number of shots and degrees of deviation spawn a sort of weapon spread
@@ -163,6 +173,28 @@ public class WeaponBehavior : NetworkBehaviour
     public int GetID()
     {
         return id;
+    }
+
+    public string GetWeaponName() { return active_weapon_name; }
+
+    public void SetWeaponName(string w_name)
+    {
+        if (isServer)
+            RpcSetWeaponName(w_name);
+        else
+            CmdSetWeaponName(w_name);
+    }
+
+    [Command]
+    public void CmdSetWeaponName(string w_name)
+    {
+        RpcSetWeaponName(w_name);
+    }
+
+    [ClientRpc]
+    public void RpcSetWeaponName(string w_name)
+    {
+        active_weapon_name = w_name;
     }
     
     public void DealDamage(GameObject target, int damage)
@@ -867,7 +899,8 @@ public class WeaponBehavior : NetworkBehaviour
         //initialize list for keeping track of bullet holes
         bullet_holes = new List<GameObject>();
 
-        UpdateID();
+        if(isLocalPlayer)
+            UpdateID();
     }
 
     // Update is called once per frame

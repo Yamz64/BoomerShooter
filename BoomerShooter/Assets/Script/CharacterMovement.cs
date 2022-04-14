@@ -147,7 +147,7 @@ public class CharacterMovement : NetworkBehaviour
         else
         {
             //hide the playermodel on the client's side
-            transform.GetChild(2).gameObject.SetActive(false);
+            //transform.GetChild(2).gameObject.SetActive(false);
         }
     }
 
