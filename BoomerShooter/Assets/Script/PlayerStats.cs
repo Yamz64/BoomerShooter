@@ -63,8 +63,13 @@ public class PlayerStats : NetworkBehaviour
         {
             dead = true;
             health = 0;
+            PlayerAudioHandler.PlayVoiceClipAtPoint(2, Random.Range(0, 3), transform.position, 1f, false);
         }
-        if (health == 0) dead = true;
+        if (health == 0)
+        {
+            dead = true;
+            PlayerAudioHandler.PlayVoiceClipAtPoint(2, Random.Range(0, 3), transform.position, 1f, false);
+        }
         if (!overheal)
         {
             if (health > max_health) health = max_health;
@@ -73,6 +78,12 @@ public class PlayerStats : NetworkBehaviour
         {
             if (health > (float)max_health * 1.5) health = (int)((float)max_health * 1.5f);
         }
+        if (h > health && health / max_health <= .2f)
+        {
+            if(Random.Range(0f, 1f) > 2f/3f)
+            PlayerAudioHandler.PlayVoiceClipAtPoint(2, Random.Range(0, 4), transform.position, 1f, false);
+        }
+        if (h < health && h > 0) PlayerAudioHandler.PlayVoiceClipAtPoint(5, Random.Range(0, 4), transform.position);
     }
 
     [ClientCallback]
@@ -138,6 +149,8 @@ public class PlayerStats : NetworkBehaviour
         GetComponent<WeaponBehavior>().ClearWeapons();
         dead = false;
         StartCoroutine(LateStart());
+
+        PlayerAudioHandler.PlayVoiceClipAtPoint(10, Random.Range(0, 6), transform.position, 1f, false);
     }
 
     //Update all UI except for the crosshair

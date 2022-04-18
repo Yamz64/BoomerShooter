@@ -5,7 +5,7 @@ using UnityEngine;
 public static class PlayerAudioHandler
 {
     public class CoroutineStarter : MonoBehaviour { }
-
+    
     private static CoroutineStarter starter;
     private static GameObject game_object;
 
@@ -49,5 +49,65 @@ public static class PlayerAudioHandler
         Init();
         starter.StartCoroutine(DestroyAudioClip(sound));
         starter.StartCoroutine(DestroyHandler());
+    }
+
+    public static void PlayVoiceClipAtPoint(int type, int index, Vector3 position, float volume = 1, bool use_spaial_blending = true, float range_factor = 1)
+    {
+        Object[] clips = Resources.LoadAll("Sound/VA", typeof(AudioClip));
+
+        List<AudioClip> clip_of_type = new List<AudioClip>();
+
+        string prefix = "";
+        switch (type)
+        {
+            case 0:
+                prefix = "Airshot";
+                break;
+            case 1:
+                prefix = "Battlecry";
+                break;
+            case 2:
+                prefix = "Die";
+                break;
+            case 3:
+                prefix = "Heal";
+                break;
+            case 4:
+                prefix = "Meatshot";
+                break;
+            case 5:
+                prefix = "Pain";
+                break;
+            case 6:
+                prefix = "DoubleKill";
+                break;
+            case 7:
+                prefix = "TripleKill";
+                break;
+            case 8:
+                prefix = "QuadraKill";
+                break;
+            case 9:
+                prefix = "PentaKill";
+                break;
+            case 10:
+                prefix = "Revive";
+                break;
+            case 11:
+                prefix = "Wep";
+                break;
+            default:
+                prefix = "Airshot";
+                break;
+        }
+
+        for (int i = 0; i < clips.Length; i++)
+        {
+            if (clips[i].name.Contains(prefix)) clip_of_type.Add((AudioClip)clips[i]);
+        }
+
+        if (index >= clip_of_type.Count) return;
+
+        PlaySoundAtPoint(clip_of_type[index], position, volume, use_spaial_blending, range_factor);
     }
 }

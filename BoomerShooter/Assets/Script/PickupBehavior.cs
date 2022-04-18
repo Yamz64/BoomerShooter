@@ -127,6 +127,7 @@ public class PickupBehavior : MonoBehaviour
             if (!player.HasWeapon(stats.weapon))
             {
                 player.GetComponent<WeaponBehavior>().AddWeapon(stats.weapon);
+                PlayerAudioHandler.PlayVoiceClipAtPoint(11, 7, transform.position, 1f, false);
                 Destroy(gameObject);
             }
             //if the player does have the weapon already, see if the player's ammo count for this weapon isn't full and use the pickup as ammo
