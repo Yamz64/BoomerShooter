@@ -5,6 +5,7 @@ using UnityEngine;
 public class JumpPadBehavior : MonoBehaviour
 {
     public float launch_power;
+    public AudioClip b_pad_clip;
     private Transform origin;
     private Transform end;
 
@@ -19,6 +20,8 @@ public class JumpPadBehavior : MonoBehaviour
         if(other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
             other.GetComponent<Rigidbody>().velocity = (end.position - origin.position) *launch_power;
+
+            PlayerAudioHandler.PlaySoundAtPoint(b_pad_clip, transform.position, 1f);
         }
     }
 }

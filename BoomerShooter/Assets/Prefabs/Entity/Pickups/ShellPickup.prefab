@@ -110,6 +110,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stats: {fileID: 11400000, guid: 2e032d6513725534bad2d29ef01aa0d3, type: 2}
+  sound: {fileID: 8300000, guid: 5b892520ca97cb447b4277bc213f12be, type: 3}
 --- !u!95 &2291367145209900688
 Animator:
   serializedVersion: 3

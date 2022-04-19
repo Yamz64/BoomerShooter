@@ -129,3 +129,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stats: {fileID: 11400000, guid: 7e9248a7fef0d4c40a9df07164134d1d, type: 2}
+  sound: {fileID: 8300000, guid: f97883716130bd348928cb8e0f0e218f, type: 3}

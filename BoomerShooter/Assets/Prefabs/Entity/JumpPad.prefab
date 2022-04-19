@@ -249,4 +249,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6663f2ec88781147a5b496f039e4b7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  launch_dir: {x: 0, y: 0, z: 0}
+  launch_power: 0
+  b_pad_clip: {fileID: 8300000, guid: ba3f028c6ccc75e4399f178c63842d8e, type: 3}

@@ -5,6 +5,7 @@ using UnityEngine;
 public class PickupBehavior : MonoBehaviour
 {
     public Pickup stats;
+    public AudioClip sound;
     private MeshRenderer rend;
     private MeshFilter filter;
 
@@ -18,6 +19,7 @@ public class PickupBehavior : MonoBehaviour
     public IEnumerator LateDestroy()
     {
         GetComponent<Collider>().enabled = false;
+        if (sound != null) PlayerAudioHandler.PlaySoundAtPoint(sound, transform.position);
         yield return new WaitForEndOfFrame();
         yield return new WaitForEndOfFrame();
         Destroy(gameObject);
@@ -231,6 +233,7 @@ public class PickupBehavior : MonoBehaviour
         {
             if (stats.weapon_pickup)
             {
+                if (sound != null) PlayerAudioHandler.PlaySoundAtPoint(sound, transform.position);
                 AddWeapon(other.GetComponent<WeaponBehavior>());
             }
             else RestoreStat(other.GetComponent<PlayerStats>());
