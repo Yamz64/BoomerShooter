@@ -163,7 +163,7 @@ public class CharacterMovement : NetworkBehaviour
         {
             PlayerAudioHandler.PlayVoiceClipAtPoint(1, Random.Range(0, 6), transform.position, 1f, false);
             //hide the playermodel on the client's side
-            //transform.GetChild(2).gameObject.SetActive(false);
+            transform.GetChild(2).GetChild(0).GetComponent<SkinnedMeshRenderer>().enabled = false;
         }
     }
 
