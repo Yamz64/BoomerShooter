@@ -58,17 +58,18 @@ public class PlayerStats : NetworkBehaviour
     [ClientCallback]
     public void SetHealth(int h, bool overheal)
     {
+        if (h < health && h > 0 && !overheal && isLocalPlayer) PlayerAudioHandler.PlayVoiceClipAtPoint(5, Random.Range(0, 4), transform.position);
         health = h;
         if (health < 0)
         {
             dead = true;
             health = 0;
-            PlayerAudioHandler.PlayVoiceClipAtPoint(2, Random.Range(0, 3), transform.position, 1f, false);
+            if(isLocalPlayer) PlayerAudioHandler.PlayVoiceClipAtPoint(2, Random.Range(0, 3), transform.position, 1f, false);
         }
         if (health == 0)
         {
             dead = true;
-            PlayerAudioHandler.PlayVoiceClipAtPoint(2, Random.Range(0, 3), transform.position, 1f, false);
+            if (isLocalPlayer) PlayerAudioHandler.PlayVoiceClipAtPoint(2, Random.Range(0, 3), transform.position, 1f, false);
         }
         if (!overheal)
         {
@@ -81,9 +82,8 @@ public class PlayerStats : NetworkBehaviour
         if (h > health && health / max_health <= .2f)
         {
             if(Random.Range(0f, 1f) > 2f/3f)
-            PlayerAudioHandler.PlayVoiceClipAtPoint(2, Random.Range(0, 4), transform.position, 1f, false);
+            if (isLocalPlayer) PlayerAudioHandler.PlayVoiceClipAtPoint(2, Random.Range(0, 4), transform.position, 1f, false);
         }
-        if (h < health && h > 0) PlayerAudioHandler.PlayVoiceClipAtPoint(5, Random.Range(0, 4), transform.position);
     }
 
     [ClientCallback]
@@ -150,7 +150,7 @@ public class PlayerStats : NetworkBehaviour
         dead = false;
         StartCoroutine(LateStart());
 
-        PlayerAudioHandler.PlayVoiceClipAtPoint(10, Random.Range(0, 6), transform.position, 1f, false);
+        if (isLocalPlayer) PlayerAudioHandler.PlayVoiceClipAtPoint(10, Random.Range(0, 6), transform.position, 1f, false);
     }
 
     //Update all UI except for the crosshair

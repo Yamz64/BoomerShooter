@@ -6,6 +6,7 @@ using Mirror;
 public class ProjectileBehavior : NetworkBehaviour
 {
     public Projectile data;
+    [SyncVar]
     public GameObject owner;
 
     private float life_time;
@@ -29,6 +30,7 @@ public class ProjectileBehavior : NetworkBehaviour
         NetworkServer.Spawn(blast);
         Destroy(blast);
         */
+        Debug.Log(owner);
         owner.GetComponent<WeaponBehavior>().SpawnExplosion(transform.position, Quaternion.identity, data.explosion_radius, data.damage, data.knockback, owner, player);
         if (data.spawn_effect) owner.GetComponent<WeaponBehavior>().SpawnGeneric(data.effect_index, transform.position, transform.rotation);
     }

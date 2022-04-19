@@ -188,6 +188,19 @@ public class PickupBehavior : MonoBehaviour
 
     }
 
+    void RecursiveSetLayer(GameObject g)
+    {
+        g.layer = LayerMask.NameToLayer("Default");
+        if (g.transform.childCount == 0) return;
+        else
+        {
+            for(int i=0; i<g.transform.childCount; i++)
+            {
+                RecursiveSetLayer(g.transform.GetChild(i).gameObject);
+            }
+        }
+    }
+
     private void Start()
     {
         rend = GetComponent<MeshRenderer>();
@@ -196,12 +209,19 @@ public class PickupBehavior : MonoBehaviour
         //initialize unique mesh at starting frame if it is a weapon pickup
         if (stats.weapon_pickup)
         {
+            /*
             filter.mesh = stats.weapon.model;
             rend.materials = new Material[stats.weapon.mats.Length];
             for(int i=0; i<stats.weapon.mats.Length; i++)
             {
                 rend.materials[i] = stats.weapon.mats[i];
             }
+            */
+
+            GameObject visual = (GameObject)Instantiate(stats.weapon.view_model, transform);
+            visual.transform.localScale = Vector3.one * .5f;
+            Destroy(visual.GetComponent<Animator>());
+            RecursiveSetLayer(visual);
         }
     }
 

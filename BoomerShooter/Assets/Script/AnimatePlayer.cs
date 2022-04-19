@@ -21,6 +21,17 @@ public class AnimatePlayer : NetworkBehaviour
     private List<string> firing_states;
     private PlayerStats stats;
 
+    public IEnumerator DelayedSpawnWeapon()
+    {
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+
+        SpawnWeapon(null);
+    }
+
     private bool GetFiring()
     {
         for(int i=0; i<firing_states.Count; i++)
@@ -34,57 +45,53 @@ public class AnimatePlayer : NetworkBehaviour
     {
         if (isServer)
             RpcSpawnWeapon(weapon);
-        else
-            CmdSpawnWeapon(weapon);
+        else if (isClient)
+        {
+            Weapon active_weapon = w_behavior.GetActiveWeapon();
+            CmdSpawnWeapon(weapon, active_weapon.playermodel_t_offset, Quaternion.Euler(active_weapon.playermodel_r_offset.x, active_weapon.playermodel_r_offset.y, active_weapon.playermodel_r_offset.z), active_weapon.playermodel_scale / 5f);
+        }
     }
 
     [Command]
-    public void CmdSpawnWeapon(GameObject weapon)
+    public void CmdSpawnWeapon(GameObject weapon, Vector3 position, Quaternion rotation, Vector3 scale)
     {
         //RpcSpawnWeapon(weapon);
-
-        if (!hasAuthority) return;
         NetworkManager manager = GameObject.FindGameObjectWithTag("NetworkManager").GetComponent<NetworkManager>();
         switch (w_behavior.GetWeaponName())
         {
             case "Pistol":
-                player_model_weapon = (GameObject)Instantiate(manager.spawnPrefabs[7], weapon_spawn);
+                player_model_weapon = (GameObject)Instantiate(manager.spawnPrefabs[7]);
                 break;
             case "Magnum":
-                player_model_weapon = (GameObject)Instantiate(manager.spawnPrefabs[8], weapon_spawn);
+                player_model_weapon = (GameObject)Instantiate(manager.spawnPrefabs[8]);
                 break;
             case "Shotgun":
-                player_model_weapon = (GameObject)Instantiate(manager.spawnPrefabs[9], weapon_spawn);
+                player_model_weapon = (GameObject)Instantiate(manager.spawnPrefabs[9]);
                 break;
             case "Super Shotgun":
-                player_model_weapon = (GameObject)Instantiate(manager.spawnPrefabs[10], weapon_spawn);
+                player_model_weapon = (GameObject)Instantiate(manager.spawnPrefabs[10]);
                 break;
             case "Chaingun":
-                player_model_weapon = (GameObject)Instantiate(manager.spawnPrefabs[11], weapon_spawn);
+                player_model_weapon = (GameObject)Instantiate(manager.spawnPrefabs[11]);
                 break;
             case "Rocket Launcher":
-                player_model_weapon = (GameObject)Instantiate(manager.spawnPrefabs[12], weapon_spawn);
+                player_model_weapon = (GameObject)Instantiate(manager.spawnPrefabs[12]);
                 break;
             case "Grenade Launcher":
-                player_model_weapon = (GameObject)Instantiate(manager.spawnPrefabs[13], weapon_spawn);
+                player_model_weapon = (GameObject)Instantiate(manager.spawnPrefabs[13]);
                 break;
             case "Plasma Rifle":
-                player_model_weapon = (GameObject)Instantiate(manager.spawnPrefabs[14], weapon_spawn);
+                player_model_weapon = (GameObject)Instantiate(manager.spawnPrefabs[14]);
                 break;
         }
 
         Weapon active_weapon = w_behavior.GetActiveWeapon();
-        player_model_weapon.transform.localPosition = active_weapon.playermodel_t_offset;
-        player_model_weapon.transform.localRotation = Quaternion.Euler(active_weapon.playermodel_r_offset.x, active_weapon.playermodel_r_offset.y, active_weapon.playermodel_r_offset.z);
-        player_model_weapon.transform.localScale = active_weapon.playermodel_scale / 5f;
-        Debug.Log(player_model_weapon.GetComponent<PM_WeaponBehavior>() == null);
-        player_model_weapon.GetComponent<PM_WeaponBehavior>().SetId(netId);
+        player_model_weapon.GetComponent<PM_WeaponBehavior>().owner = gameObject;
+        player_model_weapon.GetComponent<PM_WeaponBehavior>().position = position;
+        player_model_weapon.GetComponent<PM_WeaponBehavior>().rotation = rotation;
+        player_model_weapon.GetComponent<PM_WeaponBehavior>().scale = scale;
 
-        Debug.Log(player_model_weapon.GetComponent<PM_WeaponBehavior>().parent_id);
-
-        NetworkServer.Spawn(player_model_weapon, connectionToClient);
-
-        Destroy(player_model_weapon);
+        NetworkServer.Spawn(player_model_weapon);
     }
 
     [ClientRpc]
@@ -97,40 +104,39 @@ public class AnimatePlayer : NetworkBehaviour
         switch (w_behavior.GetWeaponName())
         {
             case "Pistol":
-                player_model_weapon = (GameObject)Instantiate(manager.spawnPrefabs[7], weapon_spawn);
+                player_model_weapon = (GameObject)Instantiate(manager.spawnPrefabs[7]);
                 break;
             case "Magnum":
-                player_model_weapon = (GameObject)Instantiate(manager.spawnPrefabs[8], weapon_spawn);
+                player_model_weapon = (GameObject)Instantiate(manager.spawnPrefabs[8]);
                 break;
             case "Shotgun":
-                player_model_weapon = (GameObject)Instantiate(manager.spawnPrefabs[9], weapon_spawn);
+                player_model_weapon = (GameObject)Instantiate(manager.spawnPrefabs[9]);
                 break;
             case "Super Shotgun":
-                player_model_weapon = (GameObject)Instantiate(manager.spawnPrefabs[10], weapon_spawn);
+                player_model_weapon = (GameObject)Instantiate(manager.spawnPrefabs[10]);
                 break;
             case "Chaingun":
-                player_model_weapon = (GameObject)Instantiate(manager.spawnPrefabs[11], weapon_spawn);
+                player_model_weapon = (GameObject)Instantiate(manager.spawnPrefabs[11]);
                 break;
             case "Rocket Launcher":
-                player_model_weapon = (GameObject)Instantiate(manager.spawnPrefabs[12], weapon_spawn);
+                player_model_weapon = (GameObject)Instantiate(manager.spawnPrefabs[12]);
                 break;
             case "Grenade Launcher":
-                player_model_weapon = (GameObject)Instantiate(manager.spawnPrefabs[13], weapon_spawn);
+                player_model_weapon = (GameObject)Instantiate(manager.spawnPrefabs[13]);
                 break;
             case "Plasma Rifle":
-                player_model_weapon = (GameObject)Instantiate(manager.spawnPrefabs[14], weapon_spawn);
+                player_model_weapon = (GameObject)Instantiate(manager.spawnPrefabs[14]);
                 break;
         }
 
         Weapon active_weapon = w_behavior.GetActiveWeapon();
-        player_model_weapon.transform.localPosition = active_weapon.playermodel_t_offset;
-        player_model_weapon.transform.localRotation = Quaternion.Euler(active_weapon.playermodel_r_offset.x, active_weapon.playermodel_r_offset.y, active_weapon.playermodel_r_offset.z);
-        player_model_weapon.transform.localScale = active_weapon.playermodel_scale / 5f;
-        player_model_weapon.GetComponent<PM_WeaponBehavior>().SetId(netId);
+        Debug.Log(w_behavior);
+        player_model_weapon.GetComponent<PM_WeaponBehavior>().owner = gameObject;
+        player_model_weapon.GetComponent<PM_WeaponBehavior>().position = active_weapon.playermodel_t_offset; ;
+        player_model_weapon.GetComponent<PM_WeaponBehavior>().rotation = Quaternion.Euler(active_weapon.playermodel_r_offset.x, active_weapon.playermodel_r_offset.y, active_weapon.playermodel_r_offset.z); ;
+        player_model_weapon.GetComponent<PM_WeaponBehavior>().scale = active_weapon.playermodel_scale / 5f; ;
 
         NetworkServer.Spawn(player_model_weapon);
-
-        Destroy(player_model_weapon);
     }
 
     public void DestroyWeapon()
@@ -171,7 +177,8 @@ public class AnimatePlayer : NetworkBehaviour
         }
         if (isLocalPlayer)
         {
-            SpawnWeapon(null);
+            CmdDestroyWeapon();
+            StartCoroutine(DelayedSpawnWeapon());
         }
         last_name = w_behavior.GetWeaponName();
     }
@@ -224,35 +231,32 @@ public class AnimatePlayer : NetworkBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (isLocalPlayer)
-        {
-            rb = GetComponent<Rigidbody>();
-            anim = transform.GetChild(2).GetComponent<Animator>();
-            w_behavior = GetComponent<WeaponBehavior>();
-            movement = GetComponent<CharacterMovement>();
-            stats = GetComponent<PlayerStats>();
-            RefreshVAnim();
+        rb = GetComponent<Rigidbody>();
+        anim = transform.GetChild(2).GetComponent<Animator>();
+        w_behavior = GetComponent<WeaponBehavior>();
+        movement = GetComponent<CharacterMovement>();
+        stats = GetComponent<PlayerStats>();
+        RefreshVAnim();
 
-            firing_states = new List<string>()
-            {
-                "Pistol_Fire",
-                "Pistol_FireC",
-                "Magnum_Fire",
-                "Magnum_FireC",
-                "Shotgun_Fire",
-                "SG_FireC",
-                "SSG_Fire",
-                "SSG_FireC",
-                "ChainGun_Fire",
-                "ChainGun_FireC",
-                "RL_Fire",
-                "RL_FireC",
-                "GL_Fire",
-                "GL_FireC",
-                "PR_Fire",
-                "PR_FireC"
-            };
-        }
+        firing_states = new List<string>()
+        {
+            "Pistol_Fire",
+            "Pistol_FireC",
+            "Magnum_Fire",
+            "Magnum_FireC",
+            "Shotgun_Fire",
+            "SG_FireC",
+            "SSG_Fire",
+            "SSG_FireC",
+            "ChainGun_Fire",
+            "ChainGun_FireC",
+            "RL_Fire",
+            "RL_FireC",
+            "GL_Fire",
+            "GL_FireC",
+            "PR_Fire",
+            "PR_FireC"
+        };
     }
 
     // Update is called once per frame

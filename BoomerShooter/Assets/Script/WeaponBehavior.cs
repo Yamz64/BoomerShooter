@@ -402,7 +402,28 @@ public class WeaponBehavior : NetworkBehaviour
 
     public void SpawnExplosion(Vector3 position, Quaternion rotation, float radius, int damage, float knockback, GameObject owner, GameObject damaged)
     {
+        if (isClient)
+        {
+            Cmd_SpawnExplosion(position, rotation, radius, damage, knockback, owner, damaged);
+            return;
+        }
         Rpc_SpawnExplosion(position, rotation, radius, damage, knockback, owner, damaged);
+    }
+
+    [Command]
+    private void Cmd_SpawnExplosion(Vector3 position, Quaternion rotation, float radius, int damage, float knockback, GameObject owner, GameObject damaged)
+    {
+        NetworkManager manager = GameObject.FindGameObjectWithTag("NetworkManager").GetComponent<NetworkManager>();
+
+        GameObject explosion = (GameObject)Instantiate(manager.spawnPrefabs[5], position, rotation);
+        BlastRadiusBehavior temp = explosion.GetComponent<BlastRadiusBehavior>();
+        explosion.GetComponent<SphereCollider>().radius = radius;
+        temp.damage = damage;
+        temp.knock_back = knockback;
+        temp.owner = owner;
+        if (damaged != null) temp.AddObject(ref damaged);
+
+        NetworkServer.Spawn(explosion);
     }
 
     [ClientRpc]

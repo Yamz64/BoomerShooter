@@ -5,31 +5,20 @@ using Mirror;
 
 public class PM_WeaponBehavior : NetworkBehaviour
 {
-    [SyncVar(hook = nameof(SetParentID))]
-    public uint parent_id;
+    [SyncVar]
+    public GameObject owner;
+    [SyncVar]
+    public Vector3 position;
+    [SyncVar]
+    public Quaternion rotation;
+    [SyncVar]
+    public Vector3 scale;
 
-    IEnumerator ParentRoutine()
+    private void Start()
     {
-        yield return new WaitUntil(() => NetworkIdentity.spawned.ContainsKey(parent_id));
-        GameObject parent_object = NetworkIdentity.spawned[parent_id].gameObject;
-
-        transform.parent = parent_object.GetComponent<AnimatePlayer>().weapon_spawn;
-        Debug.Log(parent_id);
-    }
-    
-    public void SetId(uint id) { Debug.Log(id); SetIdCmd(id); }
-
-    [Command]
-    public void SetIdCmd(uint id) { parent_id = id; }
-
-    public void SetParentID(uint old_id, uint new_id)
-    {
-        Debug.Log("ocurring");
-        parent_id = new_id;
-    }
-
-    public override void OnStartClient()
-    {
-        StartCoroutine(ParentRoutine());
+        transform.parent = owner.GetComponent<AnimatePlayer>().weapon_spawn;
+        transform.localPosition = position;
+        transform.localRotation = rotation;
+        transform.localScale = scale;
     }
 }

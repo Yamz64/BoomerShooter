@@ -38,7 +38,7 @@ MonoBehaviour:
   model: {fileID: -2432090755550338912, guid: 2d21dd4c6ba67d343a733cd0c30a6a1e, type: 3}
   view_model: {fileID: 863192402088033259, guid: cd5176c6f258f9448a13a7604f8212d0, type: 3}
   mats:
-  - {fileID: 7741625113677808684, guid: 2d21dd4c6ba67d343a733cd0c30a6a1e, type: 3}
+  - {fileID: 2100000, guid: ec1c00fa824aebb4cb6afae9932e067b, type: 2}
   projectile: {fileID: 2907262764750256196, guid: eee65341114678b4da1e5647fb12b8ef, type: 3}
   anim: {fileID: 9100000, guid: 250c89d75cd02fd429b1159d19e91bdb, type: 2}
   fire_sound: {fileID: 8300000, guid: 5da7e4cf28c8151419dc9c42881ca514, type: 3}
